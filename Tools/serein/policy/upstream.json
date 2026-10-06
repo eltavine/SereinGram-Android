@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "upstream": "https://github.com/NextAlone/Nagram.git#main",
+  "base": "b8db62a65e1e4dee34d92bff412548ef628ddb06",
+  "owned": [
+    "serein/",
+    "build-logic/",
+    "Tools/serein/",
+    "gradle/libs.versions.toml",
+    "TMessagesProj/src/serein/",
+    "TMessagesProj/src/main/kotlin/com/eltavine/",
+    "TMessagesProj/src/test/kotlin/com/eltavine/",
+    "TMessagesProj/src/main/res/values*/strings_serein.xml",
+    ".github/workflows/serein-*",
+    "BRANDING.md",
+    "README.md"
+  ],
+  "budget": {
+    "all_files": 300,
+    "all_added_lines": 293,
+    "source_files": 13,
+    "source_added_lines": 20,
+    "hook_calls": 3
+  }
+}
