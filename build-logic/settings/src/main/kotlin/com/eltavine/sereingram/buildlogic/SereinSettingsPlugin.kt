@@ -7,11 +7,20 @@ import java.io.File
 /**
  * Includes every SereinGram module: each directory below `serein/` with a
  * `build.gradle.kts` becomes the project of the same path, for example
- * `serein/features/ghost` is `:serein:features:ghost`.
+ * `serein/features/ghost` is `:serein:features:ghost`. `sereinCheck` runs
+ * the checks of all of them.
  */
 class SereinSettingsPlugin : Plugin<Settings> {
     override fun apply(settings: Settings) {
-        modulePaths(settings.settingsDir).forEach(settings::include)
+        val modules = modulePaths(settings.settingsDir)
+        modules.forEach(settings::include)
+        settings.gradle.rootProject {
+            tasks.register("sereinCheck") {
+                group = "verification"
+                description = "Runs the checks of every SereinGram module."
+                dependsOn(modules.map { "$it:check" })
+            }
+        }
     }
 }
 

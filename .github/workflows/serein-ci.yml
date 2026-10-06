@@ -1,0 +1,295 @@
+name: SereinGram CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: serein-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guards:
+    name: Guards
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clone.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up uv.
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+
+      - name: Upstream files stay within the intrusion budget.
+        run: uv run Tools/serein/upstream_budget.py
+
+      - name: The brand string overlay matches upstream strings.
+        run: |
+          uv run Tools/serein/brand/generate_strings.py
+          git add --intent-to-add TMessagesProj/src/serein/res
+          git diff --exit-code -- TMessagesProj/src/serein/res
+
+      - name: Set up Node.
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+
+      - name: Install commitlint.
+        run: npm install --no-save --no-package-lock @commitlint/cli@19.8.1 @commitlint/config-conventional@19.8.1
+
+      - name: Commit range.
+        env:
+          FROM: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          TO: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [[ -z "$FROM" || "$FROM" =~ ^0+$ ]] || ! git cat-file -e "$FROM^{commit}"; then
+            FROM="$TO~1"
+          fi
+          echo "RANGE=$FROM..$TO" >> "$GITHUB_ENV"
+
+      - name: New commits follow Conventional Commits in English.
+        run: |
+          # Upstream commits arrive through merges; only our mainline is linted.
+          failed=0
+          for sha in $(git rev-list --first-parent --reverse "$RANGE"); do
+            echo "Checking $(git log -1 --format='%h %s' "$sha")"
+            git log -1 --format=%B "$sha" \
+              | npx commitlint --config Tools/serein/commitlint.config.mjs --verbose \
+              || failed=1
+          done
+          exit "$failed"
+
+  modules:
+    name: Module tests
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clone.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out the libraries Gradle configures.
+        run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath
+
+      - name: Set up JDK 21.
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          java-version: '21'
+          distribution: temurin
+
+      - name: Set up Gradle.
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Test the SereinGram modules.
+        run: ./gradlew sereinCheck --console=plain
+
+  ffmpeg:
+    name: Native build (FFmpeg)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clone.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Fetch submodule status.
+        run: |
+          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status
+          git submodule status TMessagesProj/jni/third_party/dav1d > dav1d_status
+          git submodule status TMessagesProj/jni/third_party/libvpx > libvpx_status
+
+      - name: FFmpeg cache.
+        id: cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: TMessagesProj/jni/ffmpeg/build
+          key: ffmpeg-${{ hashFiles('ffmpeg_status', 'dav1d_status', 'libvpx_status', 'TMessagesProj/jni/third_party/build_*.sh') }}
+
+      - name: Set up the NDK.
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: ndk;27.2.12479018
+
+      - name: Build FFmpeg, libvpx and dav1d.
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          ./run init action ffmpeg
+          ./run init libs libvpx
+          ./run init libs dav1d
+          ./run init libs ffmpeg
+
+  boringssl:
+    name: Native build (BoringSSL)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clone.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Fetch submodule status.
+        run: git submodule status TMessagesProj/jni/boringssl > boringssl_status
+
+      - name: BoringSSL cache.
+        id: cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: TMessagesProj/jni/boringssl/build
+          key: boringssl-${{ hashFiles('boringssl_status') }}
+
+      - name: Set up the NDK.
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: ndk;27.2.12479018
+
+      - name: Build BoringSSL.
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          ./run init action boringssl
+          ./run init libs boringssl
+
+  native:
+    name: Native build (${{ matrix.abi }})
+    runs-on: ubuntu-24.04
+    needs:
+      - ffmpeg
+      - boringssl
+    strategy:
+      matrix:
+        abi:
+          - armeabi-v7a
+          - arm64-v8a
+    steps:
+      - name: Clone.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Fetch submodule status.
+        run: |
+          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status
+          git submodule status TMessagesProj/jni/third_party/dav1d > dav1d_status
+          git submodule status TMessagesProj/jni/third_party/libvpx > libvpx_status
+          git submodule status TMessagesProj/jni/boringssl > boringssl_status
+
+      - name: Native library cache.
+        id: cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: TMessagesProj/src/main/libs
+          key: native-${{ hashFiles('TMessagesProj/jni/**', 'ffmpeg_status', 'boringssl_status') }}-${{ matrix.abi }}
+
+      - name: Check out the native sources.
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: git submodule update --init --depth 1
+
+      - name: FFmpeg cache.
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: TMessagesProj/jni/ffmpeg/build
+          key: ffmpeg-${{ hashFiles('ffmpeg_status', 'dav1d_status', 'libvpx_status', 'TMessagesProj/jni/third_party/build_*.sh') }}
+          fail-on-cache-miss: true
+
+      - name: BoringSSL cache.
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: TMessagesProj/jni/boringssl/build
+          key: boringssl-${{ hashFiles('boringssl_status') }}
+          fail-on-cache-miss: true
+
+      - name: Set up JDK 21.
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          java-version: '21'
+          distribution: temurin
+
+      - name: Set up the NDK.
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: ndk;27.2.12479018
+
+      - name: Patch BoringSSL.
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: TMessagesProj/jni
+        run: ./patch_boringssl.sh
+
+      - name: Build the Telegram native library.
+        if: steps.cache.outputs.cache-hit != 'true'
+        env:
+          NATIVE_TARGET: ${{ matrix.abi }}
+        run: ./run libs native
+
+  apk:
+    name: APK
+    runs-on: ubuntu-24.04
+    needs:
+      - native
+    steps:
+      - name: Clone.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out the libraries Gradle configures.
+        run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath
+
+      - name: Fetch submodule status.
+        run: |
+          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status
+          git submodule status TMessagesProj/jni/boringssl > boringssl_status
+
+      - name: Native library (armeabi-v7a).
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: TMessagesProj/src/main/libs
+          key: native-${{ hashFiles('TMessagesProj/jni/**', 'ffmpeg_status', 'boringssl_status') }}-armeabi-v7a
+          fail-on-cache-miss: true
+
+      - name: Native library (arm64-v8a).
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: TMessagesProj/src/main/libs
+          key: native-${{ hashFiles('TMessagesProj/jni/**', 'ffmpeg_status', 'boringssl_status') }}-arm64-v8a
+          fail-on-cache-miss: true
+
+      - name: Set up JDK 21.
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          java-version: '21'
+          distribution: temurin
+
+      - name: Set up Gradle.
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Stamp the build time.
+        run: sed -i "s/2000000000000/$(date +%s%3N)/" gradle.properties
+
+      - name: Check the architecture of the app.
+        run: ./gradlew :TMessagesProj:testReleaseUnitTest --tests 'com.eltavine.sereingram.*' --console=plain
+
+      - name: Build the APKs.
+        env:
+          LOCAL_PROPERTIES: ${{ secrets.LOCAL_PROPERTIES }}
+        run: ./gradlew :TMessagesProj:assembleRelease --console=plain
+
+      - name: Upload the APKs.
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: SereinGram-${{ github.sha }}
+          path: TMessagesProj/build/outputs/apk/release/*.apk
+          if-no-files-found: error
