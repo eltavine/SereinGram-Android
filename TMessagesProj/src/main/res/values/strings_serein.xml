@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppIconGreen">Green</string>
+    <string name="serein_settings_entry_info">SereinGram features and project links</string>
+    <string name="serein_settings_about">About</string>
+    <string name="serein_settings_version">Version</string>
+    <string name="serein_settings_source">Source code</string>
+    <string name="serein_settings_chat">SereinGram chat</string>
+    <string name="serein_settings_about_note">SereinGram is an unofficial Telegram client based on Nagram. It is not affiliated with Telegram, Nagram, NagramX, NagramXF or AyuGram.</string>
 </resources>

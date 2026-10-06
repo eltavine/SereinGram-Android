@@ -733,6 +733,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         }
 
         items.add(SettingCell.Factory.of(100, 0xFF1BA4ED, 0xFF1488E1, R.drawable.msg_settings, getString(R.string.N_Config)));
+        for (com.eltavine.sereingram.hooks.SettingsHooks.Entry entry : com.eltavine.sereingram.hooks.SettingsHooks.mainSettingsEntries()) items.add(SettingCell.Factory.of(entry.id, entry.iconColorTop, entry.iconColorBottom, entry.icon, entry.title(), entry.subtitle()));
         items.add(UItem.asShadow(null));
 
         items.add(SettingCell.Factory.of(1, IconBackgroundColors.BLUE.top, IconBackgroundColors.BLUE.bottom, R.drawable.settings_account, getString(R.string.SettingsAccount), getString(R.string.SettingsAccountInfo)));
@@ -859,6 +860,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             }
             return;
         }
+        if (com.eltavine.sereingram.hooks.SettingsHooks.openMainSettingsEntry(item.id, this)) return;
         switch (item.id) {
             case 1:
                 presentSettingFragment(new UserInfoActivity());

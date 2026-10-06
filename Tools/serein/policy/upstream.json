@@ -11,15 +11,16 @@
     "TMessagesProj/src/main/kotlin/com/eltavine/",
     "TMessagesProj/src/test/kotlin/com/eltavine/",
     "TMessagesProj/src/main/res/values*/strings_serein.xml",
+    "TMessagesProj/src/main/res/drawable*/serein_*",
     ".github/workflows/serein-*",
     "BRANDING.md",
     "README.md"
   ],
   "budget": {
-    "all_files": 303,
-    "all_added_lines": 293,
-    "source_files": 13,
-    "source_added_lines": 20,
-    "hook_calls": 3
+    "all_files": 302,
+    "all_added_lines": 242,
+    "source_files": 14,
+    "source_added_lines": 22,
+    "hook_calls": 6
   }
 }

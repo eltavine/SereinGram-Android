@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppIconGreen">绿色</string>
+    <string name="serein_settings_entry_info">SereinGram 功能与项目链接</string>
+    <string name="serein_settings_about">关于</string>
+    <string name="serein_settings_version">版本</string>
+    <string name="serein_settings_source">源代码</string>
+    <string name="serein_settings_chat">SereinGram 交流群</string>
+    <string name="serein_settings_about_note">SereinGram 是基于 Nagram 的非官方 Telegram 客户端，与 Telegram、Nagram、NagramX、NagramXF 及 AyuGram 均无关联。</string>
 </resources>

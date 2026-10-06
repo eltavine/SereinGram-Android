@@ -30,5 +30,6 @@ object SereinApp {
         }
         options = Options(PreferencesStores(application))
         modules.start(ModuleContext(options) { message, error -> FileLog.e(message, error) })
+        installSettingsEntry(options, sections = emptyList())
     }
 }
