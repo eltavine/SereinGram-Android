@@ -5,9 +5,7 @@ import com.android.build.api.variant.ResValue
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.getByType
 
 /**
  * SereinGram's settings for the upstream app module. They are applied in
@@ -21,8 +19,7 @@ class SereinApplicationPlugin : Plugin<Project> {
             target.rootProject.subprojects
                 .filter { it.path.startsWith(":serein:") && it.file("build.gradle.kts").isFile }
                 .forEach { target.dependencies.add("implementation", it) }
-            val libs = target.extensions.getByType<VersionCatalogsExtension>().named("libs")
-            target.dependencies.add("testImplementation", libs.findLibrary("archunit").get())
+            target.dependencies.add("testImplementation", target.libs.library("archunit"))
             val properties = SereinProperties(target)
             target.extensions.configure<ApplicationAndroidComponentsExtension> {
                 finalizeDsl { android ->

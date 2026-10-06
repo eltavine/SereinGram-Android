@@ -2,12 +2,24 @@
 # Both must match the classpath in the root build.gradle, which upstream owns.
 androidGradlePlugin = "8.10.1"
 kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"
+# Room 2.8 needs minSdk 23; the app still supports 21.
+room = "2.7.2"
 junit = "5.14.4"
+junit4 = "4.13.2"
 archunit = "1.5.1"
+robolectric = "4.16.1"
+androidxTestCore = "1.5.0"
 
 [libraries]
 archunit = { module = "com.tngtech.archunit:archunit", version.ref = "archunit" }
 android-gradleApi = { module = "com.android.tools.build:gradle-api", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "ksp" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-platformLauncher = { module = "org.junit.platform:junit-platform-launcher" }
+junit4 = { module = "junit:junit", version.ref = "junit4" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTestCore" }

@@ -16324,6 +16324,7 @@ public class MessagesStorage extends BaseController {
                                     if (oldMessage.out && !message.out) {
                                         message.out = oldMessage.out;
                                     }
+                                    com.eltavine.sereingram.hooks.HistoryHooks.beforeMessageEdited(currentAccount, dialogId, oldMessage, message, sameMedia);
                                     if (!sameMedia) {
                                         addFilesToDelete(oldMessage, filesToDelete, idsToDelete, namesToDelete, false);
                                     }

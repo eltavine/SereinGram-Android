@@ -16,4 +16,10 @@
     <string name="serein_declutter_chats">聊天</string>
     <string name="serein_declutter_hide_share">隱藏訊息旁的分享按鈕</string>
     <string name="serein_declutter_hide_share_note">轉傳到儲存的訊息會保留此按鈕，用於開啟訊息來源的聊天。</string>
+    <string name="serein_history_title">訊息記錄</string>
+    <string name="serein_history_save">保存</string>
+    <string name="serein_history_save_deleted">已刪除的訊息</string>
+    <string name="serein_history_save_edits">訊息編輯前的版本</string>
+    <string name="serein_history_save_in_bots">包括與機器人的聊天</string>
+    <string name="serein_history_save_note">副本按帳號保存在本裝置上 SereinGram 自己的資料庫中，與 Telegram 的快取分開，清除快取不會刪除它們。只有本裝置載入過的訊息才能保存。</string>
 </resources>
