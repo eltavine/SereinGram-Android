@@ -1,5 +1,6 @@
 package com.eltavine.sereingram.hooks
 
+import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.Handlers
 
 /** Services that Nagram runs for its own releases, which upstream code reaches on its own. */
@@ -28,5 +29,7 @@ public object UpstreamServices {
     @JvmStatic
     public fun allowUpdateCheck(): Boolean = allow(UpstreamService.UPDATE_CHECK)
 
-    private fun allow(service: UpstreamService): Boolean = policies.all.all { it.allow(service) }
+    private fun allow(service: UpstreamService): Boolean = policies.all.all { policy ->
+        Faults.guard("upstream service policy", fallback = true) { policy.allow(service) }
+    }
 }

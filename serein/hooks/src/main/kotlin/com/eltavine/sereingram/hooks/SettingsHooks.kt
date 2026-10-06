@@ -1,5 +1,6 @@
 package com.eltavine.sereingram.hooks
 
+import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.Handlers
 
 /** Rows that SereinGram adds to Telegram's main settings list, after Nagram's own row. */
@@ -18,11 +19,11 @@ public object SettingsHooks {
             require(id >= 1000) { "settings entry id $id may clash with Telegram's" }
         }
 
-        public fun title(): CharSequence = title.invoke()
+        public fun title(): CharSequence = Faults.guard("settings entry title", fallback = "") { title.invoke() }
 
-        public fun subtitle(): CharSequence? = subtitle.invoke()
+        public fun subtitle(): CharSequence? = Faults.guard("settings entry subtitle", fallback = null) { subtitle.invoke() }
 
-        internal fun open(host: Any) = open.invoke(host)
+        internal fun open(host: Any) = Faults.guard("settings entry", fallback = Unit) { open.invoke(host) }
     }
 
     public val mainEntries: Handlers<Entry> = Handlers()
@@ -41,7 +42,9 @@ public object SettingsHooks {
     @JvmStatic
     @Suppress("UNCHECKED_CAST")
     public fun filterMainSettings(items: MutableList<*>) {
-        mainFilters.all.forEach { it.filter(items as MutableList<Any?>) }
+        mainFilters.all.forEach { filter ->
+            Faults.guard("main settings filter", fallback = Unit) { filter.filter(items as MutableList<Any?>) }
+        }
     }
 
     /** Opens the entry with [id] from [host], the settings fragment; false when the id is not SereinGram's. */

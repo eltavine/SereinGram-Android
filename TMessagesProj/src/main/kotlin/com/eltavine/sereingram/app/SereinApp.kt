@@ -2,6 +2,7 @@ package com.eltavine.sereingram.app
 
 import android.app.Application
 import com.eltavine.sereingram.adapters.prefs.PreferencesStores
+import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.ModuleRegistry
 import com.eltavine.sereingram.core.Options
@@ -34,8 +35,9 @@ object SereinApp {
         if (::options.isInitialized) {
             return
         }
+        Faults.reporters.install { message, error -> FileLog.e("SereinGram: $message", error) }
         options = Options(PreferencesStores(application))
-        modules.start(ModuleContext(options) { message, error -> FileLog.e(message, error) })
+        modules.start(ModuleContext(options, Faults::report))
         installSettingsEntry(options, listOf(featuresSection()))
     }
 

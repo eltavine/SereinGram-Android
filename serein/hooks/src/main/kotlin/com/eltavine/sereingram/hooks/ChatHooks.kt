@@ -1,5 +1,6 @@
 package com.eltavine.sereingram.hooks
 
+import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.Handlers
 
 /** Decisions Telegram's chat screen makes per message. */
@@ -14,5 +15,7 @@ public object ChatHooks {
     /** Whether the round share button may be drawn beside a message; true unless a policy refuses. */
     @JvmStatic
     public fun allowShareButton(account: Int, dialogId: Long, saved: Boolean): Boolean =
-        shareButtonPolicies.all.all { it.allow(account, dialogId, saved) }
+        shareButtonPolicies.all.all { policy ->
+            Faults.guard("share button policy", fallback = true) { policy.allow(account, dialogId, saved) }
+        }
 }
