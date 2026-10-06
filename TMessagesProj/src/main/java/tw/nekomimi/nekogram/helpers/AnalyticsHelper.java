@@ -16,7 +16,7 @@ public class AnalyticsHelper {
     public static boolean loaded = false;
 
     public static void start(Application application) {
-        if (!getSentryStatus(application)) {
+        if (!getSentryStatus(application) || !com.eltavine.sereingram.hooks.UpstreamServices.allowCrashReports()) {
             return;
         }
         SentryAndroid.init(application, options -> {

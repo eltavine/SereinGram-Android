@@ -177,6 +177,10 @@ public class UpdateHelper extends BaseRemoteHelper {
     }
 
     public void checkNewVersionAvailable(Delegate delegate, boolean updateAlways_) {
+        if (!com.eltavine.sereingram.hooks.UpstreamServices.allowUpdateCheck()) {
+            delegate.onTLResponse(null, null);
+            return;
+        }
         updateAlways = updateAlways_;
         load(delegate);
     }

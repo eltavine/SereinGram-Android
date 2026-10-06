@@ -364,6 +364,7 @@ public class ApplicationLoader extends Application {
             throw new RuntimeException("can't load native libraries " +  Build.CPU_ABI + " lookup folder " + NativeLoader.getAbiFolder());
         }
 
+        com.eltavine.sereingram.app.SereinApp.onCreate(this);
         AnalyticsHelper.start(this);
 
         new ForegroundDetector(this) {
