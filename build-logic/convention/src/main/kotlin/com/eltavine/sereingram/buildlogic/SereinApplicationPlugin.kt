@@ -26,6 +26,15 @@ class SereinApplicationPlugin : Plugin<Project> {
                     android.buildTypes.forEach { buildType ->
                         android.sourceSets.getByName(buildType.name).res.srcDir(OVERLAY_RES)
                     }
+                    val release = android.signingConfigs.findByName("release")
+                    if (release?.storePassword.isNullOrEmpty() || release?.keyAlias.isNullOrEmpty()) {
+                        target.logger.warn(
+                            "SereinGram: no release signing key is configured " +
+                                "(KEYSTORE_PASS, ALIAS_NAME, ALIAS_PASS), signing with the debug key.",
+                        )
+                        val debug = android.signingConfigs.getByName("debug")
+                        android.buildTypes.forEach { it.signingConfig = debug }
+                    }
                 }
                 // Account type and intent targets in res/xml must follow the final id.
                 onVariants { variant ->
