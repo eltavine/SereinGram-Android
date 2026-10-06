@@ -1,113 +1,32 @@
-# Nagram
+# SereinGram for Android
 
-Nagram is a third-party Telegram client based on [NekoX](https://web.archive.org/web/20240306062834/https://github.com/NekoX-Dev/NekoX) with some modifications.
+SereinGram is an unofficial Telegram client for Android. It is based on
+[Nagram](https://github.com/NextAlone/Nagram), which builds on
+[NekoX](https://web.archive.org/web/20240306062834/https://github.com/NekoX-Dev/NekoX),
+and is the Android sibling of [SereinGram Desktop](https://github.com/eltavine/SereinGram).
 
-- Official Site: <https://nextalone.xyz>
-- Telegram Update Channel: <https://t.me/nagram_channel>
-- Releases: <https://github.com/NextAlone/Nagram/releases>
-- Issues here: <https://t.me/na_gram_reports/18>
+SereinGram is not affiliated with Telegram, Nagram, NagramX, NagramXF or
+AyuGram. The application identity is described in [BRANDING.md](BRANDING.md).
 
-## Branding
+- Source and releases: <https://github.com/eltavine/SereinGram-Android>
+- Issues: <https://github.com/eltavine/SereinGram-Android/issues>
 
-Nagram's source code is licensed under GPLv3. The Nagram name and project
-identity belong to [@NextAlone](https://github.com/NextAlone); the Nagram
-application icon artwork is copyright © MaitungTM. These are separate brand
-assets. Modified, forked, and third-party distributions must use distinct
-branding and replace the Nagram brand assets. See [BRANDING.md](BRANDING.md)
-for the complete policy.
+## Features
 
-## Additional feature over Nagram
+SereinGram keeps the features of Nagram (see
+[Nagram's README](https://github.com/NextAlone/Nagram#readme)) and of NekoX
+(see [README.NekoX.md](README.NekoX.md)), and ports selected features from
+[NagramX](https://github.com/risin42/NagramX),
+[NagramXF](https://github.com/Keeperorowner/NagramXF) and
+[AyuGram](https://github.com/AyuGram/AyuGram4A).
 
-1. Nice icon (copyright © MaitungTM)
-2. Combine message
-3. Editable text style 
-4. Forced copy
-5. Invert reply
-6. Quick reply in longClick menu (thanks to @blxueya)
-7. Undo and Redo
-8. Scrollable chat preview (thanks to TeleTux)
-9. Noise suppress and voice enhance (thanks to )
-
-----
-
-## NekoX Changes
-
-- Most of Nekogram's features
-- Unlimited login accounts
-- **Proxy**
-    - Built-in VMess, Shadowsocks, SSR, Trojan-GFW proxies support (No longer maintained)
-    - Built-in public proxy (WebSocket relay via Cloudflare CDN), [documentation and for PC](https://github.com/arm64v8a/NekoXProxy)
-    - Proxy subscription support
-    - Ipv6 MTProxy support
-    - Able to parse all proxy subscription format: SIP008, ssr, v2rayN, vmess1, shit ios app formats, clash config and more
-    - Proxies import and export, remarks, speed measurement, sorting, delete unusable nodes, etc
-    - Scan the QR code (any link, can add a proxy)
-    - The ( vmess / vmess1 / ss / ssr / trojan ) proxy link in the message can be clicked
-    - Allow auto-disabling proxy when VPN is enabled
-    - Proxy automatic switcher
-    - Don't alert "Proxy unavailable" for non-current account
-- **Stickers**
-    - Custom [Emoji packs](https://web.archive.org/web/20221126140435/https://github.com/NekoX-Dev/NekoX/wiki/emoji)
-    - Add stickers without sticker pack
-    - Sticker set list backup / restore / share
-- **Internationalization**
-    - OpenCC Chinese Convert
-    - Full InstantView translation support
-    - Translation support for selected text on input and in messages
-    - Google Cloud Translate / Yandex.Translate support
-    - Force English emoji keywords to be loaded
-    - Persian calendar support
-- **Additional Options**
-    - Option to disable vibration
-    - Dialog sorting is optional "Unread and can be prioritized for reminding" etc
-    - Option to skip "regret within five seconds"
-    - Option to not send comment first when forwarding
-    - Option to use nekox chat input menu: replace record button with a menu which contains an switch to control link preview (enabled by default)
-    - Option to disable link preview by default: to prevent the server from knowing that the link is shared through Telegram.
-    - Option to ignore Android-only content restrictions (except for the Play Store version).
-    - Custom cache directory (supports external storage)
-    - Custom server (official, test DC)
-    - Option to block others from starting a secret chat with you
-    - Option to disable trending
-- **Additional Actions**
-    - Allow clicking on links in self profile
-    - Delete all messages in group
-    - Unblock all users support
-    - Login via QR code
-    - Scan and confirm the login QR code directly
-    - Allow clearing app data
-    - Proxies, groups, channels, sticker packs are able to be shared as QR codes
-    - Add "@Name" when long-pressing @user option
-    - Allow creating a group without inviting anyone
-    - Allow upgrading a group to a supergroup
-    - Mark dialogs as read using tab menu
-    - Enabled set auto delete timer option for private chats and private groups
-    - Support saving multiple selected messages to Saved Messages
-    - Support unpinning multiple selected messages
-    - View stats option for messages
-- **Optimization**
-    - Keep the original file name when downloading files
-    - View the data center you belong to when you don't have an avatar
-    - Enhanced notification service, optional version without Google Services
-    - Improved session dialog
-    - Improved link long click menu
-    - Improved hide messages from blocked users feature
-    - Don't process cleanup draft events after opening chat
-- **Others**
-    - OpenKeychain client (sign / verify / decrypt / import)
-    - Text replacer
-- **UI**
-    - Telegram X style menu for unpinning messages
-    - Built-in Material Design themes / Telegram X style icons
-- And more :)
-
-## API and Protocol documentation
+## API and protocol documentation
 
 Telegram API manuals: <https://core.telegram.org/api>
 
 MTProto protocol manuals: <https://core.telegram.org/mtproto>
 
-## Compilation Guide
+## Compilation guide
 
 **NOTE: For Windows users, please consider using a Linux VM (such as WSL2) or dual booting.**
 
@@ -115,27 +34,27 @@ Environment:
 
 - Linux distribution based on Debian or Arch Linux, or macOS
 
-- Native tools: `gcc` `go` `make` `cmake` `ninja` `yasm`
-  
+- Native tools: `gcc` `go` `make` `cmake` `ninja` `yasm` `meson`
+
   ```shell
   # for Debian based distribution
-  sudo apt install gcc golang make cmake ninja-build yasm
+  sudo apt install gcc golang make cmake ninja-build yasm meson
   # for Arch Linux based distribution
-  sudo pacman -S base-devel go ninja cmake yasm
+  sudo pacman -S base-devel go ninja cmake yasm meson
   # for macOS
   xcode-select --install # install developer tools (will open confirm dialog)
-  brew install go cmake ninja yasm # install other tools by homebrew
+  brew install go cmake ninja yasm meson # install other tools by homebrew
   ```
-- Android SDK: `build-tools;33.0.0` `platforms;android-33` `ndk;27.2.12479018` `cmake;3.18.1` `cmake;3.22.1` (the default location is **$HOME/Android/SDK**, otherwise you need to specify **$ANDROID_HOME** for it)
 
-  It is recommended to use [Android Studio](https://developer.android.com/studio) to install, but you can also use `sdkmanager` command on distributions based on Debian:
+- Android SDK: `build-tools;36.0.0` `platforms;android-36` `ndk;27.2.12479018` `cmake;3.22.1` (the default location is **$HOME/Android/SDK**, otherwise you need to specify **$ANDROID_HOME** for it)
+
+  It is recommended to use [Android Studio](https://developer.android.com/studio) to install, but you can also use `sdkmanager`:
 
   ```shell
-  sudo apt install sdkmanager
-  sdkmanager --sdk_root $HOME/Android/SDK --install "build-tools;33.0.0" "platforms;android-33" "ndk;27.2.12479018" "cmake;3.18.1" "cmake;3.22.1"
+  sdkmanager --sdk_root $HOME/Android/SDK --install "build-tools;36.0.0" "platforms;android-36" "ndk;27.2.12479018" "cmake;3.22.1"
   ```
 
-Build: 
+Build:
 
 1. Checkout submodules
 
@@ -143,19 +62,20 @@ Build:
    git submodule update --init --recursive
    ```
 
-2. Disable signature check by removing the following lines in **TMessagesProj/jni/jni.c**:
-   ```c
-    if (verifySign(env) != JNI_OK) {
-        return JNI_ERR;
-    }
-   ```
+2. Optionally set `SEREIN_SIGNING_SHA1` in **local.properties** to the SHA-1
+   of the certificate you sign the APK with (as printed by
+   `keytool -list -v`). The native library then refuses to load in an APK
+   signed with any other key. Leave it unset for development builds, which
+   skips the check.
 
 3. Build native dependencies:
+
    ```shell
    ./run init libs
    ```
 
-4. Build external libraries and native code: 
+4. Build external libraries and native code:
+
    ```shell
    ./run libs native
    ```
@@ -172,74 +92,20 @@ Build:
    ./gradlew assemble<Release/Debug>
    ```
 
-----
-
-## Compilation with GitHub Action
-
-1. Create your own `release.keystore` to replace `TMessagesProj/release.keystore`.
-
-2. Prepare LOCAL_PROPERTIES
-
-- KEYSTORE_PASS: from your keystore
-- ALIAS_NAME: from your keystore
-- ALIAS_PASS: from your keystore
-- TELEGRAM_APP_ID: from [Telegram Developer](https://my.telegram.org/auth)
-- TELEGRAM_APP_HASH: from [Telegram Developer](https://my.telegram.org/auth)
-
-```env
-KEYSTORE_PASS=123456
-ALIAS_NAME=key0
-ALIAS_PASS=123456
-TELEGRAM_APP_ID=123456
-TELEGRAM_APP_HASH=abcdefg
-```
-
-Then, use base64 to encode the above.
-
-3. Add Repo Action Secrets
-
-- LOCAL_PROPERTIES: from step 2
-- HELPER_BOT_TOKEN: from telegram [@Botfather](https://t.me/Botfather), such as `1111:abcd`
-- HELPER_BOT_TARGET: from telegram chat id, such as `777000`
-
-4. Disable signature check by removing the following lines in **TMessagesProj/jni/jni.c**:
-   ```c
-    if (verifySign(env) != JNI_OK) {
-        return JNI_ERR;
-    }
-   ```
-
-5. Run Release Build
-
-## FAQ
-
-#### What is the differences between Nagram, NekoX and Nekogram?
-
-Developed by different developers, read the feature list above to understand the differences.
-
-#### I've encountered a bug!
-
-First, make sure you have the latest version installed (check the channel).
-
-Then, if the issue appears in the official Telegram client too, please submit it to the officials, (be careful not to show custom clients in the description and screenshots).
-
-Then, submit it to our [bot](https://t.me/OrIssuesBot).
-
-If you experience a *crash*, you also need to click on the version number at the bottom of the settings and select "Enable Log" and send it to us.
-
 ## Localization
 
-Nagram is forked from Telegram, thus most locales follows the translations of Telegram for Android, checkout <https://translations.telegram.org/en/android/>.
-
-Is Nagram not in your language, or the translation is incorrect or incomplete? Get involved in the translations on our [Weblate](https://xtaolabs.crowdin.com/nagram).
-
-[![Crowdin](https://badges.crowdin.net/e/156df3a631d257cc6b57301566d545fb/localized.svg)](https://xtaolabs.crowdin.com/nagram)
+Strings inherited from Telegram and Nagram follow their translations
+([Telegram](https://translations.telegram.org/en/android/),
+[Nagram on Crowdin](https://xtaolabs.crowdin.com/nagram)). SereinGram's own
+strings live in `strings_serein.xml`.
 
 ## Thanks
 
+- [Nagram](https://github.com/NextAlone/Nagram)
 - [NekoX](https://web.archive.org/web/20240306062834/https://github.com/NekoX-Dev/NekoX)
 - [Nekogram](https://gitlab.com/Nekogram/Nekogram)
 - [Pigeongram](https://gitlab.com/JasonKhew96/Nekogram)
 - [Nullgram](https://github.com/qwq233/Nullgram)
 - [TeleTux](https://github.com/TeleTux/TeleTux)
 - [OwlGram](https://github.com/OwlGramDev/OwlGram)
+- The SereinGram logo was designed by [OukaroMF](https://github.com/OukaroMF/).

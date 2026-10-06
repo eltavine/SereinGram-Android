@@ -3624,7 +3624,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
                 actionBar.centerTitle(false);
                 if (title.equals(getString(R.string.NekoX)) && !NaConfig.INSTANCE.getUseSystemFontInTitle().Bool()) {
-                    logoDrawable = context.getResources().getDrawable(R.drawable.nagram_logo_2).mutate();
+                    logoDrawable = context.getResources().getDrawable(R.drawable.serein_wordmark).mutate();
                     logoDrawable.setBounds(0, dp(2), logoDrawable.getIntrinsicWidth(), dp(2) + logoDrawable.getIntrinsicHeight());
                     logoDrawable.setColorFilter(getThemedColor(Theme.key_telegram_color_dialogsLogo), PorterDuff.Mode.MULTIPLY);
                     SpannableStringBuilder ssb = new SpannableStringBuilder(title);

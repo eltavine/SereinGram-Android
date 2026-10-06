@@ -20,9 +20,17 @@ class SereinApplicationPlugin : Plugin<Project> {
                     val sha1 = signingCertificateSha1(properties["SEREIN_SIGNING_SHA1"])
                     android.defaultConfig.externalNativeBuild.cmake.arguments +=
                         "-DSEREIN_SIGNING_SHA1=$sha1"
+                    // Build type resources take precedence over src/main, which upstream owns.
+                    android.buildTypes.forEach { buildType ->
+                        android.sourceSets.getByName(buildType.name).res.srcDir(OVERLAY_RES)
+                    }
                 }
             }
         }
+    }
+
+    private companion object {
+        const val OVERLAY_RES = "src/serein/res"
     }
 }
 

@@ -2,8 +2,10 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
+#     "fonttools==4.66.1",
 #     "pillow==12.3.0",
 #     "resvg-py==0.5.0",
+#     "uharfbuzz==0.56.3",
 # ]
 # ///
 """Generate the SereinGram Android icons from the master logo.
@@ -12,7 +14,8 @@ The logo was designed by OukaroMF (https://github.com/OukaroMF/). Its master
 file, Tools/serein/brand/sereingram-logo.svg, is kept exactly as delivered and
 is the same file the desktop client ships. Application icons place it on a
 light tile; the monochrome glyphs reuse its dark paths and leave the lighter
-folds open, as on desktop.
+folds open, as on desktop. The wordmark is the application name set in the
+Roboto Medium the app already bundles for its titles.
 
 Run from the repository root:
     uv run Tools/serein/brand/generate_icons.py
@@ -23,6 +26,11 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import resvg_py
+import uharfbuzz
+from fontTools.pens.boundsPen import BoundsPen
+from fontTools.pens.svgPathPen import SVGPathPen
+from fontTools.pens.transformPen import TransformPen
+from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw
 
 HERE = Path(__file__).resolve().parent
@@ -30,6 +38,10 @@ ROOT = HERE.parents[2]
 MAIN = ROOT / "TMessagesProj/src/main"
 RES = MAIN / "res"
 MASTER = HERE / "sereingram-logo.svg"
+TITLE_FONT = MAIN / "assets/fonts/rmedium.ttf"
+APP_NAME = "SereinGram"
+# Height of the upstream wordmarks; the box spans cap height to the g descender.
+WORDMARK_HEIGHT = 20.408922
 
 SVG_NAMESPACE = "http://www.w3.org/2000/svg"
 DARK_FILL = "#09090B"
@@ -212,6 +224,47 @@ def background_vector(colors, gradient):
     return vector(canvas, body, aapt=True)
 
 
+def wordmark_vector():
+    font = TTFont(TITLE_FONT)
+    glyphs = font.getGlyphSet()
+    order = font.getGlyphOrder()
+    shaper = uharfbuzz.Font(uharfbuzz.Face(uharfbuzz.Blob.from_file_path(str(TITLE_FONT))))
+    buffer = uharfbuzz.Buffer()
+    buffer.add_str(APP_NAME)
+    buffer.guess_segment_properties()
+    uharfbuzz.shape(shaper, buffer, {"kern": True, "liga": True})
+    outline = SVGPathPen(glyphs, ntos=lambda value: f"{value:g}")
+    ink = BoundsPen(glyphs)
+    advance = 0
+    for info, position in zip(buffer.glyph_infos, buffer.glyph_positions, strict=True):
+        offset = (1, 0, 0, -1, advance + position.x_offset, -position.y_offset)
+        for pen in (outline, ink):
+            glyphs[order[info.codepoint]].draw(TransformPen(pen, offset))
+        advance += position.x_advance
+    descender = BoundsPen(glyphs)
+    glyphs["g"].draw(TransformPen(descender, (1, 0, 0, -1, 0, 0)))
+    x0, y0, x1, _ = ink.bounds
+    y1 = descender.bounds[3]
+    width_dp = WORDMARK_HEIGHT * (x1 - x0) / (y1 - y0)
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        f"{GENERATED}\n"
+        '<vector xmlns:android="http://schemas.android.com/apk/res/android"\n'
+        f'    android:width="{width_dp:.4f}dp"\n'
+        f'    android:height="{WORDMARK_HEIGHT}dp"\n'
+        f'    android:viewportWidth="{x1 - x0:g}"\n'
+        f'    android:viewportHeight="{y1 - y0:g}">\n'
+        "    <group\n"
+        f'        android:translateX="{-x0:g}"\n'
+        f'        android:translateY="{-y0:g}">\n'
+        "        <path\n"
+        '            android:fillColor="#FFFFFFFF"\n'
+        f'            android:pathData="{outline.getCommands()}" />\n'
+        "    </group>\n"
+        "</vector>\n"
+    )
+
+
 def adaptive_icon(suffix):
     return (
         '<?xml version="1.0" encoding="utf-8"?>\n'
@@ -258,6 +311,7 @@ def main():
     store = render(STORE_SIZE, TILES[""], margin=0, radius=0)
     store.save(MAIN / "ic_launcher-playstore.png", optimize=True)
     store.save(MAIN / "ic_launcher_web.png", optimize=True)
+    write(RES / "drawable/serein_wordmark.xml", wordmark_vector())
 
 
 if __name__ == "__main__":
