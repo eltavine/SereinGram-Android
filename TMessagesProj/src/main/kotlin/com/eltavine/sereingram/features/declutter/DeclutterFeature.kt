@@ -1,0 +1,50 @@
+package com.eltavine.sereingram.features.declutter
+
+import com.eltavine.sereingram.core.ModuleContext
+import com.eltavine.sereingram.core.Option
+import com.eltavine.sereingram.core.SereinModule
+import com.eltavine.sereingram.hooks.ChatHooks
+import com.eltavine.sereingram.hooks.SettingsHooks
+import com.eltavine.sereingram.settings.SettingsContributor
+import com.eltavine.sereingram.settings.SettingsPage
+import com.eltavine.sereingram.settings.SettingsRow
+import com.eltavine.sereingram.settings.SettingsSection
+import org.telegram.messenger.R
+
+/** Hides Telegram elements, after NagramX's options of the same names. */
+object DeclutterFeature : SereinModule, SettingsContributor {
+    override val id: String = "declutter"
+
+    override val options: List<Option<*>> = DeclutterOptions.all
+
+    override fun start(context: ModuleContext) {
+        val options = context.options
+        ChatHooks.shareButtonPolicies.install { _, _, saved ->
+            allowShareButton(options.get(DeclutterOptions.hideShareButton), saved)
+        }
+        SettingsHooks.mainFilters.install(MainSettingsDeclutter(options))
+    }
+
+    override val settingsIcon: Int = R.drawable.msg_archive_hide
+
+    override val settingsPage: SettingsPage = SettingsPage(
+        R.string.serein_declutter_title,
+        listOf(
+            SettingsSection(
+                header = R.string.serein_declutter_settings,
+                rows = listOf(
+                    SettingsRow.Toggle(DeclutterOptions.hidePremiumSection, R.string.serein_declutter_hide_premium),
+                    SettingsRow.Toggle(DeclutterOptions.hideHelpSection, R.string.serein_declutter_hide_help),
+                ),
+                note = R.string.serein_declutter_settings_note,
+            ),
+            SettingsSection(
+                header = R.string.serein_declutter_chats,
+                rows = listOf(
+                    SettingsRow.Toggle(DeclutterOptions.hideShareButton, R.string.serein_declutter_hide_share),
+                ),
+                note = R.string.serein_declutter_hide_share_note,
+            ),
+        ),
+    )
+}

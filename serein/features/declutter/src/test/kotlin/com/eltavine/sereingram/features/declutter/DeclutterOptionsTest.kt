@@ -1,0 +1,24 @@
+package com.eltavine.sereingram.features.declutter
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+
+class DeclutterOptionsTest {
+    @Test
+    fun storageKeysNeverChange() {
+        assertEquals(
+            listOf("hide_premium_section", "hide_help_section", "hide_share_button"),
+            DeclutterOptions.all.map { it.key },
+        )
+        assertTrue(DeclutterOptions.all.none { it.default == true })
+    }
+
+    @Test
+    fun savedMessagesKeepTheirShareButton() {
+        assertTrue(allowShareButton(hide = false, saved = false))
+        assertFalse(allowShareButton(hide = true, saved = false))
+        assertTrue(allowShareButton(hide = true, saved = true))
+    }
+}

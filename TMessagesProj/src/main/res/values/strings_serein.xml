@@ -7,4 +7,13 @@
     <string name="serein_settings_source">Source code</string>
     <string name="serein_settings_chat">SereinGram chat</string>
     <string name="serein_settings_about_note">SereinGram is an unofficial Telegram client based on Nagram. It is not affiliated with Telegram, Nagram, NagramX, NagramXF or AyuGram.</string>
+    <string name="serein_settings_features">Features</string>
+    <string name="serein_declutter_title">Hide elements</string>
+    <string name="serein_declutter_settings">Settings</string>
+    <string name="serein_declutter_hide_premium">Hide the Premium section</string>
+    <string name="serein_declutter_hide_help">Hide the Help section</string>
+    <string name="serein_declutter_settings_note">The Premium section holds Telegram Premium, Stars, TON, Business and gifts; the Help section holds questions, the FAQ, features and the privacy policy.</string>
+    <string name="serein_declutter_chats">Chats</string>
+    <string name="serein_declutter_hide_share">Hide the share button beside messages</string>
+    <string name="serein_declutter_hide_share_note">Messages forwarded to Saved Messages keep the button, which opens the chat they came from.</string>
 </resources>

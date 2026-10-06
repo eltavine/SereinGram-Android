@@ -7,4 +7,13 @@
     <string name="serein_settings_source">原始碼</string>
     <string name="serein_settings_chat">SereinGram 交流群</string>
     <string name="serein_settings_about_note">SereinGram 是基於 Nagram 的非官方 Telegram 用戶端，與 Telegram、Nagram、NagramX、NagramXF 及 AyuGram 皆無關聯。</string>
+    <string name="serein_settings_features">功能</string>
+    <string name="serein_declutter_title">隱藏介面元素</string>
+    <string name="serein_declutter_settings">設定</string>
+    <string name="serein_declutter_hide_premium">隱藏 Premium 區塊</string>
+    <string name="serein_declutter_hide_help">隱藏說明區塊</string>
+    <string name="serein_declutter_settings_note">Premium 區塊包括 Telegram Premium、星星、TON、商業版與禮物；說明區塊包括提問、常見問題、功能介紹與隱私政策。</string>
+    <string name="serein_declutter_chats">聊天</string>
+    <string name="serein_declutter_hide_share">隱藏訊息旁的分享按鈕</string>
+    <string name="serein_declutter_hide_share_note">轉傳到儲存的訊息會保留此按鈕，用於開啟訊息來源的聊天。</string>
 </resources>

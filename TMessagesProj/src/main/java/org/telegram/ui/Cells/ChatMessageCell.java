@@ -18822,6 +18822,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     }
 
     protected boolean checkNeedDrawShareButton(MessageObject messageObject) {
+        if (!com.eltavine.sereingram.hooks.ChatHooks.allowShareButton(messageObject.currentAccount, messageObject.getDialogId(), messageObject.isSaved)) return false;
         if (isReportChat) return false;
         if (currentMessageObject.deleted && !currentMessageObject.deletedByThanos) return false;
         if (currentMessageObject.isSponsored()) return false;

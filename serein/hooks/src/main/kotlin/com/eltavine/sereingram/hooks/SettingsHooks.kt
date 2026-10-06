@@ -27,8 +27,22 @@ public object SettingsHooks {
 
     public val mainEntries: Handlers<Entry> = Handlers()
 
+    public fun interface MainSettingsFilter {
+        /** Edits the finished main settings list in place; its elements are Telegram's list items. */
+        public fun filter(items: MutableList<Any?>)
+    }
+
+    public val mainFilters: Handlers<MainSettingsFilter> = Handlers()
+
     @JvmStatic
     public fun mainSettingsEntries(): List<Entry> = mainEntries.all
+
+    /** Runs the installed filters over the main settings list before Telegram shows it. */
+    @JvmStatic
+    @Suppress("UNCHECKED_CAST")
+    public fun filterMainSettings(items: MutableList<*>) {
+        mainFilters.all.forEach { it.filter(items as MutableList<Any?>) }
+    }
 
     /** Opens the entry with [id] from [host], the settings fragment; false when the id is not SereinGram's. */
     @JvmStatic
