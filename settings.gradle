@@ -2,6 +2,10 @@ pluginManagement {
     includeBuild 'build-logic'
 }
 
+plugins {
+    id 'serein.settings'
+}
+
 include ':TMessagesProj'
 include ':openpgp-api'
 include ':jlatexmath'

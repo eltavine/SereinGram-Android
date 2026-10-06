@@ -1,5 +1,11 @@
 [versions]
+# Both must match the classpath in the root build.gradle, which upstream owns.
 androidGradlePlugin = "8.10.1"
+kotlin = "2.1.0"
+junit = "5.14.4"
 
 [libraries]
 android-gradleApi = { module = "com.android.tools.build:gradle-api", version.ref = "androidGradlePlugin" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-platformLauncher = { module = "org.junit.platform:junit-platform-launcher" }

@@ -10,11 +10,15 @@ import org.gradle.kotlin.dsl.configure
 /**
  * SereinGram's settings for the upstream app module. They are applied in
  * `finalizeDsl`, after `TMessagesProj/build.gradle` has run, so the upstream
- * script stays as Nagram ships it.
+ * script stays as Nagram ships it. The app also depends on every module
+ * under `serein/`.
  */
 class SereinApplicationPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.pluginManager.withPlugin("com.android.application") {
+            target.rootProject.subprojects
+                .filter { it.path.startsWith(":serein:") && it.file("build.gradle.kts").isFile }
+                .forEach { target.dependencies.add("implementation", it) }
             val properties = SereinProperties(target)
             target.extensions.configure<ApplicationAndroidComponentsExtension> {
                 finalizeDsl { android ->
