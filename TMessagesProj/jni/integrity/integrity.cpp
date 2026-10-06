@@ -3,10 +3,13 @@
 #include "read_cert.h"
 #include "SHA1.h"
 
-static const char *SIGN = "3A0F57FE06485D0B90D0ACD990E3A30328E3988D";
+static const char *SIGN = SEREIN_SIGNING_SHA1;
 
 extern "C" {
 int verifySign(JNIEnv *env) {
+    if (SIGN[0] == '\0') {
+        return JNI_OK;
+    }
     jobject application = getApplication(env);
     if (application == nullptr) {
         return JNI_ERR;

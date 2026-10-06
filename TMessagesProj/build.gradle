@@ -1,6 +1,10 @@
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 import io.sentry.android.gradle.instrumentation.logcat.LogcatLevel
 
+plugins {
+    id 'serein.android.application'
+}
+
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "org.jetbrains.kotlin.plugin.serialization"

@@ -1,3 +1,7 @@
+pluginManagement {
+    includeBuild 'build-logic'
+}
+
 include ':TMessagesProj'
 include ':openpgp-api'
 include ':jlatexmath'

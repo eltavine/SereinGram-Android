@@ -1,0 +1,5 @@
+[versions]
+androidGradlePlugin = "8.10.1"
+
+[libraries]
+android-gradleApi = { module = "com.android.tools.build:gradle-api", version.ref = "androidGradlePlugin" }
