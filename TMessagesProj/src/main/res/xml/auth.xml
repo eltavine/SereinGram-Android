@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accountType="xyz.nextalone.nagram"
+    android:accountType="@string/serein_application_id"
     android:icon="@mipmap/ic_launcher"
     android:smallIcon="@mipmap/ic_launcher"
-    android:label="@string/AppName"
+    android:label="@string/NekoX"
     android:accountPreferences="@xml/auth_menu"/>

@@ -10,6 +10,14 @@ Application identity:
 
 - Display name: SereinGram, also used for the APK file names, the folders
   it saves pictures and downloads to, and the UnifiedPush registration.
+- Application ID: `com.eltavine.sereingram`, so it installs next to Nagram
+  and shares no data with it. The `serein.android.application` convention
+  plugin in `build-logic` sets it over the upstream value in
+  `TMessagesProj/build.gradle`; the system account and contact sync use the
+  same ID through the generated `serein_application_id` string.
+- Firebase: `TMessagesProj/google-services.json` is a placeholder for that
+  ID and points at no real project, so nothing is sent to Nagram's Firebase
+  project. FCM push needs your own Firebase project's file.
 
 Icons:
 

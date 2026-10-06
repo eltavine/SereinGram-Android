@@ -1,6 +1,7 @@
 package com.eltavine.sereingram.buildlogic
 
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.android.build.api.variant.ResValue
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -17,6 +18,7 @@ class SereinApplicationPlugin : Plugin<Project> {
             val properties = SereinProperties(target)
             target.extensions.configure<ApplicationAndroidComponentsExtension> {
                 finalizeDsl { android ->
+                    android.defaultConfig.applicationId = APPLICATION_ID
                     val sha1 = signingCertificateSha1(properties["SEREIN_SIGNING_SHA1"])
                     android.defaultConfig.externalNativeBuild.cmake.arguments +=
                         "-DSEREIN_SIGNING_SHA1=$sha1"
@@ -25,11 +27,19 @@ class SereinApplicationPlugin : Plugin<Project> {
                         android.sourceSets.getByName(buildType.name).res.srcDir(OVERLAY_RES)
                     }
                 }
+                // Account type and intent targets in res/xml must follow the final id.
+                onVariants { variant ->
+                    variant.resValues.put(
+                        variant.makeResValueKey("string", "serein_application_id"),
+                        variant.applicationId.map { ResValue(it) },
+                    )
+                }
             }
         }
     }
 
     private companion object {
+        const val APPLICATION_ID = "com.eltavine.sereingram"
         const val OVERLAY_RES = "src/serein/res"
     }
 }
