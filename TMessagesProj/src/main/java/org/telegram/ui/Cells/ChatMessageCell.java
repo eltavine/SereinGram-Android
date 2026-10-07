@@ -12816,6 +12816,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             ) && currentMessageObject.messageOwner != null && !(MessageObject.getMedia(currentMessageObject.messageOwner) instanceof TLRPC.TL_messageMediaWebPage) &&
             (currentMessageObject.messageOwner.media == null || currentMessageObject.messageOwner.media.ttl_seconds == 0)
         );
+        if (!useTranscribeButton && com.eltavine.sereingram.hooks.TranscriptionHooks.offersTranscription(currentAccount, currentMessageObject)) useTranscribeButton = true;
         updateSeekBarWaveformWidth(null);
     }
 

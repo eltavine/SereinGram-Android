@@ -17,10 +17,10 @@
     "README.md"
   ],
   "budget": {
-    "all_files": 312,
-    "all_added_lines": 272,
-    "source_files": 24,
-    "source_added_lines": 52
+    "all_files": 313,
+    "all_added_lines": 275,
+    "source_files": 25,
+    "source_added_lines": 55
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -57,7 +57,8 @@
     "TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java": [
       "hooks.ChatHooks.allowShareButton",
       "hooks.MessageHooks.decorateTime",
-      "hooks.MessageHooks.hidesReadReceipt"
+      "hooks.MessageHooks.hidesReadReceipt",
+      "hooks.TranscriptionHooks.offersTranscription"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/Cells/DialogCell.java": [
       "hooks.DialogsHooks.replacePreview",
@@ -75,6 +76,10 @@
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/Components/SearchViewPager.java": [
       "hooks.SearchHooks.showsAppsTab"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/ui/Components/TranscribeButton.java": [
+      "hooks.TranscriptionHooks.handlesTap",
+      "hooks.TranscriptionHooks.offersTranscription"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java": [
       "hooks.DialogsHooks.drawTitleStatus",

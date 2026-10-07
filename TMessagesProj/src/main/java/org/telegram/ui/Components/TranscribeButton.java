@@ -210,6 +210,7 @@ public class TranscribeButton {
         if (parent == null) {
             return;
         }
+        if (com.eltavine.sereingram.hooks.TranscriptionHooks.handlesTap(parent.currentAccount, parent.getMessageObject(), shouldBeOpen, this)) return;
         clickedToOpen = false;
         boolean processClick, toOpen = !shouldBeOpen;
         if (!shouldBeOpen) {
@@ -862,6 +863,7 @@ public class TranscribeButton {
         if (messageObject == null || messageObject.messageOwner == null) {
             return false;
         }
+        if (com.eltavine.sereingram.hooks.TranscriptionHooks.offersTranscription(messageObject.currentAccount, messageObject)) return false;
         if (isFreeTranscribeInChat(messageObject)) {
             return false;
         }

@@ -43,13 +43,18 @@ class SereinSettingsActivity(
 
     private fun item(id: Int, row: SettingsRow): UItem = when (row) {
         is SettingsRow.Toggle -> UItem.asCheck(id, getString(row.title)).setChecked(options.get(row.option, account(row.option)))
-        is SettingsRow.Text ->
-            UItem.asButton(id, getString(row.title), options.get(row.option, account(row.option)).ifEmpty { getString(row.placeholder) })
+        is SettingsRow.Text -> UItem.asButton(id, getString(row.title), shown(row, options.get(row.option, account(row.option))))
         is SettingsRow.Switch -> UItem.asCheck(id, getString(row.title)).setChecked(row.isOn())
         is SettingsRow.Subpage -> UItem.asButton(id, row.icon, getString(row.page.title))
         is SettingsRow.Screen -> UItem.asButton(id, getString(row.title), row.value())
         is SettingsRow.Link -> UItem.asButton(id, getString(row.title), row.value())
         is SettingsRow.Action -> UItem.asButton(id, getString(row.title))
+    }
+
+    private fun shown(row: SettingsRow.Text, value: String): String = when {
+        value.isEmpty() -> getString(row.placeholder)
+        row.secret -> "••••" + value.takeLast(4)
+        else -> value
     }
 
     override fun onResume() {

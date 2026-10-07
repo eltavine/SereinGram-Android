@@ -23,6 +23,7 @@ import com.eltavine.sereingram.features.notifications.NotificationsFeature
 import com.eltavine.sereingram.features.search.SearchFeature
 import com.eltavine.sereingram.features.services.ServicesModule
 import com.eltavine.sereingram.features.timestamps.TimestampsFeature
+import com.eltavine.sereingram.features.transcription.TranscriptionFeature
 import com.eltavine.sereingram.ports.BookmarkStore
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.ports.LocalNameStore
@@ -71,6 +72,7 @@ object SereinApp {
                 NotificationsFeature,
                 SearchFeature,
                 TimestampsFeature,
+                TranscriptionFeature,
             ),
         )
         modules.start(ModuleContext(options, Faults::report))
