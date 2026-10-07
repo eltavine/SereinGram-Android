@@ -36,6 +36,8 @@
     <string name="serein_history_deleted_list">Deleted messages</string>
     <string name="serein_history_deleted_list_empty">No deleted messages of this chat were kept.</string>
     <string name="serein_history_deleted_list_note">Each message shows when it was deleted. Tap one to find it in the chat.</string>
+    <string name="serein_history_deleted_all">Deleted messages in all chats</string>
+    <string name="serein_history_deleted_all_empty">No deleted messages have been kept yet.</string>
     <string name="serein_history_deleted_clear">Clear deleted messages</string>
     <string name="serein_history_deleted_clear_note">The deleted messages kept of this chat are removed from SereinGram for good. They leave the chat the next time it is opened.</string>
     <string name="serein_history_deleted_clear_confirm">Clear</string>

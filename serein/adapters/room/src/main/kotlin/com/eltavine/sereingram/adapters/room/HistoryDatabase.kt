@@ -30,6 +30,12 @@ internal class RecordEntity(
     @ColumnInfo(name = "api_layer") val apiLayer: Int,
 )
 
+internal class ChatRow(
+    @ColumnInfo(name = "dialog_id") val dialogId: Long,
+    val count: Int,
+    @ColumnInfo(name = "last_recorded_at") val lastRecordedAt: Long,
+)
+
 @Dao
 internal interface RecordDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -55,6 +61,12 @@ internal interface RecordDao {
 
     @Query("SELECT COUNT(*) FROM records WHERE kind = :kind AND dialog_id = :dialogId")
     fun count(kind: Int, dialogId: Long): Int
+
+    @Query(
+        "SELECT dialog_id, COUNT(DISTINCT message_id) AS count, MAX(recorded_at) AS last_recorded_at FROM records " +
+            "WHERE kind = :kind GROUP BY dialog_id ORDER BY last_recorded_at DESC",
+    )
+    fun chats(kind: Int): List<ChatRow>
 
     @Query("DELETE FROM records WHERE dialog_id = :dialogId")
     fun clear(dialogId: Long)

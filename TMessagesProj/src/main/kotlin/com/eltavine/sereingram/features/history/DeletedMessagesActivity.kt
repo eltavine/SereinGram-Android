@@ -71,7 +71,9 @@ internal class DeletedMessagesActivity(
         }
     }
 
-    override fun getTitle(): CharSequence = getString(R.string.serein_history_deleted_list)
+    // Opened from the list of all chats, the chat's name says more than the list's.
+    override fun getTitle(): CharSequence =
+        if (chat == null) Chats.name(currentAccount, dialogId) else getString(R.string.serein_history_deleted_list)
 
     override fun fillItems(items: ArrayList<UItem>, adapter: UniversalAdapter) {
         val shown = records ?: return

@@ -13,6 +13,7 @@ import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
 import org.telegram.messenger.R
+import org.telegram.messenger.UserConfig
 import java.io.File
 import java.util.concurrent.Executors
 
@@ -28,12 +29,15 @@ class HistoryFeature(
 
     override val options: List<Option<*>> = HistoryOptions.all
 
+    private lateinit var mediaBackups: MediaBackups
+
     override fun start(context: ModuleContext) {
         val writer = Executors.newSingleThreadExecutor { Thread(it, "serein-history") }
         val kept = MessageMap<Long>()
         val revised = MessageSet()
         val deletedByUser = MessageSet()
         val backups = MediaBackups(mediaRoot, context.options)
+        mediaBackups = backups
         val recorder = HistoryRecorder(context.options, stores, writer, revised, deletedByUser, backups)
         HistoryHooks.userDeletionListeners.install(recorder::beforeUserDeletes)
         HistoryHooks.deletionListeners.install(recorder::beforeDeleted)
@@ -61,6 +65,14 @@ class HistoryFeature(
                     SettingsRow.Toggle(HistoryOptions.saveInBotChats, R.string.serein_history_save_in_bots),
                 ),
                 note = R.string.serein_history_save_note,
+            ),
+            SettingsSection(
+                rows = listOf(
+                    SettingsRow.Screen(R.string.serein_history_deleted_all, {
+                        val account = UserConfig.selectedAccount
+                        DeletedChatsActivity(stores(account)) { dialogId -> mediaBackups.forgetChat(account, dialogId) }
+                    }),
+                ),
             ),
             SettingsSection(
                 header = R.string.serein_history_media,

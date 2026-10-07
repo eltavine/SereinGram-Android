@@ -31,6 +31,13 @@ public class HistoryRecord(
     public val apiLayer: Int,
 )
 
+/** A chat that has records of one kind: how many, and when the latest was recorded. */
+public class KeptChat(
+    public val dialogId: Long,
+    public val count: Int,
+    public val lastRecordedAt: Long,
+)
+
 /** The saved history of one account. Calls block; callers keep them off the main thread. */
 public interface HistoryStore {
     /** Adds [records]; a record that is already kept is left as it is. */
@@ -49,6 +56,9 @@ public interface HistoryStore {
     public fun forget(dialogId: Long, messageIds: Collection<Int>)
 
     public fun count(dialogId: Long, kind: RecordKind): Int
+
+    /** Chats with records of [kind], the one recorded in most recently first. */
+    public fun chats(kind: RecordKind): List<KeptChat>
 
     public fun clear(dialogId: Long)
 }

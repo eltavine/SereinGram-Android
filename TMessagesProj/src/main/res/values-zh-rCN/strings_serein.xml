@@ -36,6 +36,8 @@
     <string name="serein_history_deleted_list">已删除的消息</string>
     <string name="serein_history_deleted_list_empty">此聊天没有保存已删除的消息。</string>
     <string name="serein_history_deleted_list_note">每条消息旁显示其删除时间。点按可在聊天中找到它。</string>
+    <string name="serein_history_deleted_all">所有聊天中已删除的消息</string>
+    <string name="serein_history_deleted_all_empty">尚未保存任何已删除的消息。</string>
     <string name="serein_history_deleted_clear">清除已删除的消息</string>
     <string name="serein_history_deleted_clear_note">将永久移除 SereinGram 为此聊天保存的已删除消息。下次打开此聊天时，它们会从聊天中消失。</string>
     <string name="serein_history_deleted_clear_confirm">清除</string>

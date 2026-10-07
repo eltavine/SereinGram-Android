@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.eltavine.sereingram.ports.HistoryRecord
 import com.eltavine.sereingram.ports.HistoryStore
+import com.eltavine.sereingram.ports.KeptChat
 import com.eltavine.sereingram.ports.RecordKind
 
 /**
@@ -37,6 +38,9 @@ public class RoomHistoryStore internal constructor(private val database: History
     }
 
     override fun count(dialogId: Long, kind: RecordKind): Int = dao.count(kind.code, dialogId)
+
+    override fun chats(kind: RecordKind): List<KeptChat> =
+        dao.chats(kind.code).map { KeptChat(it.dialogId, it.count, it.lastRecordedAt) }
 
     override fun clear(dialogId: Long) {
         dao.clear(dialogId)

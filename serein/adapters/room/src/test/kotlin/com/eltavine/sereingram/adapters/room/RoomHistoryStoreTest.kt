@@ -24,8 +24,14 @@ class RoomHistoryStoreTest {
     @After
     fun close() = store.close()
 
-    private fun record(kind: RecordKind, messageId: Int, revision: Int = 0, dialogId: Long = -100L, text: String = "text $messageId") =
-        HistoryRecord(kind, dialogId, messageId, revision, topicId = 0, date = messageId, recordedAt = 1_000L + revision, fromId = 7, text = text, tlMessage = byteArrayOf(1, 2, messageId.toByte()), apiLayer = 214)
+    private fun record(
+        kind: RecordKind,
+        messageId: Int,
+        revision: Int = 0,
+        dialogId: Long = -100L,
+        text: String = "text $messageId",
+        recordedAt: Long = 1_000L + revision,
+    ) = HistoryRecord(kind, dialogId, messageId, revision, topicId = 0, date = messageId, recordedAt = recordedAt, fromId = 7, text = text, tlMessage = byteArrayOf(1, 2, messageId.toByte()), apiLayer = 214)
 
     @Test
     fun deletedMessagesPageNewestFirst() {
@@ -67,6 +73,25 @@ class RoomHistoryStoreTest {
         assertEquals(listOf(4), store.deleted(-100L, limit = 10).map { it.messageId })
         assertEquals(emptyList(), store.revisions(-100L, 3))
         assertEquals(1, store.count(-200L, RecordKind.DELETED))
+    }
+
+    @Test
+    fun chatsWithDeletedMessagesComeMostRecentFirstWithTheirCounts() {
+        store.add(
+            listOf(
+                record(RecordKind.DELETED, 1, dialogId = 1L, recordedAt = 5_000),
+                record(RecordKind.DELETED, 2, dialogId = 1L, recordedAt = 6_000),
+                record(RecordKind.DELETED, 1, dialogId = 2L, recordedAt = 9_000),
+                record(RecordKind.EDITED, 1, dialogId = 3L, recordedAt = 10_000),
+                record(RecordKind.EDITED, 1, revision = 4, dialogId = 1L, recordedAt = 20_000),
+            ),
+        )
+        val chats = store.chats(RecordKind.DELETED)
+        assertEquals(listOf(2L, 1L), chats.map { it.dialogId })
+        assertEquals(listOf(1, 2), chats.map { it.count })
+        assertEquals(listOf(9_000L, 6_000L), chats.map { it.lastRecordedAt })
+        assertEquals(listOf(1L, 3L), store.chats(RecordKind.EDITED).map { it.dialogId })
+        assertEquals(listOf(1, 1), store.chats(RecordKind.EDITED).map { it.count })
     }
 
     @Test
