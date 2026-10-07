@@ -16,4 +16,19 @@ class ChatHooksTest {
             onlySaved.close()
         }
     }
+
+    @Test
+    fun channelButtonsShowUntilAPolicyRefusesThem() {
+        assertTrue(ChatHooks.allowsChannelButton(1))
+        val installs = listOf(
+            ChatHooks.channelButtonPolicies.install { throw IllegalStateException() },
+            ChatHooks.channelButtonPolicies.install { button -> button != 1 },
+        )
+        try {
+            assertFalse(ChatHooks.allowsChannelButton(1))
+            assertTrue(ChatHooks.allowsChannelButton(2))
+        } finally {
+            installs.forEach(AutoCloseable::close)
+        }
+    }
 }

@@ -106,6 +106,7 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
         if (buttonId < 0 || buttonId >= buttonHolders.length) {
             return;
         }
+        if (show && !com.eltavine.sereingram.hooks.ChatHooks.allowsChannelButton(buttonId)) show = false;
 
         if (buttonHolders[buttonId] == null && !show) {
             return;

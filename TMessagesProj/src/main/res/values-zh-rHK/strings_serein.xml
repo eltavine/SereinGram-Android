@@ -16,6 +16,10 @@
     <string name="serein_declutter_chats">聊天</string>
     <string name="serein_declutter_hide_share">隱藏訊息旁的分享按鈕</string>
     <string name="serein_declutter_hide_share_note">轉傳到儲存的訊息會保留此按鈕，用於開啟訊息來源的聊天。</string>
+    <string name="serein_declutter_channels">頻道</string>
+    <string name="serein_declutter_hide_channel_gift">隱藏禮物按鈕</string>
+    <string name="serein_declutter_hide_channel_message">隱藏傳訊息給頻道的按鈕</string>
+    <string name="serein_declutter_channels_note">在頻道底部的靜音按鈕旁，Telegram 可能提供向頻道贈送禮物、傳訊息給頻道或投稿的按鈕。</string>
     <string name="serein_history_title">訊息記錄</string>
     <string name="serein_history_save">保存</string>
     <string name="serein_history_save_deleted">已刪除的訊息</string>

@@ -16,6 +16,10 @@
     <string name="serein_declutter_chats">Chats</string>
     <string name="serein_declutter_hide_share">Hide the share button beside messages</string>
     <string name="serein_declutter_hide_share_note">Messages forwarded to Saved Messages keep the button, which opens the chat they came from.</string>
+    <string name="serein_declutter_channels">Channels</string>
+    <string name="serein_declutter_hide_channel_gift">Hide the gift button</string>
+    <string name="serein_declutter_hide_channel_message">Hide the button to message the channel</string>
+    <string name="serein_declutter_channels_note">Under a channel, beside the mute button, Telegram can offer to send the channel a gift and to message it or suggest a post.</string>
     <string name="serein_history_title">Message history</string>
     <string name="serein_history_save">Keep</string>
     <string name="serein_history_save_deleted">Deleted messages</string>

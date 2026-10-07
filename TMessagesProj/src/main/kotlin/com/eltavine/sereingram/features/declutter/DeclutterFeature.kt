@@ -10,8 +10,9 @@ import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
 import org.telegram.messenger.R
+import org.telegram.ui.Components.chat.layouts.ChatActivityChannelButtonsLayout
 
-/** Hides Telegram elements, after NagramX's options of the same names. */
+/** Hides Telegram elements, after NagramX's and OctoGram's options of the same names. */
 object DeclutterFeature : SereinModule, SettingsContributor {
     override val id: String = "declutter"
 
@@ -21,6 +22,13 @@ object DeclutterFeature : SereinModule, SettingsContributor {
         val options = context.options
         ChatHooks.shareButtonPolicies.install { _, _, saved ->
             allowShareButton(options.get(DeclutterOptions.hideShareButton), saved)
+        }
+        ChatHooks.channelButtonPolicies.install { button ->
+            when (button) {
+                ChatActivityChannelButtonsLayout.BUTTON_GIFT -> !options.get(DeclutterOptions.hideChannelGiftButton)
+                ChatActivityChannelButtonsLayout.BUTTON_DIRECT -> !options.get(DeclutterOptions.hideChannelMessageButton)
+                else -> true
+            }
         }
         SettingsHooks.mainFilters.install(MainSettingsDeclutter(options))
     }
@@ -44,6 +52,14 @@ object DeclutterFeature : SereinModule, SettingsContributor {
                     SettingsRow.Toggle(DeclutterOptions.hideShareButton, R.string.serein_declutter_hide_share),
                 ),
                 note = R.string.serein_declutter_hide_share_note,
+            ),
+            SettingsSection(
+                header = R.string.serein_declutter_channels,
+                rows = listOf(
+                    SettingsRow.Toggle(DeclutterOptions.hideChannelGiftButton, R.string.serein_declutter_hide_channel_gift),
+                    SettingsRow.Toggle(DeclutterOptions.hideChannelMessageButton, R.string.serein_declutter_hide_channel_message),
+                ),
+                note = R.string.serein_declutter_channels_note,
             ),
         ),
     )

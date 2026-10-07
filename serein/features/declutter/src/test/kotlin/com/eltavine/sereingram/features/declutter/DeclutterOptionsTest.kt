@@ -9,7 +9,13 @@ class DeclutterOptionsTest {
     @Test
     fun storageKeysNeverChange() {
         assertEquals(
-            listOf("hide_premium_section", "hide_help_section", "hide_share_button"),
+            listOf(
+                "hide_premium_section",
+                "hide_help_section",
+                "hide_share_button",
+                "hide_channel_gift_button",
+                "hide_channel_message_button",
+            ),
             DeclutterOptions.all.map { it.key },
         )
         assertTrue(DeclutterOptions.all.none { it.default == true })
