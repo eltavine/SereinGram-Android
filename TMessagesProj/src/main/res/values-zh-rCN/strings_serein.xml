@@ -112,4 +112,7 @@
     <string name="serein_timestamps_hide_read_note">你发送的消息在被阅读后仍只显示一个勾，聊天和聊天列表中都是如此，你不会看到对方何时已读。Telegram 仍会记录已读状态。</string>
     <string name="serein_ghost_send_scheduled">发送消息时不上线</string>
     <string name="serein_ghost_send_scheduled_note">即使在幽灵模式下，发送消息也会让你显示为在线。开启后，当幽灵模式隐藏你的在线状态时，你发送的消息会作为定时消息等待几秒，发出后再出现在聊天中。私密聊天不受影响。</string>
+    <string name="serein_shortcuts_title">聊天快捷入口</string>
+    <string name="serein_shortcuts_header">在群组或频道的菜单中</string>
+    <string name="serein_shortcuts_note">每个入口只会在你有权打开时出现，例如最近操作和权限只对管理员显示。</string>
 </resources>

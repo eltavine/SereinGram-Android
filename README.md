@@ -55,7 +55,8 @@ under Settings → SereinGram.
 - **Ask before opening any link**, after NagramX.
 - **Hide global search results** in the chat list search
   ([NagramXF #10](https://github.com/Keeperorowner/NagramXF/issues/10),
-  [#168](https://github.com/Keeperorowner/NagramXF/issues/168)).
+  [#168](https://github.com/Keeperorowner/NagramXF/issues/168)), and its
+  **Apps tab** ([NagramXF #153](https://github.com/Keeperorowner/NagramXF/issues/153)).
 - **Paste as plain text** in messages and captions
   ([NagramX #415](https://github.com/risin42/NagramX/issues/415)).
 - **Message content in notifications while locked**

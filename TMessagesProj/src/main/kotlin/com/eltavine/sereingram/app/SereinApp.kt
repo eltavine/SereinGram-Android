@@ -10,6 +10,7 @@ import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.ModuleRegistry
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.features.bookmarks.BookmarksFeature
+import com.eltavine.sereingram.features.chatshortcuts.ChatShortcutsFeature
 import com.eltavine.sereingram.features.declutter.DeclutterFeature
 import com.eltavine.sereingram.features.ghost.GhostFeature
 import com.eltavine.sereingram.features.history.HistoryFeature
@@ -54,6 +55,7 @@ object SereinApp {
         val modules = ModuleRegistry(
             listOf(
                 ServicesModule,
+                ChatShortcutsFeature,
                 DeclutterFeature,
                 HistoryFeature(File(application.filesDir, "serein_media")) { account ->
                     historyStores.getOrPut(account) { RoomHistoryStore(application, account) }

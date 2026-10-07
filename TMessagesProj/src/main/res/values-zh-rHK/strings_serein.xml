@@ -112,4 +112,7 @@
     <string name="serein_timestamps_hide_read_note">你傳送的訊息在被閱讀後仍只顯示一個勾，聊天和聊天列表中都是如此，你不會看到對方何時已讀。Telegram 仍會記錄已讀狀態。</string>
     <string name="serein_ghost_send_scheduled">傳送訊息時不上線</string>
     <string name="serein_ghost_send_scheduled_note">即使在幽靈模式下，傳送訊息也會讓你顯示為上線。開啟後，當幽靈模式隱藏你的上線狀態時，你傳送的訊息會作為排程訊息等待幾秒，送出後再出現在聊天中。私密聊天不受影響。</string>
+    <string name="serein_shortcuts_title">聊天捷徑</string>
+    <string name="serein_shortcuts_header">在群組或頻道的選單中</string>
+    <string name="serein_shortcuts_note">每個捷徑只會在你有權開啟時出現，例如最近動作和權限只對管理員顯示。</string>
 </resources>
