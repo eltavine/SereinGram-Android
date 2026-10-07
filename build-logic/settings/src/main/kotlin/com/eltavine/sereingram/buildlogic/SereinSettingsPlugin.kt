@@ -12,6 +12,12 @@ import java.io.File
  */
 class SereinSettingsPlugin : Plugin<Settings> {
     override fun apply(settings: Settings) {
+        // The convention plugins pull in Gradle plugins from Google's repository, such as Room's.
+        settings.pluginManagement.repositories {
+            gradlePluginPortal()
+            google()
+            mavenCentral()
+        }
         val modules = modulePaths(settings.settingsDir)
         modules.forEach(settings::include)
         settings.gradle.rootProject {

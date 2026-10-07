@@ -9,6 +9,7 @@ dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
     // The root build has no KSP on its classpath, so the conventions bring it.
     implementation(libs.ksp.gradlePlugin)
+    implementation(libs.room.gradlePlugin)
 }
 
 gradlePlugin {
