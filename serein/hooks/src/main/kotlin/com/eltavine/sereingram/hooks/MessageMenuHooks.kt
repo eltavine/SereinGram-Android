@@ -11,10 +11,10 @@ public object MessageMenuHooks {
 
         public val icon: Int
 
-        public fun title(): CharSequence
-
         /** [message] is Telegram's object for the message the menu was opened on. */
         public fun isShown(account: Int, message: Any): Boolean
+
+        public fun title(account: Int, message: Any): CharSequence
 
         /** [host] is the chat screen the menu belongs to. */
         public fun onSelected(account: Int, message: Any, host: Any)
@@ -36,7 +36,7 @@ public object MessageMenuHooks {
         entries.all.forEach { entry ->
             Faults.guard("message menu entry", fallback = Unit) {
                 if (entry.option >= FIRST_OPTION && entry.isShown(account, message)) {
-                    val title = entry.title()
+                    val title = entry.title(account, message)
                     items += title
                     options += entry.option
                     icons += entry.icon

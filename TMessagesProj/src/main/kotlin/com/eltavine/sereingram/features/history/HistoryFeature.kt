@@ -22,7 +22,7 @@ class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : Serei
 
     override fun start(context: ModuleContext) {
         val writer = Executors.newSingleThreadExecutor { Thread(it, "serein-history") }
-        val kept = MessageSet()
+        val kept = MessageMap<Long>()
         val revised = MessageSet()
         val deletedByUser = MessageSet()
         val recorder = HistoryRecorder(context.options, stores, writer, revised, deletedByUser)
@@ -34,6 +34,7 @@ class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : Serei
         HistoryHooks.chatKeepers.install(KeptInChat(context.options, kept, deletedByUser))
         MessageHooks.timeDecorators.install(restorer::decorateTime)
         MessageMenuHooks.entries.install(EditHistoryEntry(stores, revised))
+        MessageMenuHooks.entries.install(DeletedAtEntry(kept))
     }
 
     override val settingsIcon: Int = R.drawable.msg_recent

@@ -29,7 +29,7 @@ internal class EditHistoryEntry(
 
     override val icon: Int = R.drawable.msg_recent
 
-    override fun title(): CharSequence = getString(R.string.serein_history_edit_history)
+    override fun title(account: Int, message: Any): CharSequence = getString(R.string.serein_history_edit_history)
 
     override fun isShown(account: Int, message: Any): Boolean {
         val shown = message as MessageObject

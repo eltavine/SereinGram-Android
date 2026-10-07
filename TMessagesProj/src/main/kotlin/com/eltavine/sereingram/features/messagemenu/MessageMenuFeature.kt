@@ -53,7 +53,7 @@ private class BlockSenderEntry(private val options: Options) : MessageMenuHooks.
 
     override val icon: Int = R.drawable.msg_block
 
-    override fun title(): CharSequence = getString(R.string.BlockUser)
+    override fun title(account: Int, message: Any): CharSequence = getString(R.string.BlockUser)
 
     override fun isShown(account: Int, message: Any): Boolean {
         val shown = message as MessageObject

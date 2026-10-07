@@ -14,7 +14,7 @@ class MessageMenuHooksTest {
         val selected = mutableListOf<Any>()
         override val icon: Int = 42
 
-        override fun title(): CharSequence = title.invoke()
+        override fun title(account: Int, message: Any): CharSequence = title.invoke()
 
         override fun isShown(account: Int, message: Any): Boolean = message == shownFor
 

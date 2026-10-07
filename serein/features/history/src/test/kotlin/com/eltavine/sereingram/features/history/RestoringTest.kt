@@ -51,4 +51,17 @@ class RestoringTest {
         assertFalse(kept.contains(0, 1, 5))
         assertTrue(kept.contains(0, 1, 7))
     }
+
+    @Test
+    fun messageMapsKeepTheLatestValueAndForgetTheLeastRecentlyUsed() {
+        val deletedAt = MessageMap<Long>(capacity = 2)
+        deletedAt.put(0, 1, 5, 100L)
+        deletedAt.put(0, 1, 5, 200L)
+        deletedAt.put(0, 1, 6, 300L)
+        assertEquals(200L, deletedAt[0, 1, 5])
+        deletedAt.put(0, 1, 7, 400L)
+        assertNull(deletedAt[0, 1, 6])
+        assertEquals(200L, deletedAt[0, 1, 5])
+        assertNull(deletedAt[1, 1, 5])
+    }
 }

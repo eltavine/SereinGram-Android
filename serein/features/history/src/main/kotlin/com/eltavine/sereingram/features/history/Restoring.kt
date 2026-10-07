@@ -38,19 +38,29 @@ public fun insertionIndex(ids: List<Int?>, id: Int): Int =
     ids.indexOfFirst { it != null && it in 1 until id }.let { if (it < 0) ids.size else it }
 
 /** A set of messages by account and chat, bounded so that it cannot grow without end. */
-public class MessageSet(private val capacity: Int = 10_000) {
+public class MessageSet(capacity: Int = 10_000) {
+    private val messages = MessageMap<Unit>(capacity)
+
+    public fun add(account: Int, dialogId: Long, messageIds: Collection<Int>) {
+        messageIds.forEach { messages.put(account, dialogId, it, Unit) }
+    }
+
+    public fun contains(account: Int, dialogId: Long, messageId: Int): Boolean = messages[account, dialogId, messageId] != null
+}
+
+/** A value per message by account and chat, bounded so that it cannot grow without end. */
+public class MessageMap<V : Any>(private val capacity: Int = 10_000) {
     private data class Key(val account: Int, val dialogId: Long, val messageId: Int)
 
-    private val keys = object : LinkedHashMap<Key, Unit>(64, 0.75f, true) {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Key, Unit>?): Boolean = size > capacity
+    private val values = object : LinkedHashMap<Key, V>(64, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Key, V>?): Boolean = size > capacity
     }
 
     @Synchronized
-    public fun add(account: Int, dialogId: Long, messageIds: Collection<Int>) {
-        messageIds.forEach { keys[Key(account, dialogId, it)] = Unit }
+    public fun put(account: Int, dialogId: Long, messageId: Int, value: V) {
+        values[Key(account, dialogId, messageId)] = value
     }
 
     @Synchronized
-    public fun contains(account: Int, dialogId: Long, messageId: Int): Boolean =
-        keys[Key(account, dialogId, messageId)] != null
+    public operator fun get(account: Int, dialogId: Long, messageId: Int): V? = values[Key(account, dialogId, messageId)]
 }

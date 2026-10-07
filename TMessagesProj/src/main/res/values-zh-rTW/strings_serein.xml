@@ -23,6 +23,7 @@
     <string name="serein_history_save_in_bots">包括與機器人的聊天</string>
     <string name="serein_history_save_note">副本按帳號保存在本裝置上 SereinGram 自己的資料庫中，與 Telegram 的快取分開，清除快取不會刪除它們。保存的已刪除訊息會帶著「已刪除」標記回到原聊天中。只有本裝置載入過的訊息才能保存。</string>
     <string name="serein_history_deleted_mark">已刪除</string>
+    <string name="serein_history_deleted_at">刪除於 %1$s</string>
     <string name="serein_history_edit_history">編輯紀錄</string>
     <string name="serein_history_versions_title">先前的版本</string>
     <string name="serein_history_version_original">傳送於 %1$s</string>

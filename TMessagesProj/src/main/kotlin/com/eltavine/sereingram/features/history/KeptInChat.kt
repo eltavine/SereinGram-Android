@@ -10,7 +10,7 @@ import org.telegram.ui.ChatActivity
 /** Leaves messages deleted while their chat is open on screen, marked as deleted. */
 internal class KeptInChat(
     private val options: Options,
-    private val kept: MessageSet,
+    private val kept: MessageMap<Long>,
     private val deletedByUser: MessageSet,
 ) : HistoryHooks.ChatKeeper {
     override fun keep(account: Int, channelId: Long, messageIds: List<Int>, chat: Any): Collection<Int> {
@@ -32,7 +32,8 @@ internal class KeptInChat(
         if (shown.isEmpty()) {
             return emptyList()
         }
-        shown.groupBy { it.dialogId }.forEach { (dialogId, messages) -> kept.add(account, dialogId, messages.map { it.id }) }
+        val now = System.currentTimeMillis()
+        shown.forEach { kept.put(account, it.dialogId, it.id, now) }
         AndroidUtilities.runOnUIThread {
             Faults.guard("history redraw", fallback = Unit) {
                 shown.forEach { message ->

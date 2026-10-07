@@ -19,7 +19,8 @@ import org.telegram.tgnet.TLRPC
 internal class HistoryRestorer(
     private val options: Options,
     private val stores: (account: Int) -> HistoryStore,
-    private val kept: MessageSet,
+    /** When each kept deleted message was deleted, in epoch milliseconds. */
+    private val kept: MessageMap<Long>,
     private val revised: MessageSet,
 ) {
     fun afterLoaded(
@@ -56,21 +57,21 @@ internal class HistoryRestorer(
     ): List<Int> {
         val span = BatchSpan.of(loadedIds) ?: return emptyList()
         val candidates = stores(account).deleted(dialogId, RESTORE_LIMIT, beforeMessageId = span.newest)
-        val restored = restorable(span, loadedIds, candidates).map { decode(account, dialogId, it) }
-        if (restored.isEmpty()) {
+        val records = restorable(span, loadedIds, candidates)
+        if (records.isEmpty()) {
             return emptyList()
         }
+        val restored = records.map { decode(account, dialogId, it) }
         restored.forEach { message ->
             messages.add(insertionIndex(messages.map { (it as? TLRPC.Message)?.id }, message.id), message)
         }
         addSenders(account, restored, users, chats)
-        val ids = restored.map { it.id }
-        kept.add(account, dialogId, ids)
-        return ids
+        records.forEach { kept.put(account, dialogId, it.messageId, it.recordedAt) }
+        return records.map { it.messageId }
     }
 
     fun decorateTime(account: Int, dialogId: Long, messageId: Int, time: String): String =
-        if (kept.contains(account, dialogId, messageId)) {
+        if (kept[account, dialogId, messageId] != null) {
             LocaleController.getString(R.string.serein_history_deleted_mark) + " " + time
         } else {
             time
