@@ -23,4 +23,10 @@
     <string name="serein_history_save_in_bots">Also in chats with bots</string>
     <string name="serein_history_save_note">Copies are kept for this account in a SereinGram database on this device, apart from Telegram\'s cache, so clearing the cache keeps them. Kept deleted messages come back into their chats marked as deleted. Only messages this device has loaded can be kept.</string>
     <string name="serein_history_deleted_mark">deleted</string>
+    <string name="serein_history_edit_history">Edit history</string>
+    <string name="serein_history_versions_title">Earlier versions</string>
+    <string name="serein_history_version_original">Sent %1$s</string>
+    <string name="serein_history_version_edited">Edited %1$s</string>
+    <string name="serein_history_version_no_text">No text</string>
+    <string name="serein_history_versions_empty">No earlier versions of this message were kept.</string>
 </resources>

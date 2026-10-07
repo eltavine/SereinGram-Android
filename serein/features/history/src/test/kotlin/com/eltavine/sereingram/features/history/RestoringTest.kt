@@ -41,8 +41,8 @@ class RestoringTest {
     }
 
     @Test
-    fun keptMessagesAreSeparatedByAccountAndChatAndBounded() {
-        val kept = KeptMessages(capacity = 2)
+    fun messageSetsAreSeparatedByAccountAndChatAndBounded() {
+        val kept = MessageSet(capacity = 2)
         kept.add(account = 0, dialogId = 1, messageIds = listOf(5))
         assertTrue(kept.contains(0, 1, 5))
         assertFalse(kept.contains(1, 1, 5))

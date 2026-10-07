@@ -52,6 +52,14 @@ class RoomHistoryStoreTest {
     }
 
     @Test
+    fun findsWhichMessagesHaveEarlierVersions() {
+        store.add(listOf(record(RecordKind.EDITED, 3), record(RecordKind.EDITED, 3, revision = 5), record(RecordKind.DELETED, 4)))
+        assertEquals(setOf(3), store.withRevisions(-100L, listOf(2, 3, 4)))
+        assertEquals(setOf(3), store.withRevisions(-100L, (1..2000).toList()))
+        assertEquals(emptySet(), store.withRevisions(-200L, listOf(3)))
+    }
+
+    @Test
     fun dialogsAreSeparateAndCanBeCleared() {
         store.add(listOf(record(RecordKind.DELETED, 1, dialogId = 1L), record(RecordKind.DELETED, 1, dialogId = 2L)))
         store.clear(1L)

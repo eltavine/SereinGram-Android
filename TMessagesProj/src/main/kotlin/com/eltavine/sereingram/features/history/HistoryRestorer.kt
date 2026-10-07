@@ -19,7 +19,8 @@ import org.telegram.tgnet.TLRPC
 internal class HistoryRestorer(
     private val options: Options,
     private val stores: (account: Int) -> HistoryStore,
-    private val kept: KeptMessages,
+    private val kept: MessageSet,
+    private val revised: MessageSet,
 ) {
     fun afterLoaded(
         account: Int,
@@ -30,23 +31,42 @@ internal class HistoryRestorer(
         users: MutableList<Any?>,
         chats: MutableList<Any?>,
     ) {
-        if (mode != 0 || threadMessageId != 0L || !options.get(HistoryOptions.saveDeleted, account)) {
+        val showDeleted = options.get(HistoryOptions.saveDeleted, account)
+        val showRevisions = options.get(HistoryOptions.saveEdits, account)
+        if (mode != 0 || threadMessageId != 0L || !showDeleted && !showRevisions) {
             return
         }
         val loadedIds = messages.mapNotNullTo(HashSet()) { message ->
             (message as? TLRPC.Message)?.id?.takeUnless(MessageObject::isEphemeralMessageId)
         }
-        val span = BatchSpan.of(loadedIds) ?: return
+        val restored = if (showDeleted) restore(account, dialogId, loadedIds, messages, users, chats) else emptyList()
+        if (showRevisions) {
+            val ids = loadedIds + restored
+            revised.add(account, dialogId, stores(account).withRevisions(dialogId, ids.filter { it > 0 }))
+        }
+    }
+
+    private fun restore(
+        account: Int,
+        dialogId: Long,
+        loadedIds: Set<Int>,
+        messages: MutableList<Any?>,
+        users: MutableList<Any?>,
+        chats: MutableList<Any?>,
+    ): List<Int> {
+        val span = BatchSpan.of(loadedIds) ?: return emptyList()
         val candidates = stores(account).deleted(dialogId, RESTORE_LIMIT, beforeMessageId = span.newest)
-        val restored = restorable(span, loadedIds, candidates).mapNotNull { decode(account, dialogId, it) }
+        val restored = restorable(span, loadedIds, candidates).map { decode(account, dialogId, it) }
         if (restored.isEmpty()) {
-            return
+            return emptyList()
         }
         restored.forEach { message ->
             messages.add(insertionIndex(messages.map { (it as? TLRPC.Message)?.id }, message.id), message)
         }
         addSenders(account, restored, users, chats)
-        kept.add(account, dialogId, restored.map { it.id })
+        val ids = restored.map { it.id }
+        kept.add(account, dialogId, ids)
+        return ids
     }
 
     fun decorateTime(account: Int, dialogId: Long, messageId: Int, time: String): String =

@@ -37,8 +37,8 @@ public fun restorable(span: BatchSpan, loadedIds: Set<Int>, candidates: List<His
 public fun insertionIndex(ids: List<Int?>, id: Int): Int =
     ids.indexOfFirst { it != null && it in 1 until id }.let { if (it < 0) ids.size else it }
 
-/** Messages a chat shows although Telegram deleted them. Bounded, so it cannot grow without end. */
-public class KeptMessages(private val capacity: Int = 10_000) {
+/** A set of messages by account and chat, bounded so that it cannot grow without end. */
+public class MessageSet(private val capacity: Int = 10_000) {
     private data class Key(val account: Int, val dialogId: Long, val messageId: Int)
 
     private val keys = object : LinkedHashMap<Key, Unit>(64, 0.75f, true) {

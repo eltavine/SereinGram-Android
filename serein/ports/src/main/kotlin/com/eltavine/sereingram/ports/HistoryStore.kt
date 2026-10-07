@@ -42,6 +42,9 @@ public interface HistoryStore {
     /** Earlier versions of a message, oldest first. */
     public fun revisions(dialogId: Long, messageId: Int): List<HistoryRecord>
 
+    /** Which of [messageIds] have earlier versions kept. */
+    public fun withRevisions(dialogId: Long, messageIds: Collection<Int>): Set<Int>
+
     public fun count(dialogId: Long, kind: RecordKind): Int
 
     public fun clear(dialogId: Long)

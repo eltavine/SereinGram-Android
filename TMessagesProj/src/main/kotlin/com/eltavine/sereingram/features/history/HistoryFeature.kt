@@ -5,6 +5,7 @@ import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.HistoryHooks
 import com.eltavine.sereingram.hooks.MessageHooks
+import com.eltavine.sereingram.hooks.MessageMenuHooks
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
@@ -21,12 +22,14 @@ class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : Serei
 
     override fun start(context: ModuleContext) {
         val writer = Executors.newSingleThreadExecutor { Thread(it, "serein-history") }
-        val recorder = HistoryRecorder(context.options, stores, writer)
+        val revised = MessageSet()
+        val recorder = HistoryRecorder(context.options, stores, writer, revised)
         HistoryHooks.deletionListeners.install(recorder::beforeDeleted)
         HistoryHooks.editListeners.install(recorder::beforeEdited)
-        val restorer = HistoryRestorer(context.options, stores, KeptMessages())
+        val restorer = HistoryRestorer(context.options, stores, MessageSet(), revised)
         HistoryHooks.loadListeners.install(restorer::afterLoaded)
         MessageHooks.timeDecorators.install(restorer::decorateTime)
+        MessageMenuHooks.entries.install(EditHistoryEntry(stores, revised))
     }
 
     override val settingsIcon: Int = R.drawable.msg_recent

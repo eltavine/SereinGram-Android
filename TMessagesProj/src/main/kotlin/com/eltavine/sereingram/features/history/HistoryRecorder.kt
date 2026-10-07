@@ -20,6 +20,7 @@ internal class HistoryRecorder(
     private val options: Options,
     private val stores: (account: Int) -> HistoryStore,
     private val writer: Executor,
+    private val revised: MessageSet,
 ) {
     fun beforeDeleted(account: Int, dialogId: Long, messageIds: List<Int>) {
         if (messageIds.isEmpty() || !options.get(HistoryOptions.saveDeleted, account)) {
@@ -45,6 +46,7 @@ internal class HistoryRecorder(
         )
         if (recordsEdit(saveEdits = true, options.get(HistoryOptions.saveInBotChats, account), change)) {
             write(account, listOf(record(RecordKind.EDITED, dialogId, old, revision = old.edit_date)))
+            revised.add(account, dialogId, listOf(old.id))
         }
     }
 
