@@ -95,6 +95,8 @@
     <string name="serein_notifications_title">Notifications</string>
     <string name="serein_notifications_content_when_locked">Show messages while locked</string>
     <string name="serein_notifications_content_when_locked_note">While a passcode locks SereinGram, notifications only say that a message arrived. With this on they show who wrote and what, as when the app is unlocked. Secret chats stay hidden.</string>
+    <string name="serein_notifications_plain_answers">Answer without replying</string>
+    <string name="serein_notifications_plain_answers_note">An answer typed into a notification replies to the chat\'s latest message. With this on, it goes out as a plain message instead; in topics it still goes to the topic.</string>
     <string name="serein_bookmarks_title">Bookmarks</string>
     <string name="serein_bookmarks_all">All bookmarks</string>
     <string name="serein_bookmarks_note">Bookmark messages from their menu to come back to them later. A chat with bookmarks lists them in its own menu.</string>

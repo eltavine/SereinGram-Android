@@ -91,7 +91,9 @@ page under Settings → SereinGram.
 - **Paste as plain text** in messages and captions
   ([NagramX #415](https://github.com/risin42/NagramX/issues/415)).
 - **Message content in notifications while locked**
-  ([NagramX #299](https://github.com/risin42/NagramX/issues/299)).
+  ([NagramX #299](https://github.com/risin42/NagramX/issues/299)), and
+  **answers from notifications without replying** to the latest message
+  ([Cherrygram #120](https://github.com/arsLan4k1390/Cherrygram/issues/120)).
 - **A proxy tile** in quick settings that turns the chosen proxy on and off
   ([NagramXF #35](https://github.com/Keeperorowner/NagramXF/issues/35)).
 - **Hide elements**, after NagramX and OctoGram: the Premium and Help

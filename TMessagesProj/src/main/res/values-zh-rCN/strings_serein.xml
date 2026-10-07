@@ -95,6 +95,8 @@
     <string name="serein_notifications_title">通知</string>
     <string name="serein_notifications_content_when_locked">锁定时显示消息内容</string>
     <string name="serein_notifications_content_when_locked_note">SereinGram 被密码锁定时，通知只会提示收到了消息。开启后，通知会像解锁时一样显示发送者和内容。私密聊天仍会隐藏。</string>
+    <string name="serein_notifications_plain_answers">回复时不引用</string>
+    <string name="serein_notifications_plain_answers_note">在通知中输入的回复会引用该聊天的最新消息。开启后改为发送普通消息；在话题中仍会发到该话题。</string>
     <string name="serein_bookmarks_title">书签</string>
     <string name="serein_bookmarks_all">全部书签</string>
     <string name="serein_bookmarks_note">可在消息菜单中为消息添加书签，以便日后回到这里。有书签的聊天会在其菜单中列出书签。</string>

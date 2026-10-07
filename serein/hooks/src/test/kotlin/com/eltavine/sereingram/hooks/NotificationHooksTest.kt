@@ -19,4 +19,18 @@ class NotificationHooksTest {
         }
         assertFalse(NotificationHooks.showsContentWhenLocked())
     }
+
+    @Test
+    fun answersReplyUntilAPolicyMakesThemPlain() {
+        assertFalse(NotificationHooks.sendsPlainAnswers())
+        val installs = listOf(
+            NotificationHooks.replyPolicies.install { throw IllegalStateException() },
+            NotificationHooks.replyPolicies.install { true },
+        )
+        try {
+            assertTrue(NotificationHooks.sendsPlainAnswers())
+        } finally {
+            installs.forEach(AutoCloseable::close)
+        }
+    }
 }
