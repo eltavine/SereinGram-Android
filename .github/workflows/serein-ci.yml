@@ -57,16 +57,7 @@ jobs:
           echo "RANGE=$FROM..$TO" >> "$GITHUB_ENV"
 
       - name: New commits follow Conventional Commits in English.
-        run: |
-          # Upstream commits arrive through merges; only our mainline is linted.
-          failed=0
-          for sha in $(git rev-list --first-parent --reverse "$RANGE"); do
-            echo "Checking $(git log -1 --format='%h %s' "$sha")"
-            git log -1 --format=%B "$sha" \
-              | npx commitlint --config Tools/serein/commitlint.config.mjs --verbose \
-              || failed=1
-          done
-          exit "$failed"
+        run: Tools/serein/lint_commits.sh "$RANGE"
 
   modules:
     name: Module tests
