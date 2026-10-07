@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 308,
-    "all_added_lines": 261,
+    "all_added_lines": 262,
     "source_files": 20,
-    "source_added_lines": 41
+    "source_added_lines": 42
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -60,6 +60,7 @@
       "hooks.InputHooks.pastesPlainText"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java": [
+      "hooks.DialogsHooks.drawTitleStatus",
       "hooks.SearchHooks.allowsGlobalSearch"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java": [

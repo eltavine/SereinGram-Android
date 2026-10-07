@@ -36,6 +36,7 @@
     <string name="serein_links_confirm_all_note">Shows the full address and asks before a link opens in the browser. Links to Telegram itself still open directly.</string>
     <string name="serein_ghost_title">Ghost mode</string>
     <string name="serein_ghost_active">Use ghost mode</string>
+    <string name="serein_ghost_indicator">Show a ghost beside the chat list title</string>
     <string name="serein_ghost_options">Ghost mode options</string>
     <string name="serein_ghost_note">Ghost mode keeps your read receipts, online status, typing and story views to yourself. While read receipts are held back, SereinGram also keeps back reading channel comments and secret chats, and the channel posts you look at are not counted as views.</string>
     <string name="serein_ghost_chat">Ghost mode in this chat</string>

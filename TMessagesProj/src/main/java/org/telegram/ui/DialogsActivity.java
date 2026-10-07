@@ -3060,6 +3060,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (statusDrawable == null || actionBar == null) {
             return;
         }
+        if (com.eltavine.sereingram.hooks.DialogsHooks.drawTitleStatus(currentAccount, statusDrawable, animated)) { actionBar.setRightDrawableOnClick(null); return; }
         Long emojiStatusId = UserObject.getEmojiStatusDocumentId(user);
         statusDrawableGiftId = null;
         if (emojiStatusId != null) {

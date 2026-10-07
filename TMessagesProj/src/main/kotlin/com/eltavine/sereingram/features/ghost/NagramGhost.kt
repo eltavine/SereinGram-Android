@@ -18,6 +18,7 @@ internal object NagramGhost {
     /** Turning it on also tells Telegram right away that every account went offline. */
     fun setActive(active: Boolean) {
         NekoConfig.setGhostMode(active)
+        GhostIndicator.refresh()
         if (active) {
             for (account in 0 until UserConfig.MAX_ACCOUNT_COUNT) {
                 if (UserConfig.getInstance(account).isClientActivated) {

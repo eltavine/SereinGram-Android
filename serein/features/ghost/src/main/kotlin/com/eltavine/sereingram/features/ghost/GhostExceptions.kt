@@ -2,6 +2,7 @@ package com.eltavine.sereingram.features.ghost
 
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.OptionScope
+import com.eltavine.sereingram.core.booleanOption
 import com.eltavine.sereingram.core.textOption
 
 /** What ghost mode keeps back that a chat can be let in on. */
@@ -12,7 +13,10 @@ public object GhostOptions {
     public val readExceptions: Option<String> = textOption("ghost_read_exceptions", scope = OptionScope.ACCOUNT)
     public val typingExceptions: Option<String> = textOption("ghost_typing_exceptions", scope = OptionScope.ACCOUNT)
 
-    public val all: List<Option<*>> = listOf(readExceptions, typingExceptions)
+    /** A ghost beside the chat list title while ghost mode is on, after NagramX's indicator. */
+    public val statusIndicator: Option<Boolean> = booleanOption("ghost_status_indicator", default = true)
+
+    public val all: List<Option<*>> = listOf(readExceptions, typingExceptions, statusIndicator)
 
     public fun exceptions(action: GhostAction): Option<String> = when (action) {
         GhostAction.READ -> readExceptions

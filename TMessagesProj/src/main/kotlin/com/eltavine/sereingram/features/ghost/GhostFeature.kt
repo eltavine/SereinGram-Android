@@ -5,6 +5,7 @@ import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ChatMenuHooks
+import com.eltavine.sereingram.hooks.DialogsHooks
 import com.eltavine.sereingram.hooks.RequestHooks
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
@@ -32,6 +33,12 @@ object GhostFeature : SereinModule, SettingsContributor {
         RequestHooks.ghostExemptions.install(gate::exempts)
         RequestHooks.interceptors.install(gate::intercept)
         ChatMenuHooks.entries.install(GhostChatEntry(gate))
+        DialogsHooks.titleStatuses.install(GhostIndicator(context.options))
+        context.options.addListener { option, _ ->
+            if (option == GhostOptions.statusIndicator) {
+                GhostIndicator.refresh()
+            }
+        }
     }
 
     override val settingsIcon: Int = R.drawable.icon_ghost
@@ -44,6 +51,7 @@ object GhostFeature : SereinModule, SettingsContributor {
                     SettingsRow.Switch(R.string.serein_ghost_active, { NagramGhost.isActive }) {
                         NagramGhost.setActive(!NagramGhost.isActive)
                     },
+                    SettingsRow.Toggle(GhostOptions.statusIndicator, R.string.serein_ghost_indicator),
                     SettingsRow.Screen(R.string.serein_ghost_options, { NagramGhost.settings() }),
                 ),
                 note = R.string.serein_ghost_note,
