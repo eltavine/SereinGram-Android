@@ -19,8 +19,8 @@ public object ChatLockOptions {
 
 /** A screen that a lock can keep closed. */
 public sealed interface LockTarget {
-    /** A chat, its profile or its topics; [secret] for a secret chat. */
-    public class Chat(public val dialogId: Long, public val secret: Boolean) : LockTarget
+    /** A chat, its profile or its topics; [secret] for a secret chat, [archived] for one in the archive. */
+    public class Chat(public val dialogId: Long, public val secret: Boolean, public val archived: Boolean = false) : LockTarget
 
     public data object Archive : LockTarget
 }
@@ -31,8 +31,10 @@ public class LockSettings(
     public val lockSecretChats: Boolean,
 )
 
+/** A locked archive locks the chats in it too, which search and folders open without the archive. */
 public fun isLocked(target: LockTarget, settings: LockSettings): Boolean = when (target) {
-    is LockTarget.Chat -> target.dialogId in settings.lockedChats || target.secret && settings.lockSecretChats
+    is LockTarget.Chat ->
+        target.dialogId in settings.lockedChats || target.secret && settings.lockSecretChats || target.archived && settings.lockArchive
     LockTarget.Archive -> settings.lockArchive
 }
 

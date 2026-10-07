@@ -20,6 +20,7 @@ import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
 import org.telegram.messenger.DialogObject
 import org.telegram.messenger.LocaleController.getString
+import org.telegram.messenger.MessagesController
 import org.telegram.messenger.R
 import org.telegram.ui.ActionBar.BaseFragment
 import org.telegram.ui.ActionBar.INavigationLayout
@@ -54,9 +55,16 @@ object ChatLockFeature : SereinModule, SettingsContributor {
 
     // The chat list would otherwise show what a locked chat keeps behind its lock.
     private fun lockedPreview(options: Options, account: Int, dialogId: Long): CharSequence? {
-        val target = LockTarget.Chat(dialogId, secret = DialogObject.isEncryptedDialog(dialogId))
+        val target = chat(account, dialogId, archived = isArchived(account, dialogId))
         return getString(R.string.serein_lock_preview).takeIf { isLocked(target, settings(options, account)) && !window.isOpen() }
     }
+
+    private fun chat(account: Int, dialogId: Long, archived: Boolean) =
+        LockTarget.Chat(dialogId, secret = DialogObject.isEncryptedDialog(dialogId), archived = archived)
+
+    // Telegram keeps its dialogs for the main thread, which is where screens open and the chat list draws.
+    private fun isArchived(account: Int, dialogId: Long): Boolean =
+        MessagesController.getInstance(account).dialogs_dict.get(dialogId)?.folder_id == 1
 
     private fun allows(options: Options, layout: Any, screen: BaseFragment, params: Any): Boolean {
         if (passes.remove(screen)) {
@@ -123,12 +131,13 @@ object ChatLockFeature : SereinModule, SettingsContributor {
                 val encrypted = arguments.getInt("enc_id", 0)
                 val userId = arguments.getLong("user_id", 0)
                 val chatId = arguments.getLong("chat_id", 0)
-                when {
-                    encrypted != 0 -> LockTarget.Chat(DialogObject.makeEncryptedDialogId(encrypted.toLong()), secret = true)
-                    userId != 0L -> LockTarget.Chat(userId, secret = false)
-                    chatId != 0L -> LockTarget.Chat(-chatId, secret = false)
-                    else -> null
+                val dialogId = when {
+                    encrypted != 0 -> DialogObject.makeEncryptedDialogId(encrypted.toLong())
+                    userId != 0L -> userId
+                    chatId != 0L -> -chatId
+                    else -> return null
                 }
+                chat(screen.currentAccount, dialogId, archived = isArchived(screen.currentAccount, dialogId))
             }
             else -> null
         }

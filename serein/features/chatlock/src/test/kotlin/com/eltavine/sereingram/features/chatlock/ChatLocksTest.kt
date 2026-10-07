@@ -19,6 +19,12 @@ class ChatLocksTest {
     }
 
     @Test
+    fun aLockedArchiveLocksTheChatsInItWhereverTheyOpen() {
+        assertTrue(isLocked(LockTarget.Chat(42, secret = false, archived = true), settings))
+        assertFalse(isLocked(LockTarget.Chat(42, secret = false, archived = true), LockSettings(emptySet(), lockArchive = false, lockSecretChats = false)))
+    }
+
+    @Test
     fun anUnlockLastsItsWindowOnly() {
         var now = 1_000L
         val window = UnlockWindow(millis = 100) { now }
