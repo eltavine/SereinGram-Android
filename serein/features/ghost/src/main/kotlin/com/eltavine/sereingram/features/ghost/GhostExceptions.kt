@@ -16,7 +16,10 @@ public object GhostOptions {
     /** A ghost beside the chat list title while ghost mode is on, after NagramX's indicator. */
     public val statusIndicator: Option<Boolean> = booleanOption("ghost_status_indicator", default = true)
 
-    public val all: List<Option<*>> = listOf(readExceptions, typingExceptions, statusIndicator)
+    /** Messages wait a moment as scheduled ones instead of showing the user online. */
+    public val sendScheduled: Option<Boolean> = booleanOption("ghost_send_scheduled")
+
+    public val all: List<Option<*>> = listOf(readExceptions, typingExceptions, statusIndicator, sendScheduled)
 
     public fun exceptions(action: GhostAction): Option<String> = when (action) {
         GhostAction.READ -> readExceptions

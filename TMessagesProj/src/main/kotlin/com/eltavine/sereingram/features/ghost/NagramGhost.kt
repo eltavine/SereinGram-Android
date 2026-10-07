@@ -15,6 +15,8 @@ internal object NagramGhost {
 
     val typingHidden: Boolean get() = !NekoConfig.sendUploadProgress
 
+    val onlineHidden: Boolean get() = !NekoConfig.sendOnlinePackets
+
     /** Turning it on also tells Telegram right away that every account went offline. */
     fun setActive(active: Boolean) {
         NekoConfig.setGhostMode(active)

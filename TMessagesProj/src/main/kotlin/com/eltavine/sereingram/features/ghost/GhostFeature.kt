@@ -7,6 +7,7 @@ import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ChatMenuHooks
 import com.eltavine.sereingram.hooks.DialogsHooks
 import com.eltavine.sereingram.hooks.RequestHooks
+import com.eltavine.sereingram.hooks.SendHooks
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
@@ -34,6 +35,7 @@ object GhostFeature : SereinModule, SettingsContributor {
         RequestHooks.interceptors.install(gate::intercept)
         ChatMenuHooks.entries.install(GhostChatEntry(gate))
         DialogsHooks.titleStatuses.install(GhostIndicator(context.options))
+        SendHooks.rewriters.install(GhostSending(context.options))
         context.options.addListener { option, _ ->
             if (option == GhostOptions.statusIndicator) {
                 GhostIndicator.refresh()
@@ -55,6 +57,10 @@ object GhostFeature : SereinModule, SettingsContributor {
                     SettingsRow.Screen(R.string.serein_ghost_options, { NagramGhost.settings() }),
                 ),
                 note = R.string.serein_ghost_note,
+            ),
+            SettingsSection(
+                rows = listOf(SettingsRow.Toggle(GhostOptions.sendScheduled, R.string.serein_ghost_send_scheduled)),
+                note = R.string.serein_ghost_send_scheduled_note,
             ),
             SettingsSection(
                 rows = listOf(

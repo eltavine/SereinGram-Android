@@ -110,4 +110,6 @@
     <string name="serein_search_hide_apps_note">在聊天列表中搜索时不再显示小程序和机器人标签页。下次启动 SereinGram 时生效。</string>
     <string name="serein_timestamps_hide_read">已读消息也只显示一个勾</string>
     <string name="serein_timestamps_hide_read_note">你发送的消息在被阅读后仍只显示一个勾，聊天和聊天列表中都是如此，你不会看到对方何时已读。Telegram 仍会记录已读状态。</string>
+    <string name="serein_ghost_send_scheduled">发送消息时不上线</string>
+    <string name="serein_ghost_send_scheduled_note">即使在幽灵模式下，发送消息也会让你显示为在线。开启后，当幽灵模式隐藏你的在线状态时，你发送的消息会作为定时消息等待几秒，发出后再出现在聊天中。私密聊天不受影响。</string>
 </resources>
