@@ -84,6 +84,24 @@ object ChatLockFeature : SereinModule, SettingsContributor {
         return false
     }
 
+    /**
+     * Runs [lift], which takes a lock away, once the owner of the device has shown themselves, as
+     * opening a locked chat asks them to; within the moments after an unlock it runs at once.
+     */
+    internal fun liftingLock(lift: () -> Unit) {
+        val activity = LaunchActivity.instance
+        val authenticators = BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        // Without a screen lock nothing can be asked, and locks let everyone through anyway.
+        if (window.isOpen() || activity == null || BiometricManager.from(activity).canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) {
+            lift()
+            return
+        }
+        authenticate(activity, authenticators) {
+            window.unlock()
+            lift()
+        }
+    }
+
     private fun authenticate(activity: FragmentActivity, authenticators: Int, onSuccess: () -> Unit) {
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) = onSuccess()
@@ -122,6 +140,9 @@ object ChatLockFeature : SereinModule, SettingsContributor {
         lockSecretChats = options.get(ChatLockOptions.lockSecretChats, account),
     )
 
+    // Locking needs nothing; turning a lock off is what someone holding an unlocked phone would do.
+    private fun guardLock(on: Boolean, change: () -> Unit) = if (on) change() else liftingLock(change)
+
     override val settingsIcon: Int = R.drawable.msg_secret
 
     override val settingsPage: SettingsPage = SettingsPage(
@@ -129,8 +150,8 @@ object ChatLockFeature : SereinModule, SettingsContributor {
         listOf(
             SettingsSection(
                 rows = listOf(
-                    SettingsRow.Toggle(ChatLockOptions.lockArchive, R.string.serein_lock_archive),
-                    SettingsRow.Toggle(ChatLockOptions.lockSecretChats, R.string.serein_lock_secret),
+                    SettingsRow.Toggle(ChatLockOptions.lockArchive, R.string.serein_lock_archive, ::guardLock),
+                    SettingsRow.Toggle(ChatLockOptions.lockSecretChats, R.string.serein_lock_secret, ::guardLock),
                     SettingsRow.Screen(R.string.serein_lock_chats, { options -> LockedChatsActivity(options) }),
                 ),
                 note = R.string.serein_lock_note,
@@ -152,10 +173,12 @@ private class LockEntry(private val options: Options) : ChatMenuHooks.Entry {
 
     override fun onSelected(account: Int, dialogId: Long, chat: Any) {
         val lock = !locked(account, dialogId)
-        options.set(ChatLockOptions.lockedChats, DialogIds.with(options.get(ChatLockOptions.lockedChats, account), dialogId, lock), account)
-        val fragment = chat as BaseFragment
-        val text = getString(if (lock) R.string.serein_chat_locked else R.string.serein_chat_unlocked)
-        Toast.makeText(fragment.parentActivity ?: return, text, Toast.LENGTH_SHORT).show()
+        val change: () -> Unit = {
+            options.set(ChatLockOptions.lockedChats, DialogIds.with(options.get(ChatLockOptions.lockedChats, account), dialogId, lock), account)
+            val text = getString(if (lock) R.string.serein_chat_locked else R.string.serein_chat_unlocked)
+            (chat as BaseFragment).parentActivity?.let { Toast.makeText(it, text, Toast.LENGTH_SHORT).show() }
+        }
+        if (lock) change() else ChatLockFeature.liftingLock(change)
     }
 
     private fun locked(account: Int, dialogId: Long) =

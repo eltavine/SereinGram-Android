@@ -30,9 +30,12 @@ internal class LockedChatsActivity(private val options: Options) : UniversalFrag
 
     override fun onLongClick(item: UItem, view: View, position: Int, x: Float, y: Float): Boolean {
         val dialogId = shown.getOrNull(item.id - 1) ?: return false
-        val locked = options.get(ChatLockOptions.lockedChats, currentAccount)
-        options.set(ChatLockOptions.lockedChats, DialogIds.with(locked, dialogId, included = false), currentAccount)
-        listView.adapter.update(true)
+        val account = currentAccount
+        ChatLockFeature.liftingLock {
+            val locked = options.get(ChatLockOptions.lockedChats, account)
+            options.set(ChatLockOptions.lockedChats, DialogIds.with(locked, dialogId, included = false), account)
+            listView?.adapter?.update(true)
+        }
         return true
     }
 }

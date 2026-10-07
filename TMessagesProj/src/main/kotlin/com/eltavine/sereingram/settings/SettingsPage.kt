@@ -21,8 +21,15 @@ class SettingsSection(
 )
 
 sealed interface SettingsRow {
-    /** A switch for [option]; account options apply to the account the page was opened in. */
-    class Toggle(val option: Option<Boolean>, @StringRes val title: Int) : SettingsRow
+    /**
+     * A switch for [option]; account options apply to the account the page was opened in.
+     * A [guard] gets the value the switch would take and the [change] to make, which it makes or not.
+     */
+    class Toggle(
+        val option: Option<Boolean>,
+        @StringRes val title: Int,
+        val guard: ((on: Boolean, change: () -> Unit) -> Unit)? = null,
+    ) : SettingsRow
 
     /** Edits [option] in a dialog; [placeholder] stands in for it while it is empty. A [secret] shows only its end. */
     class Text(

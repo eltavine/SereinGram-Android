@@ -69,8 +69,12 @@ class SereinSettingsActivity(
         when (val row = rows[item.id]) {
             is SettingsRow.Toggle -> {
                 val account = account(row.option)
-                options.set(row.option, !options.get(row.option, account), account)
-                listView.adapter.update(true)
+                val on = !options.get(row.option, account)
+                val change: () -> Unit = {
+                    options.set(row.option, on, account)
+                    listView?.adapter?.update(true)
+                }
+                row.guard?.invoke(on, change) ?: change()
             }
             is SettingsRow.Text -> edit(row)
             is SettingsRow.Switch -> {
