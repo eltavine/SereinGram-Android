@@ -1218,6 +1218,7 @@ public class EditTextCaption extends EditTextBoldCursor implements FloatingToolb
 
     @Override
     public boolean onTextContextMenuItem(int id) {
+        if (id == android.R.id.paste && com.eltavine.sereingram.hooks.InputHooks.pastesPlainText()) id = android.R.id.pasteAsPlainText;
         if (id == android.R.id.paste) {
             ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clipData = clipboard.getPrimaryClip();

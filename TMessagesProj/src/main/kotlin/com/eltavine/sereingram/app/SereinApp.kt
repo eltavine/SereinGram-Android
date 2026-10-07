@@ -10,6 +10,7 @@ import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.features.declutter.DeclutterFeature
 import com.eltavine.sereingram.features.ghost.GhostFeature
 import com.eltavine.sereingram.features.history.HistoryFeature
+import com.eltavine.sereingram.features.input.InputFeature
 import com.eltavine.sereingram.features.links.LinksFeature
 import com.eltavine.sereingram.features.messagemenu.MessageMenuFeature
 import com.eltavine.sereingram.features.search.SearchFeature
@@ -46,6 +47,7 @@ object SereinApp {
                 DeclutterFeature,
                 HistoryFeature { account -> historyStores.getOrPut(account) { RoomHistoryStore(application, account) } },
                 GhostFeature,
+                InputFeature,
                 LinksFeature,
                 MessageMenuFeature,
                 SearchFeature,

@@ -63,4 +63,7 @@
     <string name="serein_search_title">Search</string>
     <string name="serein_search_hide_global">Hide global search results</string>
     <string name="serein_search_hide_global_note">Searching from the chat list no longer lists public people, groups and channels you are not in; your chats, contacts and messages are still found. Applies the next time SereinGram starts.</string>
+    <string name="serein_input_title">Message field</string>
+    <string name="serein_input_plain_paste">Paste as plain text</string>
+    <string name="serein_input_plain_paste_note">Text pasted into messages and captions loses the bold, links, tables and other formatting it was copied with. Needs Android 6.0 or later.</string>
 </resources>

@@ -63,4 +63,7 @@
     <string name="serein_search_title">搜索</string>
     <string name="serein_search_hide_global">隐藏全局搜索结果</string>
     <string name="serein_search_hide_global_note">在聊天列表中搜索时，不再列出你未加入的公开用户、群组和频道；你的聊天、联系人和消息仍可搜索到。下次启动 SereinGram 时生效。</string>
+    <string name="serein_input_title">输入框</string>
+    <string name="serein_input_plain_paste">以纯文本粘贴</string>
+    <string name="serein_input_plain_paste_note">粘贴到消息和说明中的文字会去掉复制时带有的粗体、链接、表格等格式。需要 Android 6.0 或更高版本。</string>
 </resources>
