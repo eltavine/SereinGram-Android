@@ -40,4 +40,13 @@ class TranscriptionTest {
             TranscriptionOptions.all.map { it.key },
         )
     }
+
+    @Test
+    fun noBackupHoldsTheKeyOrChangesWhereItGoes() {
+        assertTrue(TranscriptionOptions.apiKey.secret)
+        assertEquals(
+            listOf("transcription_base_url", "transcription_api_key"),
+            TranscriptionOptions.all.filterNot { it.backedUp }.map { it.key },
+        )
+    }
 }

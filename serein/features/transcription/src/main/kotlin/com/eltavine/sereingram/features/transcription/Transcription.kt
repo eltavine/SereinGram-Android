@@ -11,7 +11,8 @@ import com.eltavine.sereingram.core.textOption
  */
 public object TranscriptionOptions {
     public val enabled: Option<Boolean> = booleanOption("transcription_enabled")
-    public val baseUrl: Option<String> = textOption("transcription_base_url", default = "https://api.openai.com/v1")
+    /** The key goes to this address, so no backup may change where it goes. */
+    public val baseUrl: Option<String> = textOption("transcription_base_url", default = "https://api.openai.com/v1", backedUp = false)
     public val apiKey: Option<String> = textOption("transcription_api_key", secret = true)
     public val model: Option<String> = textOption("transcription_model", default = "whisper-1")
 
