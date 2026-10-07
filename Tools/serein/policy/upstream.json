@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 322,
-    "all_added_lines": 295,
+    "all_added_lines": 296,
     "source_files": 34,
-    "source_added_lines": 75
+    "source_added_lines": 76
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -83,6 +83,7 @@
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java": [
       "hooks.ChatMenuHooks.fill",
+      "hooks.ChatMenuHooks.refresh",
       "hooks.ChatMenuHooks.select",
       "hooks.HistoryHooks.removedFromChat",
       "hooks.MessageMenuHooks.fill",

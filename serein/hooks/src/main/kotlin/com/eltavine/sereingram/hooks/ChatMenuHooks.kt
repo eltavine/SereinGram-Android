@@ -24,19 +24,37 @@ public object ChatMenuHooks {
         public fun add(id: Int, icon: Int, title: CharSequence)
     }
 
+    /** Telegram's menu as it opens, as far as entries need it. */
+    public fun interface OpenMenu {
+        public fun update(id: Int, shown: Boolean, title: CharSequence)
+    }
+
     public const val FIRST_ID: Int = 40_000
 
     /** One entry per id, so a selected item always reaches the entry that showed it. */
     public val entries: Handlers<Entry> = Handlers { it.id }
 
+    /** Adds every entry to a chat's menu once; [refresh] shows the ones that apply whenever it opens. */
     @JvmStatic
     public fun fill(account: Int, dialogId: Long, menu: Menu) {
         entries.all.forEach { entry ->
             Faults.guard("chat menu entry", fallback = Unit) {
-                if (entry.id >= FIRST_ID && entry.isShown(account, dialogId)) {
-                    val title = entry.title(account, dialogId)
-                    menu.add(entry.id, entry.icon, title)
+                if (entry.id >= FIRST_ID) {
+                    menu.add(entry.id, entry.icon, entry.title(account, dialogId))
                 }
+            }
+        }
+    }
+
+    /** Shows the entries that apply as the menu opens, with their titles of the moment. */
+    @JvmStatic
+    public fun refresh(account: Int, dialogId: Long, menu: OpenMenu) {
+        entries.all.forEach { entry ->
+            if (entry.id >= FIRST_ID) {
+                val title = Faults.guard("chat menu entry", fallback = null) {
+                    if (entry.isShown(account, dialogId)) entry.title(account, dialogId) else null
+                }
+                Faults.guard("chat menu", fallback = Unit) { menu.update(entry.id, title != null, title ?: "") }
             }
         }
     }

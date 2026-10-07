@@ -4656,6 +4656,7 @@ public class ChatActivity extends BaseFragment implements
                 @Override
                 public void onShowSubMenu() {
                     updateScrimSourceBitmap();
+                    com.eltavine.sereingram.hooks.ChatMenuHooks.refresh(currentAccount, dialog_id, (sereinId, sereinShown, sereinTitle) -> { headerItem.setSubItemShown(sereinId, sereinShown); ActionBarMenuSubItem sereinItem = headerItem.getSubItem(sereinId); if (sereinItem != null) sereinItem.setText(sereinTitle); });
                 }
 
                 @Override
