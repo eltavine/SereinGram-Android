@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 322,
-    "all_added_lines": 296,
+    "all_added_lines": 297,
     "source_files": 34,
-    "source_added_lines": 76
+    "source_added_lines": 77
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
