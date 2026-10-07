@@ -124,8 +124,8 @@
     <string name="serein_shortcuts_header">In the menu of a group or channel</string>
     <string name="serein_shortcuts_note">Each screen shows up only where you may open it, for example recent actions and permissions for admins.</string>
     <string name="serein_shortcuts_message_header">In the menu of a message</string>
-    <string name="serein_shortcuts_restrict">Restrict member</string>
-    <string name="serein_shortcuts_restrict_note">Admins who may ban members can open the restrictions of whoever sent a message in a supergroup, and ban them from there.</string>
+    <string name="serein_shortcuts_restrict">Change permissions of senders</string>
+    <string name="serein_shortcuts_restrict_note">Admins who may ban members can change the permissions of whoever sent a message in a supergroup from the message\'s menu, and ban them there, also in large groups where Nagram\'s own item does not appear.</string>
     <string name="serein_shortcuts_restrict_admin">Administrators cannot be restricted.</string>
     <string name="serein_lock_title">Chat locks</string>
     <string name="serein_lock_archive">Lock the archive</string>

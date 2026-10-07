@@ -25,6 +25,7 @@ import org.telegram.ui.ChannelAdminLogActivity
 import org.telegram.ui.ChatRightsEditActivity
 import org.telegram.ui.ChatUsersActivity
 import org.telegram.ui.Components.BulletinFactory
+import tw.nekomimi.nekogram.NekoConfig
 import org.telegram.ui.ManageLinksActivity
 import org.telegram.ui.StatisticActivity
 
@@ -64,7 +65,7 @@ private class RestrictEntry(private val options: Options) : MessageMenuHooks.Ent
 
     override val icon: Int = R.drawable.msg_permissions
 
-    override fun title(account: Int, message: Any): CharSequence = getString(R.string.serein_shortcuts_restrict)
+    override fun title(account: Int, message: Any): CharSequence = getString(R.string.ChangePermissions)
 
     override fun isShown(account: Int, message: Any): Boolean {
         val shown = message as MessageObject
@@ -75,8 +76,13 @@ private class RestrictEntry(private val options: Options) : MessageMenuHooks.Ent
         val chat = controller.getChat(-shown.dialogId) ?: return false
         val sender = shown.senderId
         val isSelf = sender == UserConfig.getInstance(account).clientUserId
-        return offersRestriction(options.get(MessageShortcuts.restrictMember), rights(chat, null), sender, isSelf)
+        return offersRestriction(options.get(MessageShortcuts.restrictMember), rights(chat, null), sender, isSelf) &&
+            !nagramOffers(controller.getChatFull(chat.id), sender)
     }
+
+    // Nagram's own item appears for members the chat has already loaded; this one covers the rest.
+    private fun nagramOffers(full: TLRPC.ChatFull?, sender: Long): Boolean =
+        NekoConfig.showChangePermissions.Bool() && full?.participants?.participants?.any { it.user_id == sender } == true
 
     override fun onSelected(account: Int, message: Any, host: Any) {
         val fragment = host as BaseFragment

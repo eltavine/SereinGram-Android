@@ -56,7 +56,8 @@ page under Settings → SereinGram.
   OctoGram and NagramX: recent actions, administrators, members,
   permissions, statistics and invite links
   ([Swiftgram #41](https://github.com/Swiftgram/Telegram-iOS/issues/41)),
-  and restricting the sender of a message from its menu, after Swiftgram.
+  and changing the permissions of a message's sender from its menu, also in
+  large groups, after Swiftgram.
 - **Voice transcription with one's own service**, after NagramX, Cherrygram
   and OctoGram: voice and video messages are turned into text by any service
   that speaks OpenAI's transcription API, without Telegram Premium
