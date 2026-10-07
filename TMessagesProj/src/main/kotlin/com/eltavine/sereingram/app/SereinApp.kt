@@ -56,10 +56,17 @@ object SereinApp {
         }
         Faults.reporters.install { message, error -> FileLog.e("SereinGram: $message", error) }
         options = Options(PreferencesStores(application))
+        val modules = modules(application)
+        modules.start(ModuleContext(options, Faults::report))
+        installSettingsEntry(options, listOf(featuresSection(modules), BackupSettings.section(options, modules.options)))
+    }
+
+    /** Every module of the app, in start order; building the registry checks their ids and option keys. */
+    internal fun modules(application: Application): ModuleRegistry {
         val historyStores = ConcurrentHashMap<Int, HistoryStore>()
         val bookmarkStores = ConcurrentHashMap<Int, BookmarkStore>()
         val localNameStores = ConcurrentHashMap<Int, LocalNameStore>()
-        val modules = ModuleRegistry(
+        return ModuleRegistry(
             listOf(
                 ServicesModule,
                 ChatLockFeature,
@@ -84,8 +91,6 @@ object SereinApp {
                 TranscriptionFeature,
             ),
         )
-        modules.start(ModuleContext(options, Faults::report))
-        installSettingsEntry(options, listOf(featuresSection(modules), BackupSettings.section(options, modules.modules.flatMap { it.options })))
     }
 
     private fun featuresSection(modules: ModuleRegistry) = SettingsSection(
