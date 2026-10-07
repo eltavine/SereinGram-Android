@@ -9,6 +9,7 @@ import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.ModuleRegistry
 import com.eltavine.sereingram.core.Options
+import com.eltavine.sereingram.features.backup.BackupSettings
 import com.eltavine.sereingram.features.bookmarks.BookmarksFeature
 import com.eltavine.sereingram.features.chatlock.ChatLockFeature
 import com.eltavine.sereingram.features.chatshortcuts.ChatShortcutsFeature
@@ -82,7 +83,7 @@ object SereinApp {
             ),
         )
         modules.start(ModuleContext(options, Faults::report))
-        installSettingsEntry(options, listOf(featuresSection(modules)))
+        installSettingsEntry(options, listOf(featuresSection(modules), BackupSettings.section(options, modules.modules.flatMap { it.options })))
     }
 
     private fun featuresSection(modules: ModuleRegistry) = SettingsSection(

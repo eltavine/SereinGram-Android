@@ -34,5 +34,6 @@ class ChatLocksTest {
     @Test
     fun storageKeysNeverChange() {
         assertEquals(listOf("chat_lock_chats", "chat_lock_archive", "chat_lock_secret_chats"), ChatLockOptions.all.map { it.key })
+        assertTrue(ChatLockOptions.all.all { it.secret }, "a backup must not be able to lift a lock")
     }
 }

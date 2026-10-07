@@ -171,4 +171,12 @@
     <string name="serein_qr_scan">辨識 QR 碼</string>
     <string name="serein_qr_found">QR 碼內容</string>
     <string name="serein_qr_none">未在此圖片中找到 QR 碼。</string>
+    <string name="serein_backup_header">備份</string>
+    <string name="serein_backup_export">匯出設定</string>
+    <string name="serein_backup_import">匯入設定</string>
+    <string name="serein_backup_note">將本裝置及目前帳號的 SereinGram 設定儲存為檔案，或從檔案還原。檔案中不含 API 金鑰，還原時也會保留現有金鑰。</string>
+    <string name="serein_backup_restored">設定已還原：%1$d 項有變化，略過 %2$d 項。</string>
+    <string name="serein_backup_not_a_backup">此檔案不是 SereinGram 的設定備份。</string>
+    <string name="serein_backup_too_new">此備份來自較新版本的 SereinGram，請更新後再還原。</string>
+    <string name="serein_backup_failed">無法讀取檔案：%1$s</string>
 </resources>

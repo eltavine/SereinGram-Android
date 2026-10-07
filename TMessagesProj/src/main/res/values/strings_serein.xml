@@ -171,4 +171,12 @@
     <string name="serein_qr_scan">Scan QR code</string>
     <string name="serein_qr_found">QR code</string>
     <string name="serein_qr_none">No QR code was found in this image.</string>
+    <string name="serein_backup_header">Backup</string>
+    <string name="serein_backup_export">Export settings</string>
+    <string name="serein_backup_import">Import settings</string>
+    <string name="serein_backup_note">Saves SereinGram\'s settings of this device and of this account to a file, or restores them from one. API keys stay out of the file and are kept on restore.</string>
+    <string name="serein_backup_restored">Settings restored: %1$d changed, %2$d skipped.</string>
+    <string name="serein_backup_not_a_backup">This file is not a backup of SereinGram\'s settings.</string>
+    <string name="serein_backup_too_new">This backup comes from a newer SereinGram; update it to restore the backup.</string>
+    <string name="serein_backup_failed">Could not read the file: %1$s</string>
 </resources>

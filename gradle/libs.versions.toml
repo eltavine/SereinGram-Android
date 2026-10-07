@@ -23,6 +23,8 @@ room-gradlePlugin = { module = "androidx.room:room-gradle-plugin", version.ref =
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version = "3.3.0" }
 # Matches the ZXing Telegram scans and draws QR codes with.
 zxing-core = { module = "com.google.zxing:core", version = "3.5.4" }
+# Matches what Nagram's Ktor brings into the app.
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-platformLauncher = { module = "org.junit.platform:junit-platform-launcher" }
 junit4 = { module = "junit:junit", version.ref = "junit4" }
