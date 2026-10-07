@@ -27,15 +27,19 @@ under Settings → SereinGram.
   versions of edited messages are kept per account in a database of their
   own. Kept deleted messages come back into their chats, stay on screen when
   deleted while the chat is open, carry a "deleted" mark that can be any text,
-  and keep their downloaded media. A message's menu shows its earlier versions
-  and when it was deleted ([NagramXF #133](https://github.com/Keeperorowner/NagramXF/issues/133)),
-  and a chat's menu lists and clears its kept deleted messages. What the user
-  deletes is not kept.
+  and keep their downloaded media, of which copies outlive Telegram's cache in
+  the kinds of chat chosen. A message's menu shows its earlier versions and
+  when it was deleted ([NagramXF #133](https://github.com/Keeperorowner/NagramXF/issues/133)),
+  and a chat's menu lists, exports as text
+  ([NagramX #294](https://github.com/risin42/NagramX/issues/294)) and clears
+  its kept deleted messages. What the user deletes is not kept.
 - **Ghost mode**, rounding out Nagram's after AyuGram and NagramX: it also
   holds back reading channel comments and secret chats, and channel posts are
   not counted as viewed. Chosen chats can see read receipts or typing, a chat
-  can be marked read on demand, a quick settings tile and a home screen
-  shortcut switch it ([NagramXF #181](https://github.com/Keeperorowner/NagramXF/issues/181)),
+  can be marked read on demand, messages can wait a moment as scheduled ones
+  so that sending does not show one online, after AyuGram, a quick settings
+  tile and a home screen shortcut switch it
+  ([NagramXF #181](https://github.com/Keeperorowner/NagramXF/issues/181)),
   and a ghost beside the chat list title shows it is on
   ([NagramX #231](https://github.com/risin42/NagramX/issues/231)).
 - **Bookmarks** on messages to jump back to
@@ -45,7 +49,9 @@ under Settings → SereinGram.
 - **Block a sender** from their message in a group
   ([NagramX #283](https://github.com/risin42/NagramX/issues/283)).
 - **The date beside the time** of older messages
-  ([NagramX #462](https://github.com/risin42/NagramX/issues/462)).
+  ([NagramX #462](https://github.com/risin42/NagramX/issues/462)), and **one
+  check** on one's messages after they were read
+  ([NagramXF #123](https://github.com/Keeperorowner/NagramXF/issues/123)).
 - **Ask before opening any link**, after NagramX.
 - **Hide global search results** in the chat list search
   ([NagramXF #10](https://github.com/Keeperorowner/NagramXF/issues/10),
