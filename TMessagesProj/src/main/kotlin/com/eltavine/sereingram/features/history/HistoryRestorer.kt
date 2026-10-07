@@ -72,11 +72,11 @@ internal class HistoryRestorer(
 
     fun decorateTime(account: Int, message: Any, time: String): String {
         val shown = message as MessageObject
-        return if (kept[account, shown.dialogId, shown.id] != null) {
-            LocaleController.getString(R.string.serein_history_deleted_mark) + " " + time
-        } else {
-            time
+        if (kept[account, shown.dialogId, shown.id] == null) {
+            return time
         }
+        val mark = options.get(HistoryOptions.deletedMark).ifBlank { LocaleController.getString(R.string.serein_history_deleted_mark) }
+        return "$mark $time"
     }
 
     private fun decode(account: Int, dialogId: Long, record: HistoryRecord): TLRPC.Message {

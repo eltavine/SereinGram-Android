@@ -23,6 +23,9 @@ sealed interface SettingsRow {
     /** A switch for [option]; account options apply to the account the page was opened in. */
     class Toggle(val option: Option<Boolean>, @StringRes val title: Int) : SettingsRow
 
+    /** Edits [option] in a dialog; [placeholder] stands in for it while it is empty. */
+    class Text(val option: Option<String>, @StringRes val title: Int, @StringRes val placeholder: Int) : SettingsRow
+
     /** A switch for state kept outside SereinGram's options, such as one of Nagram's settings. */
     class Switch(@StringRes val title: Int, val isOn: () -> Boolean, val toggle: () -> Unit) : SettingsRow
 

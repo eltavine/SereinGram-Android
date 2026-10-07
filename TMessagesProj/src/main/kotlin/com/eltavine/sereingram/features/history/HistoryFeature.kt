@@ -53,6 +53,13 @@ class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : Serei
                 ),
                 note = R.string.serein_history_save_note,
             ),
+            SettingsSection(
+                header = R.string.serein_history_appearance,
+                rows = listOf(
+                    SettingsRow.Text(HistoryOptions.deletedMark, R.string.serein_history_deleted_mark_title, R.string.serein_history_deleted_mark),
+                ),
+                note = R.string.serein_history_deleted_mark_note,
+            ),
         ),
     )
 }

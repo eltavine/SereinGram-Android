@@ -1,11 +1,20 @@
 package com.eltavine.sereingram.settings
 
+import android.util.TypedValue
 import android.view.View
+import android.widget.FrameLayout
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.OptionScope
 import com.eltavine.sereingram.core.Options
+import org.telegram.messenger.AndroidUtilities
+import org.telegram.messenger.AndroidUtilities.dp
 import org.telegram.messenger.LocaleController.getString
+import org.telegram.messenger.R
 import org.telegram.messenger.browser.Browser
+import org.telegram.ui.ActionBar.AlertDialog
+import org.telegram.ui.ActionBar.Theme
+import org.telegram.ui.Components.EditTextBoldCursor
+import org.telegram.ui.Components.LayoutHelper
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
 import org.telegram.ui.Components.UniversalFragment
@@ -34,6 +43,8 @@ class SereinSettingsActivity(
 
     private fun item(id: Int, row: SettingsRow): UItem = when (row) {
         is SettingsRow.Toggle -> UItem.asCheck(id, getString(row.title)).setChecked(options.get(row.option, account(row.option)))
+        is SettingsRow.Text ->
+            UItem.asButton(id, getString(row.title), options.get(row.option, account(row.option)).ifEmpty { getString(row.placeholder) })
         is SettingsRow.Switch -> UItem.asCheck(id, getString(row.title)).setChecked(row.isOn())
         is SettingsRow.Subpage -> UItem.asButton(id, row.icon, getString(row.page.title))
         is SettingsRow.Screen -> UItem.asButton(id, getString(row.title), row.value())
@@ -53,6 +64,7 @@ class SereinSettingsActivity(
                 options.set(row.option, !options.get(row.option, account), account)
                 listView.adapter.update(true)
             }
+            is SettingsRow.Text -> edit(row)
             is SettingsRow.Switch -> {
                 row.toggle()
                 listView.adapter.update(true)
@@ -66,6 +78,36 @@ class SereinSettingsActivity(
     }
 
     override fun onLongClick(item: UItem, view: View, position: Int, x: Float, y: Float): Boolean = false
+
+    private fun edit(row: SettingsRow.Text) {
+        val context = parentActivity ?: return
+        val account = account(row.option)
+        val field = EditTextBoldCursor(context).apply {
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
+            setTextColor(Theme.getColor(Theme.key_dialogTextBlack, resourceProvider))
+            setHintTextColor(Theme.getColor(Theme.key_dialogTextHint, resourceProvider))
+            background = Theme.createEditTextDrawable(context, true)
+            setSingleLine(true)
+            setPadding(0, dp(4f), 0, dp(4f))
+            hint = getString(row.placeholder)
+            setText(options.get(row.option, account))
+            setSelection(length())
+        }
+        val frame = FrameLayout(context)
+        frame.addView(field, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT.toFloat(), 0, 24f, 6f, 24f, 0f))
+        val dialog = AlertDialog.Builder(context, resourceProvider)
+            .setTitle(getString(row.title))
+            .setView(frame)
+            .setPositiveButton(getString(R.string.OK)) { _, _ ->
+                options.set(row.option, field.text.toString().trim(), account)
+                listView.adapter.update(true)
+            }
+            .setNegativeButton(getString(R.string.Cancel), null)
+            .create()
+        showDialog(dialog)
+        field.requestFocus()
+        AndroidUtilities.runOnUIThread({ AndroidUtilities.showKeyboard(field) }, 200)
+    }
 
     private fun account(option: Option<*>): Int =
         if (option.scope == OptionScope.ACCOUNT) currentAccount else Options.NO_ACCOUNT
