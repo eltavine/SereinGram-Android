@@ -29398,6 +29398,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     drawCheck2 = false;
                     drawClock = false;
                 }
+                if (drawCheck1 && com.eltavine.sereingram.hooks.MessageHooks.hidesReadReceipt(currentAccount, currentMessageObject)) drawCheck1 = false;
                 return (drawCheck1 ? 1 : 0) | (drawCheck2 ? 2 : 0) | (drawClock ? 4 : 0) | (drawError ? 8 : 0);
             } else {
                 boolean drawClock = currentMessageObject.isSending() || currentMessageObject.isEditing();

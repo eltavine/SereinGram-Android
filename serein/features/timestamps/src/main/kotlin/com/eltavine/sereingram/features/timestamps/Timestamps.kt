@@ -9,7 +9,10 @@ import java.time.ZoneId
 public object TimestampOptions {
     public val showDate: Option<Boolean> = booleanOption("timestamps_show_date")
 
-    public val all: List<Option<*>> = listOf(showDate)
+    /** One check for read messages too, after NagramXF #123; Telegram itself still knows they were read. */
+    public val hideReadChecks: Option<Boolean> = booleanOption("timestamps_hide_read_checks")
+
+    public val all: List<Option<*>> = listOf(showDate, hideReadChecks)
 }
 
 /** How much of the date a message's time needs so that it can be read without tapping. */

@@ -24,6 +24,7 @@ object TimestampsFeature : SereinModule, SettingsContributor {
     override fun start(context: ModuleContext) {
         val options = context.options
         MessageHooks.timeDecorators.install { _, message, time -> dated(options, message as MessageObject, time) }
+        MessageHooks.readReceiptPolicies.install { _, _ -> options.get(TimestampOptions.hideReadChecks) }
     }
 
     private fun dated(options: Options, message: MessageObject, time: String): String {
@@ -49,6 +50,10 @@ object TimestampsFeature : SereinModule, SettingsContributor {
             SettingsSection(
                 rows = listOf(SettingsRow.Toggle(TimestampOptions.showDate, R.string.serein_timestamps_show_date)),
                 note = R.string.serein_timestamps_show_date_note,
+            ),
+            SettingsSection(
+                rows = listOf(SettingsRow.Toggle(TimestampOptions.hideReadChecks, R.string.serein_timestamps_hide_read)),
+                note = R.string.serein_timestamps_hide_read_note,
             ),
         ),
     )

@@ -2180,6 +2180,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                         } else {
                             drawCheck1 = !message.isUnread() || ChatObject.isChannel(chat) && !chat.megagroup;
                         }
+                        if (drawCheck1 && com.eltavine.sereingram.hooks.MessageHooks.hidesReadReceipt(currentAccount, message)) drawCheck1 = false;
                         drawCheck2 = true;
                         drawClock = false;
                         drawError = false;

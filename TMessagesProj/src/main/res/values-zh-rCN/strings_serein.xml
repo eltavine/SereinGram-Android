@@ -100,4 +100,6 @@
     <string name="serein_local_name_remove">移除</string>
     <string name="serein_search_hide_apps">隐藏“应用”标签页</string>
     <string name="serein_search_hide_apps_note">在聊天列表中搜索时不再显示小程序和机器人标签页。下次启动 SereinGram 时生效。</string>
+    <string name="serein_timestamps_hide_read">已读消息也只显示一个勾</string>
+    <string name="serein_timestamps_hide_read_note">你发送的消息在被阅读后仍只显示一个勾，聊天和聊天列表中都是如此，你不会看到对方何时已读。Telegram 仍会记录已读状态。</string>
 </resources>

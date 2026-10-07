@@ -100,4 +100,6 @@
     <string name="serein_local_name_remove">Remove</string>
     <string name="serein_search_hide_apps">Hide the Apps tab</string>
     <string name="serein_search_hide_apps_note">The search from the chat list no longer has a tab of mini apps and bots. Applies the next time SereinGram starts.</string>
+    <string name="serein_timestamps_hide_read">One check for read messages</string>
+    <string name="serein_timestamps_hide_read_note">Messages you send keep a single check after they were read, in chats and in the chat list, so you do not see when they were read. Telegram still knows.</string>
 </resources>

@@ -13,7 +13,19 @@ public object MessageHooks {
         public fun decorate(account: Int, message: Any, time: String): String
     }
 
+    public fun interface ReadReceiptPolicy {
+        /** Whether the second check of the read outgoing [message] is left out of its bubble and its chat. */
+        public fun hidesReadReceipt(account: Int, message: Any): Boolean
+    }
+
     public val timeDecorators: Handlers<TimeDecorator> = Handlers()
+    public val readReceiptPolicies: Handlers<ReadReceiptPolicy> = Handlers()
+
+    @JvmStatic
+    public fun hidesReadReceipt(account: Int, message: Any): Boolean =
+        readReceiptPolicies.all.any { policy ->
+            Faults.guard("read receipt policy", fallback = false) { policy.hidesReadReceipt(account, message) }
+        }
 
     /** Telegram's time text, passed through every installed decorator in turn. */
     @JvmStatic
