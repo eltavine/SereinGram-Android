@@ -21327,7 +21327,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         boolean forward = x >= width / 3 * 2;
         long current = getCurrentVideoPosition();
         long total = getVideoDuration();
-        return current != C.TIME_UNSET && total > 15 * 1000 && (!forward || total - current > 10000);
+        return current != C.TIME_UNSET && total > 15 * 1000 && (!forward || total - current > com.eltavine.sereingram.hooks.PlaybackHooks.doubleTapSeekMillis());
     }
 
     long totalRewinding;

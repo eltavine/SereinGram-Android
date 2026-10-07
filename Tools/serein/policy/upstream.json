@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 322,
-    "all_added_lines": 297,
+    "all_added_lines": 298,
     "source_files": 34,
-    "source_added_lines": 77
+    "source_added_lines": 78
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -114,6 +114,7 @@
       "hooks.SearchHooks.allowsGlobalSearch"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/PhotoViewer.java": [
+      "hooks.PlaybackHooks.doubleTapSeekMillis",
       "hooks.PlaybackHooks.doubleTapSeekMillis"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/RightSlidingDialogContainer.java": [
