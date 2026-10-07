@@ -39,6 +39,8 @@
     <string name="serein_history_deleted_clear">清除已删除的消息</string>
     <string name="serein_history_deleted_clear_note">将永久移除 SereinGram 为此聊天保存的已删除消息。下次打开此聊天时，它们会从聊天中消失。</string>
     <string name="serein_history_deleted_clear_confirm">清除</string>
+    <string name="serein_history_deleted_export">导出为文本</string>
+    <string name="serein_history_deleted_export_title">%1$s：SereinGram 保存的已删除消息</string>
     <string name="serein_history_edit_history">编辑历史</string>
     <string name="serein_history_versions_title">早先的版本</string>
     <string name="serein_history_version_original">发送于 %1$s</string>

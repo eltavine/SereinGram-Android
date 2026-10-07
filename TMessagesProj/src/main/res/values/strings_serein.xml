@@ -39,6 +39,8 @@
     <string name="serein_history_deleted_clear">Clear deleted messages</string>
     <string name="serein_history_deleted_clear_note">The deleted messages kept of this chat are removed from SereinGram for good. They leave the chat the next time it is opened.</string>
     <string name="serein_history_deleted_clear_confirm">Clear</string>
+    <string name="serein_history_deleted_export">Export as text</string>
+    <string name="serein_history_deleted_export_title">%1$s: deleted messages kept by SereinGram</string>
     <string name="serein_history_edit_history">Edit history</string>
     <string name="serein_history_versions_title">Earlier versions</string>
     <string name="serein_history_version_original">Sent %1$s</string>

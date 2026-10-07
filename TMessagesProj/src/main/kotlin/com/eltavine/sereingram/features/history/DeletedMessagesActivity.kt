@@ -1,8 +1,10 @@
 package com.eltavine.sereingram.features.history
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.FileProvider
 import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.hooks.ChatMenuHooks
@@ -10,6 +12,7 @@ import com.eltavine.sereingram.ports.HistoryRecord
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.support.Chats
 import org.telegram.messenger.AndroidUtilities
+import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
@@ -21,6 +24,8 @@ import org.telegram.ui.ChatActivity
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
 import org.telegram.ui.Components.UniversalFragment
+import java.io.File
+import java.time.ZoneId
 
 /** "Deleted messages" in the menu of a chat, after NagramX's items to view and clear them. */
 internal class DeletedMessagesEntry(
@@ -79,14 +84,15 @@ internal class DeletedMessagesActivity(
             items.add(UItem.asButton(index + 1, text, LocaleController.formatShortDateTime(record.recordedAt / 1000)))
         }
         items.add(UItem.asShadow(getString(R.string.serein_history_deleted_list_note)))
+        items.add(UItem.asButton(EXPORT, getString(R.string.serein_history_deleted_export)))
         items.add(UItem.asButton(CLEAR, getString(R.string.serein_history_deleted_clear)).red())
         items.add(UItem.asShadow(null))
     }
 
     override fun onClick(item: UItem, view: View, position: Int, x: Float, y: Float) {
-        if (item.id == CLEAR) {
-            confirmClear()
-            return
+        when (item.id) {
+            EXPORT -> return export()
+            CLEAR -> return confirmClear()
         }
         val record = records?.getOrNull(item.id - 1) ?: return
         val origin = chat
@@ -99,6 +105,35 @@ internal class DeletedMessagesActivity(
     }
 
     override fun onLongClick(item: UItem, view: View, position: Int, x: Float, y: Float): Boolean = false
+
+    /** Shares every kept deleted message of the chat as a text file, after NagramX's export request. */
+    private fun export() {
+        val context = parentActivity ?: return
+        val account = currentAccount
+        Utilities.globalQueue.postRunnable {
+            val file = Faults.guard("deleted messages export", fallback = null) {
+                val chatName = Chats.name(account, dialogId)
+                val words = TranscriptWords(
+                    title = LocaleController.formatString(R.string.serein_history_deleted_export_title, chatName),
+                    deleted = getString(R.string.serein_history_deleted_mark),
+                    noText = getString(R.string.serein_history_version_no_text),
+                )
+                val text = transcript(store.deleted(dialogId, EXPORT_LIMIT), words, { Chats.name(account, it) }, ZoneId.systemDefault())
+                File(context.cacheDir, "media/serein_deleted_$dialogId.txt").apply {
+                    parentFile?.mkdirs()
+                    writeText(text)
+                }
+            } ?: return@postRunnable
+            AndroidUtilities.runOnUIThread {
+                val uri = FileProvider.getUriForFile(context, ApplicationLoader.getApplicationId() + ".provider", file)
+                val share = Intent(Intent.ACTION_SEND)
+                    .setType("text/plain")
+                    .putExtra(Intent.EXTRA_STREAM, uri)
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                context.startActivity(Intent.createChooser(share, getString(R.string.serein_history_deleted_export)))
+            }
+        }
+    }
 
     private fun confirmClear() {
         val context = parentActivity ?: return
@@ -122,6 +157,8 @@ internal class DeletedMessagesActivity(
 
     private companion object {
         const val LIMIT = 500
-        const val CLEAR = 100_000
+        const val EXPORT_LIMIT = 100_000
+        const val EXPORT = 100_000
+        const val CLEAR = 100_001
     }
 }
