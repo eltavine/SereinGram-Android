@@ -550,6 +550,7 @@ public class NotificationsController extends BaseController implements Notificat
             for (int a = 0; a < pushMessages.size(); a++) {
                 MessageObject messageObject = pushMessages.get(a);
                 long dialog_id = messageObject.getDialogId();
+                if (com.eltavine.sereingram.hooks.NotificationHooks.hidesContent(currentAccount, dialog_id)) continue;
                 if (messageObject.messageOwner.mentioned && messageObject.messageOwner.action instanceof TLRPC.TL_messageActionPinMessage ||
                         DialogObject.isEncryptedDialog(dialog_id) || messageObject.messageOwner.peer_id.channel_id != 0 && !messageObject.isSupergroup()) {
                     continue;
@@ -985,6 +986,7 @@ public class NotificationsController extends BaseController implements Notificat
 
     private int addToPopupMessages(ArrayList<MessageObject> popupArrayAdd, MessageObject messageObject, long dialogId, boolean isChannel, SharedPreferences preferences) {
         if (messageObject.isStoryReactionPush) return 0;
+        if (com.eltavine.sereingram.hooks.NotificationHooks.hidesContent(currentAccount, dialogId)) return 0;
         int popup = 0;
         if (!DialogObject.isEncryptedDialog(dialogId)) {
             if (preferences.getBoolean("custom_" + dialogId, false)) {
@@ -1859,7 +1861,7 @@ public class NotificationsController extends BaseController implements Notificat
     }
 
     public String getShortStringForMessage(MessageObject messageObject, String[] userName, boolean[] preview) {
-        if (AndroidUtilities.needShowPasscode() || SharedConfig.isWaitingForPasscodeEnter) {
+        if (com.eltavine.sereingram.hooks.NotificationHooks.hidesText(currentAccount, messageObject.getDialogId(), AndroidUtilities.needShowPasscode() || SharedConfig.isWaitingForPasscodeEnter)) {
             return LocaleController.getString(R.string.NotificationHiddenMessage);
         }
         long dialogId = messageObject.messageOwner.dialog_id;
@@ -2547,7 +2549,7 @@ public class NotificationsController extends BaseController implements Notificat
     }
 
     private String getStringForMessage(MessageObject messageObject, boolean shortMessage, boolean[] text, boolean[] preview) {
-        if (AndroidUtilities.needShowPasscode() || SharedConfig.isWaitingForPasscodeEnter) {
+        if (com.eltavine.sereingram.hooks.NotificationHooks.hidesText(currentAccount, messageObject.getDialogId(), AndroidUtilities.needShowPasscode() || SharedConfig.isWaitingForPasscodeEnter)) {
             return LocaleController.getString(R.string.YouHaveNewMessage);
         }
         if (messageObject.isStoryPush || messageObject.isStoryMentionPush) {
@@ -3705,6 +3707,7 @@ public class NotificationsController extends BaseController implements Notificat
             } else {
                 icon = IconCompat.createWithResource(ApplicationLoader.applicationContext, R.drawable.book_group);
             }
+            if (com.eltavine.sereingram.hooks.NotificationHooks.hidesContent(currentAccount, did)) supportsBubble = false;
             if (supportsBubble && !NekoConfig.disableNotificationBubbles.Bool()) {
                 NotificationCompat.BubbleMetadata.Builder bubbleBuilder =
                         new NotificationCompat.BubbleMetadata.Builder(
@@ -4307,7 +4310,7 @@ public class NotificationsController extends BaseController implements Notificat
                 chatName = UserObject.getUserName(user);
             }
             boolean passcode = AndroidUtilities.needShowPasscode() || SharedConfig.isWaitingForPasscodeEnter;
-            if (passcode && com.eltavine.sereingram.hooks.NotificationHooks.showsContentWhenLocked()) passcode = false;
+            passcode = com.eltavine.sereingram.hooks.NotificationHooks.hidesText(currentAccount, dialog_id, passcode);
             final boolean allowSummary = !"samsung".equalsIgnoreCase(Build.MANUFACTURER);
             if (DialogObject.isEncryptedDialog(dialog_id) || allowSummary && pushDialogs.size() > 1 || passcode) {
                 if (passcode) {
@@ -4975,7 +4978,7 @@ public class NotificationsController extends BaseController implements Notificat
 
         long selfUserId = getUserConfig().getClientUserId();
         boolean waitingForPasscode = AndroidUtilities.needShowPasscode() || SharedConfig.isWaitingForPasscodeEnter;
-        if (waitingForPasscode && com.eltavine.sereingram.hooks.NotificationHooks.showsContentWhenLocked()) waitingForPasscode = false;
+        final boolean sereinPasscodeLocked = waitingForPasscode;
         boolean passcode = SharedConfig.passcodeHash.length() > 0;
         FileLog.d("showExtraNotifications: passcode="+passcode+" waitingForPasscode=" + waitingForPasscode + " selfUserId=" + selfUserId + " useSummaryNotification=" + useSummaryNotification);
 
@@ -4987,6 +4990,7 @@ public class NotificationsController extends BaseController implements Notificat
                 break;
             }
             final DialogKey dialogKey = sortedDialogs.get(b);
+            waitingForPasscode = com.eltavine.sereingram.hooks.NotificationHooks.hidesText(currentAccount, dialogKey.dialogId, sereinPasscodeLocked);
             final long dialogId;
             final long topicId;
             int maxId;

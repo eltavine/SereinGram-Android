@@ -21,6 +21,31 @@ class NotificationHooksTest {
     }
 
     @Test
+    fun textIsHiddenWhileThePasscodeLocksTheAppUnlessShownAndAlwaysForHiddenChats() {
+        assertTrue(NotificationHooks.hidesText(0, 7, passcodeLocked = true))
+        assertFalse(NotificationHooks.hidesText(0, 7, passcodeLocked = false))
+        val installs = listOf(
+            NotificationHooks.lockedContentPolicies.install { true },
+            NotificationHooks.contentPolicies.install { _, dialogId -> dialogId == -100L },
+        )
+        try {
+            assertFalse(NotificationHooks.hidesText(0, 7, passcodeLocked = true))
+            assertTrue(NotificationHooks.hidesText(0, -100, passcodeLocked = false))
+            assertTrue(NotificationHooks.hidesText(0, -100, passcodeLocked = true))
+        } finally {
+            installs.forEach(AutoCloseable::close)
+        }
+    }
+
+    @Test
+    fun aContentPolicyThatThrowsHidesTheChat() {
+        NotificationHooks.contentPolicies.install { _, _ -> throw IllegalStateException() }.use {
+            assertTrue(NotificationHooks.hidesContent(0, 7))
+        }
+        assertFalse(NotificationHooks.hidesContent(0, 7))
+    }
+
+    @Test
     fun answersReplyUntilAPolicyMakesThemPlain() {
         assertFalse(NotificationHooks.sendsPlainAnswers())
         val installs = listOf(

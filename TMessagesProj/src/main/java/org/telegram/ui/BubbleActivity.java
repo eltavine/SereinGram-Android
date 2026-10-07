@@ -175,6 +175,7 @@ public class BubbleActivity extends BasePermissionsActivity implements INavigati
             finish();
             return false;
         }
+        if (com.eltavine.sereingram.hooks.NotificationHooks.hidesContent(currentAccount, dialogId)) { finish(); return false; }
         NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.closeChats, dialogId);
         actionBarLayout.removeAllFragments();
         actionBarLayout.addFragmentToStack(chatActivity);

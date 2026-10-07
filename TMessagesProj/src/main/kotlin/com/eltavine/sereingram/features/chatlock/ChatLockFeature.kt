@@ -14,6 +14,7 @@ import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ChatMenuHooks
 import com.eltavine.sereingram.hooks.DialogsHooks
 import com.eltavine.sereingram.hooks.NavigationHooks
+import com.eltavine.sereingram.hooks.NotificationHooks
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
@@ -35,8 +36,8 @@ import java.util.WeakHashMap
 /**
  * Chats, the archive and secret chats that ask for the device's fingerprint,
  * face or screen lock before they open, after Cherrygram's and OctoGram's
- * locks and Swiftgram issue 56. Telegram opens every screen through one call,
- * which asks [NavigationHooks] first.
+ * locks and Swiftgram issue 56. Telegram opens screens through calls that ask
+ * [NavigationHooks] first, and its notifications ask [NotificationHooks].
  */
 object ChatLockFeature : SereinModule, SettingsContributor {
     override val id: String = "chat_lock"
@@ -51,6 +52,9 @@ object ChatLockFeature : SereinModule, SettingsContributor {
         NavigationHooks.guards.install { screen, preview, retry -> allows(options, screen as BaseFragment, preview, retry) }
         ChatMenuHooks.entries.install(LockEntry(options))
         DialogsHooks.previewReplacers.install { account, dialogId -> lockedPreview(options, account, dialogId) }
+        // Notifications are built off the main thread, where the folder of a chat cannot be read safely,
+        // and Telegram moves unmuted chats out of the archive when they get a message anyway.
+        NotificationHooks.contentPolicies.install { account, dialogId -> isLocked(chat(account, dialogId, archived = false), settings(options, account)) }
     }
 
     // The chat list would otherwise show what a locked chat keeps behind its lock.
