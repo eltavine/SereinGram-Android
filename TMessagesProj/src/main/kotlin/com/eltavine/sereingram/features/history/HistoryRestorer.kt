@@ -70,12 +70,14 @@ internal class HistoryRestorer(
         return records.map { it.messageId }
     }
 
-    fun decorateTime(account: Int, dialogId: Long, messageId: Int, time: String): String =
-        if (kept[account, dialogId, messageId] != null) {
+    fun decorateTime(account: Int, message: Any, time: String): String {
+        val shown = message as MessageObject
+        return if (kept[account, shown.dialogId, shown.id] != null) {
             LocaleController.getString(R.string.serein_history_deleted_mark) + " " + time
         } else {
             time
         }
+    }
 
     private fun decode(account: Int, dialogId: Long, record: HistoryRecord): TLRPC.Message {
         val selfId = UserConfig.getInstance(account).clientUserId

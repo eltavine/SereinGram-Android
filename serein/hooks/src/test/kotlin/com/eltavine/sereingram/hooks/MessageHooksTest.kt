@@ -7,17 +7,17 @@ class MessageHooksTest {
     @Test
     fun decoratorsApplyInOrderAndABrokenOneIsSkipped() {
         val installs = listOf(
-            MessageHooks.timeDecorators.install { _, _, id, time -> if (id == 7) "deleted $time" else time },
-            MessageHooks.timeDecorators.install { _, _, _, _ -> throw IllegalStateException() },
-            MessageHooks.timeDecorators.install { _, _, _, time -> "$time!" },
+            MessageHooks.timeDecorators.install { _, message, time -> if (message == "kept") "deleted $time" else time },
+            MessageHooks.timeDecorators.install { _, _, _ -> throw IllegalStateException() },
+            MessageHooks.timeDecorators.install { _, _, time -> "$time!" },
         )
         try {
-            assertEquals("deleted 12:00!", MessageHooks.decorateTime(account = 0, dialogId = 1, messageId = 7, time = "12:00"))
-            assertEquals("12:00!", MessageHooks.decorateTime(account = 0, dialogId = 1, messageId = 8, time = "12:00"))
+            assertEquals("deleted 12:00!", MessageHooks.decorateTime(account = 0, message = "kept", time = "12:00"))
+            assertEquals("12:00!", MessageHooks.decorateTime(account = 0, message = "other", time = "12:00"))
         } finally {
             installs.forEach(AutoCloseable::close)
         }
-        assertEquals("12:00", MessageHooks.decorateTime(account = 0, dialogId = 1, messageId = 7, time = "12:00"))
+        assertEquals("12:00", MessageHooks.decorateTime(account = 0, message = "kept", time = "12:00"))
     }
 
     @Test
