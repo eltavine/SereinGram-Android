@@ -29,4 +29,19 @@ class DialogsHooksTest {
             installs.forEach(AutoCloseable::close)
         }
     }
+
+    @Test
+    fun previewsShowUnlessAModuleReplacesThem() {
+        assertEquals(null, DialogsHooks.replacePreview(0, 5))
+        val installs = listOf(
+            DialogsHooks.previewReplacers.install { _, _ -> throw IllegalStateException() },
+            DialogsHooks.previewReplacers.install { _, dialogId -> "Locked".takeIf { dialogId == 5L } },
+        )
+        try {
+            assertEquals("Locked", DialogsHooks.replacePreview(0, 5))
+            assertEquals(null, DialogsHooks.replacePreview(0, 6))
+        } finally {
+            installs.forEach(AutoCloseable::close)
+        }
+    }
 }

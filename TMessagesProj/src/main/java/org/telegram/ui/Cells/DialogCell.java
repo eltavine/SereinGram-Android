@@ -2666,6 +2666,8 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             }
         }
 
+        CharSequence sereinPreview = com.eltavine.sereingram.hooks.DialogsHooks.replacePreview(currentAccount, currentDialogId);
+        if (sereinPreview != null) { messageString = sereinPreview; messageNameString = null; thumbsCount = 0; }
         if (checkMessage) {
             if (messageString == null) {
                 messageString = "";

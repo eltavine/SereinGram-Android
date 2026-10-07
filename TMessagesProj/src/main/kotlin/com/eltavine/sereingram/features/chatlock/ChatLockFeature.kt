@@ -12,6 +12,7 @@ import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ChatMenuHooks
+import com.eltavine.sereingram.hooks.DialogsHooks
 import com.eltavine.sereingram.hooks.NavigationHooks
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
@@ -48,6 +49,13 @@ object ChatLockFeature : SereinModule, SettingsContributor {
         val options = context.options
         NavigationHooks.guards.install { layout, screen, params -> allows(options, layout, screen as BaseFragment, params) }
         ChatMenuHooks.entries.install(LockEntry(options))
+        DialogsHooks.previewReplacers.install { account, dialogId -> lockedPreview(options, account, dialogId) }
+    }
+
+    // The chat list would otherwise show what a locked chat keeps behind its lock.
+    private fun lockedPreview(options: Options, account: Int, dialogId: Long): CharSequence? {
+        val target = LockTarget.Chat(dialogId, secret = DialogObject.isEncryptedDialog(dialogId))
+        return getString(R.string.serein_lock_preview).takeIf { isLocked(target, settings(options, account)) && !window.isOpen() }
     }
 
     private fun allows(options: Options, layout: Any, screen: BaseFragment, params: Any): Boolean {

@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 312,
-    "all_added_lines": 270,
+    "all_added_lines": 272,
     "source_files": 24,
-    "source_added_lines": 50
+    "source_added_lines": 52
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -60,6 +60,7 @@
       "hooks.MessageHooks.hidesReadReceipt"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/Cells/DialogCell.java": [
+      "hooks.DialogsHooks.replacePreview",
       "hooks.MessageHooks.hidesReadReceipt"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java": [
