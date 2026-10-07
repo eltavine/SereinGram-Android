@@ -21,7 +21,7 @@
     <string name="serein_history_save_deleted">已删除的消息</string>
     <string name="serein_history_save_edits">消息编辑前的版本</string>
     <string name="serein_history_save_in_bots">包括与机器人的聊天</string>
-    <string name="serein_history_save_note">副本按账号保存在本设备上 SereinGram 自己的数据库中，与 Telegram 的缓存分开，清理缓存不会删除它们。保存的已删除消息会带着“已删除”标记回到原聊天中。只有本设备加载过的消息才能保存。</string>
+    <string name="serein_history_save_note">副本按账号保存在本设备上 SereinGram 自己的数据库中，与 Telegram 的缓存分开，清理缓存不会删除它们。保存的已删除消息会带着“已删除”标记回到原聊天中。只有本设备加载过的消息才能保存。已删除消息中的照片和文件会留在 Telegram 的缓存中，只要缓存还保留着它们就能显示。</string>
     <string name="serein_history_deleted_mark">已删除</string>
     <string name="serein_history_appearance">外观</string>
     <string name="serein_history_deleted_mark_title">删除标记</string>

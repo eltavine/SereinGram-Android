@@ -33,6 +33,7 @@ class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : Serei
         val restorer = HistoryRestorer(context.options, stores, kept, revised)
         HistoryHooks.loadListeners.install(restorer::afterLoaded)
         HistoryHooks.chatKeepers.install(KeptInChat(context.options, kept, deletedByUser))
+        HistoryHooks.fileKeepers.install { account, _, _ -> context.options.get(HistoryOptions.saveDeleted, account) }
         MessageHooks.timeDecorators.install(restorer::decorateTime)
         MessageMenuHooks.entries.install(EditHistoryEntry(stores, revised))
         MessageMenuHooks.entries.install(DeletedAtEntry(kept))

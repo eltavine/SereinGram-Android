@@ -40,6 +40,11 @@ public object HistoryHooks {
         public fun beforeUserDeletes(account: Int, dialogId: Long, messageIds: List<Int>)
     }
 
+    public fun interface FileKeeper {
+        /** Whether the downloaded files of the deleted [messageIds] stay in Telegram's cache. */
+        public fun keepsFiles(account: Int, dialogId: Long, messageIds: List<Int>): Boolean
+    }
+
     public fun interface ChatKeeper {
         /**
          * Picks which of the just deleted [messageIds] the open [chat] keeps showing.
@@ -53,6 +58,14 @@ public object HistoryHooks {
     public val loadListeners: Handlers<LoadListener> = Handlers()
     public val userDeletionListeners: Handlers<UserDeletionListener> = Handlers()
     public val chatKeepers: Handlers<ChatKeeper> = Handlers()
+    public val fileKeepers: Handlers<FileKeeper> = Handlers()
+
+    /** Whether Telegram deletes the downloaded files of messages others deleted, as it does by itself. */
+    @JvmStatic
+    public fun deletesFilesOf(account: Int, dialogId: Long, messageIds: List<Int>): Boolean =
+        fileKeepers.all.none { keeper ->
+            Faults.guard("history file keeper", fallback = false) { keeper.keepsFiles(account, dialogId, messageIds) }
+        }
 
     @JvmStatic
     public fun beforeUserDeletes(account: Int, dialogId: Long, messageIds: List<Int>) {
