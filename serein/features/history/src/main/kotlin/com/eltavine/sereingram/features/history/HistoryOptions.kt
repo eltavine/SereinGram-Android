@@ -16,5 +16,21 @@ public object HistoryOptions {
     /** What stands before the time of a kept deleted message, after AyuGram's custom mark; empty for the default. */
     public val deletedMark: Option<String> = textOption("history_deleted_mark")
 
-    public val all: List<Option<*>> = listOf(saveDeleted, saveEdits, saveInBotChats, deletedMark)
+    /** Copies of the media of deleted messages, after AyuGram's saved media; channels are left out by default. */
+    public val backupMedia: Option<Boolean> = booleanOption("history_backup_media", default = true, scope = OptionScope.ACCOUNT)
+    public val backupInPrivateChats: Option<Boolean> =
+        booleanOption("history_backup_in_private_chats", default = true, scope = OptionScope.ACCOUNT)
+    public val backupInGroups: Option<Boolean> = booleanOption("history_backup_in_groups", default = true, scope = OptionScope.ACCOUNT)
+    public val backupInChannels: Option<Boolean> = booleanOption("history_backup_in_channels", scope = OptionScope.ACCOUNT)
+
+    public val all: List<Option<*>> = listOf(
+        saveDeleted,
+        saveEdits,
+        saveInBotChats,
+        deletedMark,
+        backupMedia,
+        backupInPrivateChats,
+        backupInGroups,
+        backupInChannels,
+    )
 }

@@ -22,6 +22,7 @@ internal class HistoryRecorder(
     private val writer: Executor,
     private val revised: MessageSet,
     private val deletedByUser: MessageSet,
+    private val backups: MediaBackups,
 ) {
     fun beforeUserDeletes(account: Int, dialogId: Long, messageIds: List<Int>) {
         val ids = messageIds.filter { it > 0 }
@@ -30,7 +31,12 @@ internal class HistoryRecorder(
         }
         deletedByUser.add(account, dialogId, ids)
         if (options.get(HistoryOptions.saveDeleted, account) || options.get(HistoryOptions.saveEdits, account)) {
-            writer.execute { Faults.guard("history forget", fallback = Unit) { stores(account).forget(dialogId, ids) } }
+            writer.execute {
+                Faults.guard("history forget", fallback = Unit) {
+                    stores(account).forget(dialogId, ids)
+                    backups.forget(account, dialogId, ids)
+                }
+            }
         }
     }
 
@@ -39,11 +45,14 @@ internal class HistoryRecorder(
             return
         }
         val saveInBots = options.get(HistoryOptions.saveInBotChats, account)
-        val records = storedMessages(account, dialogId, messageIds)
+        val kept = storedMessages(account, dialogId, messageIds)
             .filterNot { (uid, message) -> deletedByUser.contains(account, uid, message.id) }
             .filter { (uid, _) -> recordsDeletion(saveDeleted = true, saveInBots, Change(botChat = isBotChat(account, uid))) }
-            .map { (uid, message) -> record(RecordKind.DELETED, uid, message, revision = 0) }
-        write(account, records)
+        write(account, kept.map { (uid, message) -> record(RecordKind.DELETED, uid, message, revision = 0) })
+        // Telegram leaves the files in its cache while deleted messages are kept, so copying can wait.
+        kept.forEach { (uid, message) ->
+            writer.execute { Faults.guard("history media backup", fallback = Unit) { backups.backUp(account, uid, message) } }
+        }
     }
 
     fun beforeEdited(account: Int, dialogId: Long, previous: Any, next: Any, sameMedia: Boolean) {

@@ -29,6 +29,7 @@ import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
 import org.telegram.messenger.FileLog
 import org.telegram.messenger.R
+import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -54,7 +55,9 @@ object SereinApp {
             listOf(
                 ServicesModule,
                 DeclutterFeature,
-                HistoryFeature { account -> historyStores.getOrPut(account) { RoomHistoryStore(application, account) } },
+                HistoryFeature(File(application.filesDir, "serein_media")) { account ->
+                    historyStores.getOrPut(account) { RoomHistoryStore(application, account) }
+                },
                 BookmarksFeature { account -> bookmarkStores.getOrPut(account) { RoomBookmarkStore(application, account) } },
                 GhostFeature,
                 InputFeature,

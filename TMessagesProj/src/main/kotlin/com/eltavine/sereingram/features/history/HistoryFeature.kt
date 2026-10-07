@@ -13,10 +13,17 @@ import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
 import org.telegram.messenger.R
+import java.io.File
 import java.util.concurrent.Executors
 
-/** Saves deleted messages and earlier versions of edited ones, after AyuGram's message history. */
-class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : SereinModule, SettingsContributor {
+/**
+ * Saves deleted messages and earlier versions of edited ones, after AyuGram's
+ * message history; copies of their media go under [mediaRoot].
+ */
+class HistoryFeature(
+    private val mediaRoot: File,
+    private val stores: (account: Int) -> HistoryStore,
+) : SereinModule, SettingsContributor {
     override val id: String = "history"
 
     override val options: List<Option<*>> = HistoryOptions.all
@@ -26,18 +33,19 @@ class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : Serei
         val kept = MessageMap<Long>()
         val revised = MessageSet()
         val deletedByUser = MessageSet()
-        val recorder = HistoryRecorder(context.options, stores, writer, revised, deletedByUser)
+        val backups = MediaBackups(mediaRoot, context.options)
+        val recorder = HistoryRecorder(context.options, stores, writer, revised, deletedByUser, backups)
         HistoryHooks.userDeletionListeners.install(recorder::beforeUserDeletes)
         HistoryHooks.deletionListeners.install(recorder::beforeDeleted)
         HistoryHooks.editListeners.install(recorder::beforeEdited)
-        val restorer = HistoryRestorer(context.options, stores, kept, revised)
+        val restorer = HistoryRestorer(context.options, stores, kept, revised, backups)
         HistoryHooks.loadListeners.install(restorer::afterLoaded)
         HistoryHooks.chatKeepers.install(KeptInChat(context.options, kept, deletedByUser))
         HistoryHooks.fileKeepers.install { account, _, _ -> context.options.get(HistoryOptions.saveDeleted, account) }
         MessageHooks.timeDecorators.install(restorer::decorateTime)
         MessageMenuHooks.entries.install(EditHistoryEntry(stores, revised))
         MessageMenuHooks.entries.install(DeletedAtEntry(kept))
-        ChatMenuHooks.entries.install(DeletedMessagesEntry(context.options, stores))
+        ChatMenuHooks.entries.install(DeletedMessagesEntry(context.options, stores, backups))
     }
 
     override val settingsIcon: Int = R.drawable.msg_recent
@@ -53,6 +61,16 @@ class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : Serei
                     SettingsRow.Toggle(HistoryOptions.saveInBotChats, R.string.serein_history_save_in_bots),
                 ),
                 note = R.string.serein_history_save_note,
+            ),
+            SettingsSection(
+                header = R.string.serein_history_media,
+                rows = listOf(
+                    SettingsRow.Toggle(HistoryOptions.backupMedia, R.string.serein_history_backup_media),
+                    SettingsRow.Toggle(HistoryOptions.backupInPrivateChats, R.string.serein_history_backup_private),
+                    SettingsRow.Toggle(HistoryOptions.backupInGroups, R.string.serein_history_backup_groups),
+                    SettingsRow.Toggle(HistoryOptions.backupInChannels, R.string.serein_history_backup_channels),
+                ),
+                note = R.string.serein_history_backup_note,
             ),
             SettingsSection(
                 header = R.string.serein_history_appearance,

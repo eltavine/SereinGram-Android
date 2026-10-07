@@ -22,6 +22,12 @@
     <string name="serein_history_save_edits">訊息編輯前的版本</string>
     <string name="serein_history_save_in_bots">包括與機器人的聊天</string>
     <string name="serein_history_save_note">副本按帳號保存在本裝置上 SereinGram 自己的資料庫中，與 Telegram 的快取分開，清除快取不會刪除它們。保存的已刪除訊息會帶著「已刪除」標記回到原聊天中。只有本裝置載入過的訊息才能保存。已刪除訊息中的相片和檔案會留在 Telegram 的快取中，只要快取還保留著它們就能顯示。</string>
+    <string name="serein_history_media">已刪除訊息的媒體</string>
+    <string name="serein_history_backup_media">保存媒體副本</string>
+    <string name="serein_history_backup_private">私人聊天中</string>
+    <string name="serein_history_backup_groups">群組中</string>
+    <string name="serein_history_backup_channels">頻道中</string>
+    <string name="serein_history_backup_note">已刪除訊息中不超過 64 MB 的相片和檔案會複製到 SereinGram 自己的儲存空間中，清除 Telegram 快取後仍能顯示。只有本裝置下載過的媒體才能複製。</string>
     <string name="serein_history_deleted_mark">已刪除</string>
     <string name="serein_history_appearance">外觀</string>
     <string name="serein_history_deleted_mark_title">刪除標記</string>

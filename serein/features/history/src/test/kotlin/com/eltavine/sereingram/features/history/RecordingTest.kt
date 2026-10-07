@@ -30,7 +30,16 @@ class RecordingTest {
     @Test
     fun storageKeysNeverChange() {
         assertEquals(
-            listOf("history_save_deleted", "history_save_edits", "history_save_in_bot_chats", "history_deleted_mark"),
+            listOf(
+                "history_save_deleted",
+                "history_save_edits",
+                "history_save_in_bot_chats",
+                "history_deleted_mark",
+                "history_backup_media",
+                "history_backup_in_private_chats",
+                "history_backup_in_groups",
+                "history_backup_in_channels",
+            ),
             HistoryOptions.all.map { it.key },
         )
     }

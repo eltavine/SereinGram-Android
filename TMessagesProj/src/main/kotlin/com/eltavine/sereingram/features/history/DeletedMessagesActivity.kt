@@ -26,6 +26,7 @@ import org.telegram.ui.Components.UniversalFragment
 internal class DeletedMessagesEntry(
     private val options: Options,
     private val stores: (account: Int) -> HistoryStore,
+    private val backups: MediaBackups,
 ) : ChatMenuHooks.Entry {
     override val id: Int = ChatMenuHooks.FIRST_ID + 3
 
@@ -36,15 +37,17 @@ internal class DeletedMessagesEntry(
     override fun isShown(account: Int, dialogId: Long): Boolean = options.get(HistoryOptions.saveDeleted, account)
 
     override fun onSelected(account: Int, dialogId: Long, chat: Any) {
-        (chat as BaseFragment).presentFragment(DeletedMessagesActivity(stores(account), dialogId, chat as? ChatActivity))
+        val list = DeletedMessagesActivity(stores(account), dialogId, chat as? ChatActivity) { backups.forgetChat(account, dialogId) }
+        (chat as BaseFragment).presentFragment(list)
     }
 }
 
-/** The deleted messages kept of one chat, most recent first, and a way to drop them. */
+/** The deleted messages kept of one chat, most recent first, and a way to drop them with their media. */
 internal class DeletedMessagesActivity(
     private val store: HistoryStore,
     private val dialogId: Long,
     private val chat: ChatActivity?,
+    private val forgetMedia: () -> Unit,
 ) : UniversalFragment() {
     private var records: List<HistoryRecord>? = null
 
@@ -104,7 +107,10 @@ internal class DeletedMessagesActivity(
             .setMessage(getString(R.string.serein_history_deleted_clear_note))
             .setPositiveButton(getString(R.string.serein_history_deleted_clear_confirm)) { _, _ ->
                 Utilities.globalQueue.postRunnable {
-                    Faults.guard("deleted messages", fallback = Unit) { store.clear(dialogId) }
+                    Faults.guard("deleted messages", fallback = Unit) {
+                        store.clear(dialogId)
+                        forgetMedia()
+                    }
                     reload()
                 }
             }
