@@ -20,6 +20,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ApplicationLoader
+import org.telegram.messenger.DialogObject
 import org.telegram.messenger.FileLoader
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MessageObject
@@ -44,7 +45,8 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
     private class Provider(private val options: Options) : TranscriptionHooks.Provider {
         override fun offers(account: Int, message: Any): Boolean {
             val shown = message as MessageObject
-            return config(options).isUsable && (shown.isVoice || shown.isRoundVideo) && shown.isSent && shown.messageOwner?.media?.ttl_seconds == 0
+            return config(options).isUsable && (shown.isVoice || shown.isRoundVideo) && shown.isSent &&
+                shown.messageOwner?.media?.ttl_seconds == 0 && !DialogObject.isEncryptedDialog(shown.dialogId)
         }
 
         override fun tap(account: Int, message: Any, open: Boolean, button: Any): Boolean {

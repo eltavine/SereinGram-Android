@@ -146,7 +146,7 @@
     <string name="serein_lock_list_empty">還沒有鎖定的聊天。可在聊天選單中鎖定。</string>
     <string name="serein_transcription_title">語音轉文字</string>
     <string name="serein_transcription_enabled">使用我自己的服務轉寫</string>
-    <string name="serein_transcription_note">語音訊息和影片訊息會出現轉寫按鈕，無須 Telegram Premium 即可用下方服務轉成文字。訊息的音訊會傳送給該服務。</string>
+    <string name="serein_transcription_note">語音訊息和影片訊息會出現轉寫按鈕，無須 Telegram Premium 即可用下方服務轉成文字。訊息的音訊會傳送給該服務，因此私密聊天中的訊息不會出現此按鈕。</string>
     <string name="serein_transcription_service">服務</string>
     <string name="serein_transcription_base_url">網址</string>
     <string name="serein_transcription_base_url_hint">https://api.openai.com/v1</string>

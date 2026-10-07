@@ -146,7 +146,7 @@
     <string name="serein_lock_list_empty">No chat is locked yet. Lock one from its menu.</string>
     <string name="serein_transcription_title">Voice transcription</string>
     <string name="serein_transcription_enabled">Transcribe with my own service</string>
-    <string name="serein_transcription_note">Voice and video messages get a button that turns them into text with the service below, without Telegram Premium. Their audio is sent to that service.</string>
+    <string name="serein_transcription_note">Voice and video messages get a button that turns them into text with the service below, without Telegram Premium. Their audio is sent to that service, so messages in secret chats get none.</string>
     <string name="serein_transcription_service">Service</string>
     <string name="serein_transcription_base_url">Address</string>
     <string name="serein_transcription_base_url_hint">https://api.openai.com/v1</string>
