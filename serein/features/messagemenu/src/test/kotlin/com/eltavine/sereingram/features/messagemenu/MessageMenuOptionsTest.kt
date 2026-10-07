@@ -21,4 +21,19 @@ class MessageMenuOptionsTest {
         assertFalse(offersBlock(enabled = true, sender(isSelf = true)))
         assertFalse(offersBlock(enabled = true, sender(isBlocked = true)))
     }
+
+    @Test
+    fun privateRepliesAreOfferedForWhatOtherPeopleSayInGroups() {
+        assertTrue(offersPrivateReply(enabled = true, sender(), replyable = true))
+    }
+
+    @Test
+    fun privateRepliesAreNotOfferedWhereTelegramCouldNotSendThem() {
+        assertFalse(offersPrivateReply(enabled = false, sender(), replyable = true))
+        assertFalse(offersPrivateReply(enabled = true, sender(), replyable = false))
+        assertFalse(offersPrivateReply(enabled = true, sender(inGroup = false), replyable = true))
+        assertFalse(offersPrivateReply(enabled = true, sender(userId = -100), replyable = true))
+        assertFalse(offersPrivateReply(enabled = true, sender(isSelf = true), replyable = true))
+        assertFalse(offersPrivateReply(enabled = true, sender(isBlocked = true), replyable = true))
+    }
 }
