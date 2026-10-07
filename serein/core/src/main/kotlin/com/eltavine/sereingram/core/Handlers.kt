@@ -14,14 +14,19 @@ public class Handlers<H : Any> {
     public val isEmpty: Boolean
         get() = installed.isEmpty()
 
-    /** Adds [handler] after the ones already installed; closing the result removes it. */
+    /** Adds [handler] after the ones already installed; closing the result removes this installation once. */
     public fun install(handler: H): AutoCloseable {
         synchronized(this) {
             installed = installed + handler
         }
+        var removed = false
         return AutoCloseable {
             synchronized(this) {
-                installed = installed.filterNot { it === handler }
+                val index = installed.indexOfFirst { it === handler }
+                if (!removed && index >= 0) {
+                    removed = true
+                    installed = installed.filterIndexed { position, _ -> position != index }
+                }
             }
         }
     }

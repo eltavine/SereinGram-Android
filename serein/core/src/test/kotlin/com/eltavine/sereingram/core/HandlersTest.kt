@@ -22,6 +22,17 @@ class HandlersTest {
     }
 
     @Test
+    fun closingRemovesOneInstallationOnceEvenOfTheSameHandler() {
+        val handlers = Handlers<Handler>()
+        val shared = Handler { "shared" }
+        val firstInstall = handlers.install(shared)
+        handlers.install(shared)
+        firstInstall.close()
+        firstInstall.close()
+        assertEquals(listOf("shared"), handlers.all.map { it.name() })
+    }
+
+    @Test
     fun aSnapshotIsUnaffectedByLaterInstalls() {
         val handlers = Handlers<Handler>()
         val snapshot = handlers.all
