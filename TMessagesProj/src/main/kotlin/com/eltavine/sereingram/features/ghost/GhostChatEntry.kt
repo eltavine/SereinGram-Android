@@ -17,7 +17,7 @@ internal class GhostChatEntry(private val gate: GhostGate) : ChatMenuHooks.Entry
 
     override val icon: Int = R.drawable.icon_ghost
 
-    override fun title(): CharSequence = getString(R.string.serein_ghost_chat)
+    override fun title(account: Int, dialogId: Long): CharSequence = getString(R.string.serein_ghost_chat)
 
     override fun isShown(account: Int, dialogId: Long): Boolean =
         (NagramGhost.readsHidden || NagramGhost.typingHidden) && dialogId != UserConfig.getInstance(account).clientUserId

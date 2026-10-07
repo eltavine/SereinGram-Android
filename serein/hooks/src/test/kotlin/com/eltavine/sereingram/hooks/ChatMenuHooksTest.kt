@@ -14,7 +14,7 @@ class ChatMenuHooksTest {
         val selected = mutableListOf<Long>()
         override val icon: Int = 7
 
-        override fun title(): CharSequence = title.invoke()
+        override fun title(account: Int, dialogId: Long): CharSequence = title.invoke()
 
         override fun isShown(account: Int, dialogId: Long): Boolean = dialogId == shownIn
 

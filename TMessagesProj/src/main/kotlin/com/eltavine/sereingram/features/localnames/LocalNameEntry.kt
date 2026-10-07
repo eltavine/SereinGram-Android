@@ -22,7 +22,7 @@ internal class LocalNameEntry(private val feature: LocalNamesFeature) : ChatMenu
 
     override val icon: Int = R.drawable.msg_edit
 
-    override fun title(): CharSequence = getString(R.string.serein_local_name)
+    override fun title(account: Int, dialogId: Long): CharSequence = getString(R.string.serein_local_name)
 
     override fun isShown(account: Int, dialogId: Long): Boolean =
         !DialogObject.isEncryptedDialog(dialogId) && dialogId != UserConfig.getInstance(account).clientUserId

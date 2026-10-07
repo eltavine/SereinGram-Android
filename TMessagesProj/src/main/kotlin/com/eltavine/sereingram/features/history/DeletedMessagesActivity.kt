@@ -37,7 +37,7 @@ internal class DeletedMessagesEntry(
 
     override val icon: Int = R.drawable.msg_delete
 
-    override fun title(): CharSequence = getString(R.string.serein_history_deleted_list)
+    override fun title(account: Int, dialogId: Long): CharSequence = getString(R.string.serein_history_deleted_list)
 
     override fun isShown(account: Int, dialogId: Long): Boolean = options.get(HistoryOptions.saveDeleted, account)
 

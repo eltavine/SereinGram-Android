@@ -46,7 +46,7 @@ internal class BookmarksChatEntry(private val feature: BookmarksFeature) : ChatM
 
     override val icon: Int = R.drawable.msg_fave
 
-    override fun title(): CharSequence = getString(R.string.serein_bookmarks_title)
+    override fun title(account: Int, dialogId: Long): CharSequence = getString(R.string.serein_bookmarks_title)
 
     override fun isShown(account: Int, dialogId: Long): Boolean = feature.hasAny(account, dialogId)
 

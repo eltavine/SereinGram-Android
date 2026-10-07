@@ -11,9 +11,9 @@ public object ChatMenuHooks {
 
         public val icon: Int
 
-        public fun title(): CharSequence
-
         public fun isShown(account: Int, dialogId: Long): Boolean
+
+        public fun title(account: Int, dialogId: Long): CharSequence
 
         /** [chat] is the chat screen the menu belongs to. */
         public fun onSelected(account: Int, dialogId: Long, chat: Any)
@@ -33,7 +33,7 @@ public object ChatMenuHooks {
         entries.all.forEach { entry ->
             Faults.guard("chat menu entry", fallback = Unit) {
                 if (entry.id >= FIRST_ID && entry.isShown(account, dialogId)) {
-                    val title = entry.title()
+                    val title = entry.title(account, dialogId)
                     menu.add(entry.id, entry.icon, title)
                 }
             }

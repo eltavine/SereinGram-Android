@@ -57,7 +57,7 @@ private class ShortcutEntry(private val shortcut: AdminShortcut, private val opt
         AdminShortcut.INVITE_LINKS -> R.drawable.msg_link2
     }
 
-    override fun title(): CharSequence = getString(title(shortcut))
+    override fun title(account: Int, dialogId: Long): CharSequence = getString(title(shortcut))
 
     override fun isShown(account: Int, dialogId: Long): Boolean {
         if (dialogId >= 0 || !options.get(shortcut.option)) {
