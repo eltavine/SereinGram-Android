@@ -9529,6 +9529,7 @@ public class MessagesController extends BaseController implements NotificationCe
             } else if (welcomeMessages) {
                 getMessagesStorage().markMessagesAsDeleted(dialogId, messages, true, false, ChatActivity.MODE_WELCOME_MESSAGES, topicId);
             } else {
+                if (!cacheOnly) com.eltavine.sereingram.hooks.HistoryHooks.beforeUserDeletes(currentAccount, dialogId, messages);
                 if (channelId == 0) {
                     for (int a = 0; a < messages.size(); a++) {
                         Integer id = messages.get(a);

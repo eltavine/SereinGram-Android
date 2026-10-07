@@ -60,6 +60,16 @@ class RoomHistoryStoreTest {
     }
 
     @Test
+    fun forgettingMessagesDropsAllTheirRecordsInThatChatOnly() {
+        store.add(listOf(record(RecordKind.EDITED, 3), record(RecordKind.DELETED, 3), record(RecordKind.DELETED, 4)))
+        store.add(listOf(record(RecordKind.DELETED, 3, dialogId = -200L)))
+        store.forget(-100L, listOf(3))
+        assertEquals(listOf(4), store.deleted(-100L, limit = 10).map { it.messageId })
+        assertEquals(emptyList(), store.revisions(-100L, 3))
+        assertEquals(1, store.count(-200L, RecordKind.DELETED))
+    }
+
+    @Test
     fun dialogsAreSeparateAndCanBeCleared() {
         store.add(listOf(record(RecordKind.DELETED, 1, dialogId = 1L), record(RecordKind.DELETED, 1, dialogId = 2L)))
         store.clear(1L)

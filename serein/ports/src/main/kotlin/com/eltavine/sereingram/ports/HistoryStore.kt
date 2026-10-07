@@ -45,6 +45,9 @@ public interface HistoryStore {
     /** Which of [messageIds] have earlier versions kept. */
     public fun withRevisions(dialogId: Long, messageIds: Collection<Int>): Set<Int>
 
+    /** Drops everything kept of [messageIds]. */
+    public fun forget(dialogId: Long, messageIds: Collection<Int>)
+
     public fun count(dialogId: Long, kind: RecordKind): Int
 
     public fun clear(dialogId: Long)

@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 306,
-    "all_added_lines": 250,
+    "all_added_lines": 252,
     "source_files": 18,
-    "source_added_lines": 30,
-    "hook_calls": 14
+    "source_added_lines": 32,
+    "hook_calls": 16
   }
 }

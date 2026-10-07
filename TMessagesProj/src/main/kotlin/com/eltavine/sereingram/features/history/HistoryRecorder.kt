@@ -6,7 +6,6 @@ import com.eltavine.sereingram.ports.HistoryRecord
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.ports.RecordKind
 import org.telegram.messenger.MessageObject
-import org.telegram.messenger.MessagesController
 import org.telegram.messenger.MessagesStorage
 import org.telegram.messenger.UserConfig
 import org.telegram.tgnet.TLRPC
@@ -15,19 +14,33 @@ import java.util.concurrent.Executor
 /**
  * Keeps the versions of messages Telegram is about to drop. It reads them on
  * Telegram's storage queue, where the hooks run, and writes on [writer].
+ * What the user deletes is not kept, and anything kept of it is dropped.
  */
 internal class HistoryRecorder(
     private val options: Options,
     private val stores: (account: Int) -> HistoryStore,
     private val writer: Executor,
     private val revised: MessageSet,
+    private val deletedByUser: MessageSet,
 ) {
+    fun beforeUserDeletes(account: Int, dialogId: Long, messageIds: List<Int>) {
+        val ids = messageIds.filter { it > 0 }
+        if (ids.isEmpty()) {
+            return
+        }
+        deletedByUser.add(account, dialogId, ids)
+        if (options.get(HistoryOptions.saveDeleted, account) || options.get(HistoryOptions.saveEdits, account)) {
+            writer.execute { Faults.guard("history forget", fallback = Unit) { stores(account).forget(dialogId, ids) } }
+        }
+    }
+
     fun beforeDeleted(account: Int, dialogId: Long, messageIds: List<Int>) {
         if (messageIds.isEmpty() || !options.get(HistoryOptions.saveDeleted, account)) {
             return
         }
         val saveInBots = options.get(HistoryOptions.saveInBotChats, account)
         val records = storedMessages(account, dialogId, messageIds)
+            .filterNot { (uid, message) -> deletedByUser.contains(account, uid, message.id) }
             .filter { (uid, _) -> recordsDeletion(saveDeleted = true, saveInBots, Change(botChat = isBotChat(account, uid))) }
             .map { (uid, message) -> record(RecordKind.DELETED, uid, message, revision = 0) }
         write(account, records)
@@ -73,9 +86,6 @@ internal class HistoryRecorder(
         }
         return messages
     }
-
-    private fun isBotChat(account: Int, dialogId: Long): Boolean =
-        dialogId > 0 && MessagesController.getInstance(account).getUser(dialogId)?.bot == true
 
     private fun record(kind: RecordKind, dialogId: Long, message: TLRPC.Message, revision: Int): HistoryRecord =
         HistoryRecord(

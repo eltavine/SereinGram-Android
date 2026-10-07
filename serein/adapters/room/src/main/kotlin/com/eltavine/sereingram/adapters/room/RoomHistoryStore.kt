@@ -29,9 +29,12 @@ public class RoomHistoryStore internal constructor(private val database: History
     override fun revisions(dialogId: Long, messageId: Int): List<HistoryRecord> =
         dao.versions(RecordKind.EDITED.code, dialogId, messageId).mapNotNull(::record)
 
-    // SQLite allows at most 999 bound variables per query.
     override fun withRevisions(dialogId: Long, messageIds: Collection<Int>): Set<Int> =
-        messageIds.distinct().chunked(900).flatMapTo(HashSet()) { dao.present(RecordKind.EDITED.code, dialogId, it) }
+        messageIds.distinct().chunked(MAX_IDS).flatMapTo(HashSet()) { dao.present(RecordKind.EDITED.code, dialogId, it) }
+
+    override fun forget(dialogId: Long, messageIds: Collection<Int>) {
+        messageIds.distinct().chunked(MAX_IDS).forEach { dao.forget(dialogId, it) }
+    }
 
     override fun count(dialogId: Long, kind: RecordKind): Int = dao.count(kind.code, dialogId)
 
@@ -73,5 +76,10 @@ public class RoomHistoryStore internal constructor(private val database: History
             tlMessage = entity.tlMessage,
             apiLayer = entity.apiLayer,
         )
+    }
+
+    private companion object {
+        // Older SQLite builds allow at most 999 bound variables per query.
+        const val MAX_IDS = 900
     }
 }

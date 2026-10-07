@@ -50,6 +50,9 @@ internal interface RecordDao {
     @Query("SELECT DISTINCT message_id FROM records WHERE kind = :kind AND dialog_id = :dialogId AND message_id IN (:messageIds)")
     fun present(kind: Int, dialogId: Long, messageIds: List<Int>): List<Int>
 
+    @Query("DELETE FROM records WHERE dialog_id = :dialogId AND message_id IN (:messageIds)")
+    fun forget(dialogId: Long, messageIds: List<Int>)
+
     @Query("SELECT COUNT(*) FROM records WHERE kind = :kind AND dialog_id = :dialogId")
     fun count(kind: Int, dialogId: Long): Int
 

@@ -23222,6 +23222,7 @@ public class ChatActivity extends BaseFragment implements
             ArrayList<Integer> sentMessages = null;
             if (args.length > 6) sentMessages = (ArrayList<Integer>) args[6];
             boolean movedToScheduled = args.length > 4 && (boolean) args[4] || sentMessages != null && !sentMessages.isEmpty();
+            if (!movedToScheduled) markAsDeletedMessages = com.eltavine.sereingram.hooks.HistoryHooks.removedFromChat(currentAccount, channelId, markAsDeletedMessages, this);
             final ArrayList<MessageObject> messages = new ArrayList<>();
             MessageObject conversionMessage = null;
             boolean conversion = false;

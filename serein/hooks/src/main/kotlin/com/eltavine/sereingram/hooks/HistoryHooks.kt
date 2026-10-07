@@ -4,8 +4,8 @@ import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.Handlers
 
 /**
- * The moments before Telegram drops a version of a message. Both run on
- * Telegram's storage queue while the old data is still in its database.
+ * How messages leave and enter Telegram's history. Unless noted otherwise, the
+ * hooks run on Telegram's storage queue while the old data is still in its database.
  */
 public object HistoryHooks {
     public fun interface DeletionListener {
@@ -35,9 +35,45 @@ public object HistoryHooks {
         )
     }
 
+    public fun interface UserDeletionListener {
+        /** The user deletes [messageIds] of [dialogId]. Runs on the UI thread, before Telegram drops them. */
+        public fun beforeUserDeletes(account: Int, dialogId: Long, messageIds: List<Int>)
+    }
+
+    public fun interface ChatKeeper {
+        /**
+         * Picks which of the just deleted [messageIds] the open [chat] keeps showing.
+         * Runs on the UI thread; [channelId] is 0 outside channels, as for [DeletionListener].
+         */
+        public fun keep(account: Int, channelId: Long, messageIds: List<Int>, chat: Any): Collection<Int>
+    }
+
     public val deletionListeners: Handlers<DeletionListener> = Handlers()
     public val editListeners: Handlers<EditListener> = Handlers()
     public val loadListeners: Handlers<LoadListener> = Handlers()
+    public val userDeletionListeners: Handlers<UserDeletionListener> = Handlers()
+    public val chatKeepers: Handlers<ChatKeeper> = Handlers()
+
+    @JvmStatic
+    public fun beforeUserDeletes(account: Int, dialogId: Long, messageIds: List<Int>) {
+        userDeletionListeners.all.forEach { listener ->
+            Faults.guard("history user deletion listener", fallback = Unit) {
+                listener.beforeUserDeletes(account, dialogId, messageIds)
+            }
+        }
+    }
+
+    /** The deleted messages [chat] should remove: [messageIds] itself unless a keeper keeps some. */
+    @JvmStatic
+    public fun removedFromChat(account: Int, channelId: Long, messageIds: ArrayList<Int>, chat: Any): ArrayList<Int> {
+        val kept = HashSet<Int>()
+        chatKeepers.all.forEach { keeper ->
+            Faults.guard("history chat keeper", fallback = Unit) {
+                kept += keeper.keep(account, channelId, messageIds, chat)
+            }
+        }
+        return if (kept.isEmpty()) messageIds else messageIds.filterTo(ArrayList()) { it !in kept }
+    }
 
     @JvmStatic
     @Suppress("UNCHECKED_CAST")

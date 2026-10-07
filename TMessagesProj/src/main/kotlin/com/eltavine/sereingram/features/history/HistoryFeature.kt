@@ -22,12 +22,16 @@ class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : Serei
 
     override fun start(context: ModuleContext) {
         val writer = Executors.newSingleThreadExecutor { Thread(it, "serein-history") }
+        val kept = MessageSet()
         val revised = MessageSet()
-        val recorder = HistoryRecorder(context.options, stores, writer, revised)
+        val deletedByUser = MessageSet()
+        val recorder = HistoryRecorder(context.options, stores, writer, revised, deletedByUser)
+        HistoryHooks.userDeletionListeners.install(recorder::beforeUserDeletes)
         HistoryHooks.deletionListeners.install(recorder::beforeDeleted)
         HistoryHooks.editListeners.install(recorder::beforeEdited)
-        val restorer = HistoryRestorer(context.options, stores, MessageSet(), revised)
+        val restorer = HistoryRestorer(context.options, stores, kept, revised)
         HistoryHooks.loadListeners.install(restorer::afterLoaded)
+        HistoryHooks.chatKeepers.install(KeptInChat(context.options, kept, deletedByUser))
         MessageHooks.timeDecorators.install(restorer::decorateTime)
         MessageMenuHooks.entries.install(EditHistoryEntry(stores, revised))
     }
