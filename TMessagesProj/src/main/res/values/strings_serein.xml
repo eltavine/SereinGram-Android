@@ -145,4 +145,7 @@
     <string name="serein_transcription_downloading">Downloading the message first; tap again once it has loaded.</string>
     <string name="serein_transcription_too_long">This message is too long to transcribe: services take up to 25 MB.</string>
     <string name="serein_transcription_failed">Could not transcribe: %1$s</string>
+    <string name="serein_playback_title">Playback</string>
+    <string name="serein_playback_stop_after_voice">Stop after each voice message</string>
+    <string name="serein_playback_stop_after_voice_note">When a voice or video message ends, Telegram goes on to the next one in the chat. With this on, playback stops at the end of the one you started.</string>
 </resources>

@@ -20,6 +20,7 @@ import com.eltavine.sereingram.features.links.LinksFeature
 import com.eltavine.sereingram.features.localnames.LocalNamesFeature
 import com.eltavine.sereingram.features.messagemenu.MessageMenuFeature
 import com.eltavine.sereingram.features.notifications.NotificationsFeature
+import com.eltavine.sereingram.features.playback.PlaybackFeature
 import com.eltavine.sereingram.features.search.SearchFeature
 import com.eltavine.sereingram.features.services.ServicesModule
 import com.eltavine.sereingram.features.timestamps.TimestampsFeature
@@ -70,6 +71,7 @@ object SereinApp {
                 LocalNamesFeature { account -> localNameStores.getOrPut(account) { PreferencesLocalNameStore(application, account) } },
                 MessageMenuFeature,
                 NotificationsFeature,
+                PlaybackFeature,
                 SearchFeature,
                 TimestampsFeature,
                 TranscriptionFeature,

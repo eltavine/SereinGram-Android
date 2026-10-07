@@ -145,4 +145,7 @@
     <string name="serein_transcription_downloading">正在先下載這則訊息，下載完成後請再點一次。</string>
     <string name="serein_transcription_too_long">這則訊息太長，無法轉寫：服務最多接受 25 MB。</string>
     <string name="serein_transcription_failed">轉寫失敗：%1$s</string>
+    <string name="serein_playback_title">播放</string>
+    <string name="serein_playback_stop_after_voice">每則語音訊息播完即停</string>
+    <string name="serein_playback_stop_after_voice_note">一則語音或影片訊息播完後，Telegram 會接著播放聊天中的下一則。開啟後，播完你點開的那一則就會停止。</string>
 </resources>
