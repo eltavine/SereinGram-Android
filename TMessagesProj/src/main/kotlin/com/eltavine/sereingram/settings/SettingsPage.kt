@@ -39,6 +39,14 @@ sealed interface SettingsRow {
         val secret: Boolean = option.secret,
     ) : SettingsRow
 
+    /** Picks [option]'s value among [choices] in a dialog; [label] names each one. */
+    class Choice(
+        val option: Option<Int>,
+        @StringRes val title: Int,
+        val choices: List<Int>,
+        val label: (Int) -> CharSequence,
+    ) : SettingsRow
+
     /** A switch for state kept outside SereinGram's options, such as one of Nagram's settings. */
     class Switch(@StringRes val title: Int, val isOn: () -> Boolean, val toggle: () -> Unit) : SettingsRow
 

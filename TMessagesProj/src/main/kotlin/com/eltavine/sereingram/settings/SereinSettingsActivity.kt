@@ -46,6 +46,7 @@ class SereinSettingsActivity(
     private fun item(id: Int, row: SettingsRow): UItem = when (row) {
         is SettingsRow.Toggle -> UItem.asCheck(id, getString(row.title)).setChecked(options.get(row.option, account(row.option)))
         is SettingsRow.Text -> UItem.asButton(id, getString(row.title), shown(row, options.get(row.option, account(row.option))))
+        is SettingsRow.Choice -> UItem.asButton(id, getString(row.title), row.label(options.get(row.option, account(row.option))))
         is SettingsRow.Switch -> UItem.asCheck(id, getString(row.title)).setChecked(row.isOn())
         is SettingsRow.Subpage -> UItem.asButton(id, row.icon, getString(row.page.title))
         is SettingsRow.Screen -> UItem.asButton(id, getString(row.title), row.value())
@@ -77,6 +78,7 @@ class SereinSettingsActivity(
                 row.guard?.invoke(on, change) ?: change()
             }
             is SettingsRow.Text -> edit(row)
+            is SettingsRow.Choice -> choose(row)
             is SettingsRow.Switch -> {
                 row.toggle()
                 listView.adapter.update(true)
@@ -111,6 +113,20 @@ class SereinSettingsActivity(
     }
 
     override fun onLongClick(item: UItem, view: View, position: Int, x: Float, y: Float): Boolean = false
+
+    private fun choose(row: SettingsRow.Choice) {
+        val context = parentActivity ?: return
+        val account = account(row.option)
+        val dialog = AlertDialog.Builder(context, resourceProvider)
+            .setTitle(getString(row.title))
+            .setItems(row.choices.map(row.label).toTypedArray()) { _, which ->
+                options.set(row.option, row.choices[which], account)
+                listView?.adapter?.update(true)
+            }
+            .setNegativeButton(getString(R.string.Cancel), null)
+            .create()
+        showDialog(dialog)
+    }
 
     private fun edit(row: SettingsRow.Text) {
         val context = parentActivity ?: return
