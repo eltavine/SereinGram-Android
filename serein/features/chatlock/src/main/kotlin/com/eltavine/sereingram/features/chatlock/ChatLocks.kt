@@ -47,6 +47,12 @@ public class UnlockWindow(private val millis: Long = 60_000, private val clock: 
         openUntil = clock() + millis
     }
 
+    /** Ends the window early, as when the app goes to the background. */
+    @Synchronized
+    public fun close() {
+        openUntil = Long.MIN_VALUE
+    }
+
     @Synchronized
     public fun isOpen(): Boolean = clock() < openUntil
 }

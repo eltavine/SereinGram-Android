@@ -35,6 +35,9 @@ class ChatLocksTest {
         assertTrue(window.isOpen())
         now += 1
         assertFalse(window.isOpen())
+        window.unlock()
+        window.close()
+        assertFalse(window.isOpen())
     }
 
     @Test

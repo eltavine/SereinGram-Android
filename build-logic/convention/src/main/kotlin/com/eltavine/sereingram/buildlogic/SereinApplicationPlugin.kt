@@ -19,6 +19,7 @@ class SereinApplicationPlugin : Plugin<Project> {
             target.rootProject.subprojects
                 .filter { it.path.startsWith(":serein:") && it.file("build.gradle.kts").isFile }
                 .forEach { target.dependencies.add("implementation", it) }
+            target.dependencies.add("implementation", target.libs.library("androidx-lifecycle-process"))
             target.dependencies.add("testImplementation", target.libs.library("archunit"))
             target.dependencies.add("testImplementation", target.libs.library("ktor-client-mock"))
             val properties = SereinProperties(target)

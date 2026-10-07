@@ -6,6 +6,9 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.eltavine.sereingram.core.DialogIds
 import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.Option
@@ -55,6 +58,11 @@ object ChatLockFeature : SereinModule, SettingsContributor {
         // Notifications are built off the main thread, where the folder of a chat cannot be read safely,
         // and Telegram moves unmuted chats out of the archive when they get a message anyway.
         NotificationHooks.contentPolicies.install { account, dialogId -> isLocked(chat(account, dialogId, archived = false), settings(options, account)) }
+        ProcessLifecycleOwner.get().lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onStop(owner: LifecycleOwner) = window.close()
+            },
+        )
     }
 
     // The chat list would otherwise show what a locked chat keeps behind its lock.
