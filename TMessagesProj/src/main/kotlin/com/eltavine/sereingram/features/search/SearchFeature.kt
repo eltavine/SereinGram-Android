@@ -19,6 +19,7 @@ object SearchFeature : SereinModule, SettingsContributor {
     override fun start(context: ModuleContext) {
         val options = context.options
         SearchHooks.globalSearchPolicies.install { !options.get(SearchOptions.hideGlobalResults) }
+        SearchHooks.appsTabPolicies.install { !options.get(SearchOptions.hideAppsTab) }
     }
 
     override val settingsIcon: Int = R.drawable.msg_search
@@ -29,6 +30,10 @@ object SearchFeature : SereinModule, SettingsContributor {
             SettingsSection(
                 rows = listOf(SettingsRow.Toggle(SearchOptions.hideGlobalResults, R.string.serein_search_hide_global)),
                 note = R.string.serein_search_hide_global_note,
+            ),
+            SettingsSection(
+                rows = listOf(SettingsRow.Toggle(SearchOptions.hideAppsTab, R.string.serein_search_hide_apps)),
+                note = R.string.serein_search_hide_apps_note,
             ),
         ),
     )

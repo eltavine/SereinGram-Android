@@ -1539,7 +1539,7 @@ public class SearchViewPager extends ViewPagerFixed implements FilteredSearchVie
                 items.add(new Item(PUBLIC_POSTS_TYPE));
             }
             items.add(new Item(CHANNELS_TYPE));
-            items.add(new Item(BOTS_TYPE));
+            if (com.eltavine.sereingram.hooks.SearchHooks.showsAppsTab()) items.add(new Item(BOTS_TYPE));
             items.add(new Item(POSTS_TYPE));
             if (!showOnlyDialogsAdapter) {
                 Item item = new Item(FILTER_TYPE);

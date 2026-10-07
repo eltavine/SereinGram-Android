@@ -17,10 +17,10 @@
     "README.md"
   ],
   "budget": {
-    "all_files": 308,
-    "all_added_lines": 265,
-    "source_files": 20,
-    "source_added_lines": 45
+    "all_files": 309,
+    "all_added_lines": 266,
+    "source_files": 21,
+    "source_added_lines": 46
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -61,6 +61,9 @@
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/Components/EditTextCaption.java": [
       "hooks.InputHooks.pastesPlainText"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/ui/Components/SearchViewPager.java": [
+      "hooks.SearchHooks.showsAppsTab"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java": [
       "hooks.DialogsHooks.drawTitleStatus",

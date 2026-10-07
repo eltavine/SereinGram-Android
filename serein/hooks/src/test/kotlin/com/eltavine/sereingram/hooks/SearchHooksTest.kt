@@ -21,4 +21,15 @@ class SearchHooksTest {
             broken.close()
         }
     }
+
+    @Test
+    fun theAppsTabStaysUnlessAPolicyHidesIt() {
+        assertTrue(SearchHooks.showsAppsTab())
+        val hidden = SearchHooks.appsTabPolicies.install { false }
+        try {
+            assertFalse(SearchHooks.showsAppsTab())
+        } finally {
+            hidden.close()
+        }
+    }
 }
