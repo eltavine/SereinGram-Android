@@ -18636,6 +18636,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         if (messageObject.messageOwner != null && messageObject.messageOwner.translated) {
             timeString = timeString + " | " + LocaleController.getString(R.string.Translate);
         }
+        timeString = com.eltavine.sereingram.hooks.MessageHooks.decorateTime(currentAccount, messageObject.getDialogId(), messageObject.getId(), timeString);
         if (messageObject.isAnyKindOfSticker() && NaConfig.INSTANCE.getRealHideTimeForSticker().Bool()) {
             timeString = "";
             drawEditedIcon = false;

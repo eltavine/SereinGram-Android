@@ -9,7 +9,6 @@ import org.telegram.messenger.MessageObject
 import org.telegram.messenger.MessagesController
 import org.telegram.messenger.MessagesStorage
 import org.telegram.messenger.UserConfig
-import org.telegram.tgnet.SerializedData
 import org.telegram.tgnet.TLRPC
 import java.util.concurrent.Executor
 
@@ -76,12 +75,8 @@ internal class HistoryRecorder(
     private fun isBotChat(account: Int, dialogId: Long): Boolean =
         dialogId > 0 && MessagesController.getInstance(account).getUser(dialogId)?.bot == true
 
-    private fun record(kind: RecordKind, dialogId: Long, message: TLRPC.Message, revision: Int): HistoryRecord {
-        val data = SerializedData(message.objectSize)
-        message.serializeToStream(data)
-        val bytes = data.toByteArray()
-        data.cleanup()
-        return HistoryRecord(
+    private fun record(kind: RecordKind, dialogId: Long, message: TLRPC.Message, revision: Int): HistoryRecord =
+        HistoryRecord(
             kind = kind,
             dialogId = dialogId,
             messageId = message.id,
@@ -91,10 +86,9 @@ internal class HistoryRecorder(
             recordedAt = System.currentTimeMillis(),
             fromId = MessageObject.getFromChatId(message),
             text = message.message.orEmpty(),
-            tlMessage = bytes,
+            tlMessage = MessageCodec.encode(message),
             apiLayer = TLRPC.LAYER,
         )
-    }
 
     private fun write(account: Int, records: List<HistoryRecord>) {
         if (records.isNotEmpty()) {

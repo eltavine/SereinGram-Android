@@ -9983,6 +9983,7 @@ public class MessagesStorage extends BaseController {
                 runnable.run();
             };
         } else {*/
+        com.eltavine.sereingram.hooks.HistoryHooks.afterHistoryLoaded(currentAccount, dialogId, mode, threadMessageId, res.messages, res.users, res.chats);
         int finalMessagesCount = scheduled ? res.messages.size() : messagesCount;
         return () -> getMessagesController().processLoadedMessages(res, finalMessagesCount, dialogId, mergeDialogId, countQueryFinal, maxIdOverrideFinal, offset_date, true, classGuid, minUnreadIdFinal, lastMessageIdFinal, countUnreadFinal, maxUnreadDateFinal, load_type, isEndFinal, mode, threadMessageId, loadIndex, queryFromServerFinal, mentionsUnreadFinal, processMessages, isTopic, loaderLogger);
         //}

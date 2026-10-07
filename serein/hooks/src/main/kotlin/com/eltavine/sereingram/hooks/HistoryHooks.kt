@@ -18,8 +18,52 @@ public object HistoryHooks {
         public fun beforeEdited(account: Int, dialogId: Long, previous: Any, next: Any, sameMedia: Boolean)
     }
 
+    public fun interface LoadListener {
+        /**
+         * Sees a batch of history Telegram read from its database before the chat
+         * gets it, and may add to it. The lists hold Telegram's message, user and
+         * chat objects; [mode] and [threadMessageId] are 0 for a chat's own history.
+         */
+        public fun afterLoaded(
+            account: Int,
+            dialogId: Long,
+            mode: Int,
+            threadMessageId: Long,
+            messages: MutableList<Any?>,
+            users: MutableList<Any?>,
+            chats: MutableList<Any?>,
+        )
+    }
+
     public val deletionListeners: Handlers<DeletionListener> = Handlers()
     public val editListeners: Handlers<EditListener> = Handlers()
+    public val loadListeners: Handlers<LoadListener> = Handlers()
+
+    @JvmStatic
+    @Suppress("UNCHECKED_CAST")
+    public fun afterHistoryLoaded(
+        account: Int,
+        dialogId: Long,
+        mode: Int,
+        threadMessageId: Long,
+        messages: MutableList<*>,
+        users: MutableList<*>,
+        chats: MutableList<*>,
+    ) {
+        loadListeners.all.forEach { listener ->
+            Faults.guard("history load listener", fallback = Unit) {
+                listener.afterLoaded(
+                    account,
+                    dialogId,
+                    mode,
+                    threadMessageId,
+                    messages as MutableList<Any?>,
+                    users as MutableList<Any?>,
+                    chats as MutableList<Any?>,
+                )
+            }
+        }
+    }
 
     @JvmStatic
     public fun beforeMessagesDeleted(account: Int, dialogId: Long, messageIds: List<Int>) {
