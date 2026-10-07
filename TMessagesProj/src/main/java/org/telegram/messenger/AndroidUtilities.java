@@ -5552,6 +5552,7 @@ public class AndroidUtilities {
         if (NekoConfig.skipOpenLinkConfirm.Bool()) {
             return false;
         }
+        if (com.eltavine.sereingram.hooks.LinkHooks.confirmsBeforeOpening(url)) return true;
         try {
             Uri uri = Uri.parse(url);
             url = uri.getHost();

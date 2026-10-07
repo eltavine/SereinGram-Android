@@ -29,4 +29,8 @@
     <string name="serein_history_version_edited">编辑于 %1$s</string>
     <string name="serein_history_version_no_text">无文字</string>
     <string name="serein_history_versions_empty">没有保存这条消息的早先版本。</string>
+    <string name="serein_links_title">链接</string>
+    <string name="serein_links_opening">打开</string>
+    <string name="serein_links_confirm_all">打开链接前询问</string>
+    <string name="serein_links_confirm_all_note">在浏览器中打开链接前显示完整地址并询问。指向 Telegram 自身的链接仍会直接打开。</string>
 </resources>
