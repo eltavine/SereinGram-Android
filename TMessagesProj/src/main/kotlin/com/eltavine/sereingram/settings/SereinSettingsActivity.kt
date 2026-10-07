@@ -1,5 +1,7 @@
 package com.eltavine.sereingram.settings
 
+import android.app.Activity
+import android.content.Intent
 import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
@@ -49,6 +51,7 @@ class SereinSettingsActivity(
         is SettingsRow.Screen -> UItem.asButton(id, getString(row.title), row.value())
         is SettingsRow.Link -> UItem.asButton(id, getString(row.title), row.value())
         is SettingsRow.Action -> UItem.asButton(id, getString(row.title))
+        is SettingsRow.PickFile -> UItem.asButton(id, getString(row.title))
     }
 
     private fun shown(row: SettingsRow.Text, value: String): String = when {
@@ -78,7 +81,28 @@ class SereinSettingsActivity(
             is SettingsRow.Screen -> presentFragment(row.open(options))
             is SettingsRow.Link -> Browser.openUrl(parentActivity, row.url)
             is SettingsRow.Action -> row.run(this)
+            is SettingsRow.PickFile -> pick(row)
             null -> Unit
+        }
+    }
+
+    private var picking: SettingsRow.PickFile? = null
+
+    private fun pick(row: SettingsRow.PickFile) {
+        picking = row
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            .addCategory(Intent.CATEGORY_OPENABLE)
+            .setType(row.mimeTypes.singleOrNull() ?: "*/*")
+            .putExtra(Intent.EXTRA_MIME_TYPES, row.mimeTypes.toTypedArray())
+        startActivityForResult(intent, PICK_FILE)
+    }
+
+    override fun onActivityResultFragment(requestCode: Int, resultCode: Int, data: Intent?) {
+        val row = picking.takeIf { requestCode == PICK_FILE } ?: return
+        picking = null
+        val uri = data?.data
+        if (resultCode == Activity.RESULT_OK && uri != null) {
+            row.picked(this, uri)
         }
     }
 
@@ -116,4 +140,9 @@ class SereinSettingsActivity(
 
     private fun account(option: Option<*>): Int =
         if (option.scope == OptionScope.ACCOUNT) currentAccount else Options.NO_ACCOUNT
+
+    private companion object {
+        // Telegram's own request codes stay well below this.
+        const val PICK_FILE = 0x5e17
+    }
 }

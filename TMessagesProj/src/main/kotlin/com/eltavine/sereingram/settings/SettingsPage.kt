@@ -1,5 +1,6 @@
 package com.eltavine.sereingram.settings
 
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.eltavine.sereingram.core.Option
@@ -47,4 +48,11 @@ sealed interface SettingsRow {
 
     /** Does something once when tapped; [run] gets the page it was tapped on. */
     class Action(@StringRes val title: Int, val run: (BaseFragment) -> Unit) : SettingsRow
+
+    /** Lets the user pick a document of [mimeTypes] with the system picker, then hands it to [picked]. */
+    class PickFile(
+        @StringRes val title: Int,
+        val mimeTypes: List<String>,
+        val picked: (BaseFragment, Uri) -> Unit,
+    ) : SettingsRow
 }
