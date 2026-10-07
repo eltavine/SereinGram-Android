@@ -11,6 +11,7 @@ import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.AndroidUtilities.dp
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.LocaleController.getString
+import org.telegram.messenger.MessageObject
 import org.telegram.messenger.R
 import org.telegram.messenger.Utilities
 import org.telegram.ui.ActionBar.BaseFragment
@@ -30,10 +31,14 @@ internal class EditHistoryEntry(
 
     override fun title(): CharSequence = getString(R.string.serein_history_edit_history)
 
-    override fun isShown(account: Int, dialogId: Long, messageId: Int): Boolean = revised.contains(account, dialogId, messageId)
+    override fun isShown(account: Int, message: Any): Boolean {
+        val shown = message as MessageObject
+        return revised.contains(account, shown.dialogId, shown.id)
+    }
 
-    override fun onSelected(account: Int, dialogId: Long, messageId: Int, host: Any) {
-        (host as BaseFragment).presentFragment(EditHistoryActivity(stores(account), dialogId, messageId))
+    override fun onSelected(account: Int, message: Any, host: Any) {
+        val shown = message as MessageObject
+        (host as BaseFragment).presentFragment(EditHistoryActivity(stores(account), shown.dialogId, shown.id))
     }
 }
 

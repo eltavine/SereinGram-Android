@@ -13,10 +13,11 @@ public object MessageMenuHooks {
 
         public fun title(): CharSequence
 
-        public fun isShown(account: Int, dialogId: Long, messageId: Int): Boolean
+        /** [message] is Telegram's object for the message the menu was opened on. */
+        public fun isShown(account: Int, message: Any): Boolean
 
         /** [host] is the chat screen the menu belongs to. */
-        public fun onSelected(account: Int, dialogId: Long, messageId: Int, host: Any)
+        public fun onSelected(account: Int, message: Any, host: Any)
     }
 
     public const val FIRST_OPTION: Int = 30_000
@@ -27,15 +28,14 @@ public object MessageMenuHooks {
     @JvmStatic
     public fun fill(
         account: Int,
-        dialogId: Long,
-        messageId: Int,
+        message: Any,
         items: MutableList<CharSequence>,
         options: MutableList<Int>,
         icons: MutableList<Int>,
     ) {
         entries.all.forEach { entry ->
             Faults.guard("message menu entry", fallback = Unit) {
-                if (entry.option >= FIRST_OPTION && entry.isShown(account, dialogId, messageId)) {
+                if (entry.option >= FIRST_OPTION && entry.isShown(account, message)) {
                     val title = entry.title()
                     items += title
                     options += entry.option
@@ -47,9 +47,9 @@ public object MessageMenuHooks {
 
     /** Handles [option] when it is one of SereinGram's; false leaves it to Telegram. */
     @JvmStatic
-    public fun select(option: Int, account: Int, dialogId: Long, messageId: Int, host: Any): Boolean {
+    public fun select(option: Int, account: Int, message: Any, host: Any): Boolean {
         val entry = entries.all.firstOrNull { it.option == option } ?: return false
-        Faults.guard("message menu entry", fallback = Unit) { entry.onSelected(account, dialogId, messageId, host) }
+        Faults.guard("message menu entry", fallback = Unit) { entry.onSelected(account, message, host) }
         return true
     }
 }

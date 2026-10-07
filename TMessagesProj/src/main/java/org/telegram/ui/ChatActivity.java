@@ -35390,7 +35390,7 @@ public class ChatActivity extends BaseFragment implements
                 break;
             }
             default: {
-                if (com.eltavine.sereingram.hooks.MessageMenuHooks.select(option, currentAccount, selectedObject.getDialogId(), selectedObject.getId(), this)) break;
+                if (com.eltavine.sereingram.hooks.MessageMenuHooks.select(option, currentAccount, selectedObject, this)) break;
                 nkbtn_onclick(option);
                 break;
             }
@@ -48905,7 +48905,7 @@ public class ChatActivity extends BaseFragment implements
             options.add(OPTION_WELCOME_REVERT);
             icons.add(R.drawable.outline_revert_24);
         }
-        com.eltavine.sereingram.hooks.MessageMenuHooks.fill(currentAccount, message.getDialogId(), message.getId(), items, options, icons);
+        com.eltavine.sereingram.hooks.MessageMenuHooks.fill(currentAccount, message, items, options, icons);
     }
 
     private boolean showWelcomeMessageRevertOption(MessageObject messageObject) {
