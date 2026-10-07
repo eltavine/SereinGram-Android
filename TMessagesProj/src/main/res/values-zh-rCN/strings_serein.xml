@@ -90,4 +90,12 @@
     <string name="serein_bookmarks_empty">还没有书签。可在消息菜单中添加。</string>
     <string name="serein_bookmarks_list_note">点按书签可跳转到对应消息；长按可移除书签。</string>
     <string name="serein_bookmarks_no_text">无文字消息</string>
+    <string name="serein_local_names_title">本地名称</string>
+    <string name="serein_local_names_all">全部本地名称</string>
+    <string name="serein_local_names_note">可在聊天菜单中为用户、群组和频道设置只在本设备上显示的名称。</string>
+    <string name="serein_local_names_empty">还没有本地名称。</string>
+    <string name="serein_local_names_list_note">点按名称可打开聊天；长按可恢复为 Telegram 提供的名称。</string>
+    <string name="serein_local_name">本地名称</string>
+    <string name="serein_local_name_note">只在本设备上显示，替代 Telegram 提供的名称。</string>
+    <string name="serein_local_name_remove">移除</string>
 </resources>

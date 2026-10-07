@@ -6988,6 +6988,7 @@ public class MessagesController extends BaseController implements NotificationCe
         if (user == null) {
             return false;
         }
+        com.eltavine.sereingram.hooks.PeerHooks.beforeUserPut(currentAccount, user);
         fromCache = fromCache && user.id / 1000 != 333 && user.id != 777000;
         TLRPC.User oldUser = users.get(user.id);
         if (oldUser == user && !force) {
@@ -7123,6 +7124,7 @@ public class MessagesController extends BaseController implements NotificationCe
         if (chat == null) {
             return;
         }
+        com.eltavine.sereingram.hooks.PeerHooks.beforeChatPut(currentAccount, chat);
         TLRPC.Chat oldChat = chats.get(chat.id);
         if (oldChat == chat) {
             return;

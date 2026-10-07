@@ -90,4 +90,12 @@
     <string name="serein_bookmarks_empty">還沒有書籤。可在訊息選單中加入。</string>
     <string name="serein_bookmarks_list_note">輕觸書籤可跳至對應訊息；長按可移除書籤。</string>
     <string name="serein_bookmarks_no_text">無文字訊息</string>
+    <string name="serein_local_names_title">本機名稱</string>
+    <string name="serein_local_names_all">所有本機名稱</string>
+    <string name="serein_local_names_note">可在聊天選單中為使用者、群組和頻道設定只在本裝置上顯示的名稱。</string>
+    <string name="serein_local_names_empty">還沒有本機名稱。</string>
+    <string name="serein_local_names_list_note">輕觸名稱可開啟聊天；長按可恢復為 Telegram 提供的名稱。</string>
+    <string name="serein_local_name">本機名稱</string>
+    <string name="serein_local_name_note">只在本裝置上顯示，替代 Telegram 提供的名稱。</string>
+    <string name="serein_local_name_remove">移除</string>
 </resources>

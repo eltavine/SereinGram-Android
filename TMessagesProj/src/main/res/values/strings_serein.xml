@@ -90,4 +90,12 @@
     <string name="serein_bookmarks_empty">No bookmarks yet. Bookmark a message from its menu.</string>
     <string name="serein_bookmarks_list_note">Tap a bookmark to go to its message; long press it to remove it.</string>
     <string name="serein_bookmarks_no_text">Message without text</string>
+    <string name="serein_local_names_title">Local names</string>
+    <string name="serein_local_names_all">All local names</string>
+    <string name="serein_local_names_note">Give people, groups and channels names that only this device shows, from the menu of their chat.</string>
+    <string name="serein_local_names_empty">No local names yet.</string>
+    <string name="serein_local_names_list_note">Tap a name to open its chat; long press it to go back to the name Telegram gives.</string>
+    <string name="serein_local_name">Local name</string>
+    <string name="serein_local_name_note">Shown only on this device, instead of the name Telegram gives.</string>
+    <string name="serein_local_name_remove">Remove</string>
 </resources>

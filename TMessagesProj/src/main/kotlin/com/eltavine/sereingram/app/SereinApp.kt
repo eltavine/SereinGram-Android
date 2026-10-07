@@ -1,6 +1,7 @@
 package com.eltavine.sereingram.app
 
 import android.app.Application
+import com.eltavine.sereingram.adapters.prefs.PreferencesLocalNameStore
 import com.eltavine.sereingram.adapters.prefs.PreferencesStores
 import com.eltavine.sereingram.adapters.room.RoomBookmarkStore
 import com.eltavine.sereingram.adapters.room.RoomHistoryStore
@@ -14,6 +15,7 @@ import com.eltavine.sereingram.features.ghost.GhostFeature
 import com.eltavine.sereingram.features.history.HistoryFeature
 import com.eltavine.sereingram.features.input.InputFeature
 import com.eltavine.sereingram.features.links.LinksFeature
+import com.eltavine.sereingram.features.localnames.LocalNamesFeature
 import com.eltavine.sereingram.features.messagemenu.MessageMenuFeature
 import com.eltavine.sereingram.features.notifications.NotificationsFeature
 import com.eltavine.sereingram.features.search.SearchFeature
@@ -21,6 +23,7 @@ import com.eltavine.sereingram.features.services.ServicesModule
 import com.eltavine.sereingram.features.timestamps.TimestampsFeature
 import com.eltavine.sereingram.ports.BookmarkStore
 import com.eltavine.sereingram.ports.HistoryStore
+import com.eltavine.sereingram.ports.LocalNameStore
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
@@ -46,6 +49,7 @@ object SereinApp {
         options = Options(PreferencesStores(application))
         val historyStores = ConcurrentHashMap<Int, HistoryStore>()
         val bookmarkStores = ConcurrentHashMap<Int, BookmarkStore>()
+        val localNameStores = ConcurrentHashMap<Int, LocalNameStore>()
         val modules = ModuleRegistry(
             listOf(
                 ServicesModule,
@@ -55,6 +59,7 @@ object SereinApp {
                 GhostFeature,
                 InputFeature,
                 LinksFeature,
+                LocalNamesFeature { account -> localNameStores.getOrPut(account) { PreferencesLocalNameStore(application, account) } },
                 MessageMenuFeature,
                 NotificationsFeature,
                 SearchFeature,

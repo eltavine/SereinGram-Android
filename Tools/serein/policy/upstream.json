@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 308,
-    "all_added_lines": 263,
+    "all_added_lines": 265,
     "source_files": 20,
-    "source_added_lines": 43
+    "source_added_lines": 45
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -32,7 +32,9 @@
     "TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java": [
       "hooks.HistoryHooks.beforeMessagesDeleted",
       "hooks.HistoryHooks.beforeUserDeletes",
-      "hooks.HistoryHooks.deletesFilesOf"
+      "hooks.HistoryHooks.deletesFilesOf",
+      "hooks.PeerHooks.beforeChatPut",
+      "hooks.PeerHooks.beforeUserPut"
     ],
     "TMessagesProj/src/main/java/org/telegram/messenger/MessagesStorage.java": [
       "hooks.HistoryHooks.afterHistoryLoaded",
