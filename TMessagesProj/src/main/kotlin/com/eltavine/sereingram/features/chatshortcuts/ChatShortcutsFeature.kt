@@ -25,9 +25,9 @@ import org.telegram.ui.ChannelAdminLogActivity
 import org.telegram.ui.ChatRightsEditActivity
 import org.telegram.ui.ChatUsersActivity
 import org.telegram.ui.Components.BulletinFactory
-import tw.nekomimi.nekogram.NekoConfig
 import org.telegram.ui.ManageLinksActivity
 import org.telegram.ui.StatisticActivity
+import tw.nekomimi.nekogram.NekoConfig
 
 /** Admin screens of a group or channel in its chat's menu, each one optional. */
 object ChatShortcutsFeature : SereinModule, SettingsContributor {
@@ -146,17 +146,19 @@ private class ShortcutEntry(private val shortcut: AdminShortcut, private val opt
     }
 
     override fun onSelected(account: Int, dialogId: Long, chat: Any) {
-        val group = MessagesController.getInstance(account).getChat(-dialogId) ?: return
-        (chat as BaseFragment).presentFragment(screen(group))
+        val controller = MessagesController.getInstance(account)
+        val group = controller.getChat(-dialogId) ?: return
+        val screen = screen(group, controller.getChatFull(group.id)) ?: return
+        (chat as BaseFragment).presentFragment(screen)
     }
 
-    private fun screen(chat: TLRPC.Chat): BaseFragment = when (shortcut) {
+    private fun screen(chat: TLRPC.Chat, full: TLRPC.ChatFull?): BaseFragment? = when (shortcut) {
         AdminShortcut.RECENT_ACTIONS -> ChannelAdminLogActivity(chat)
         AdminShortcut.ADMINISTRATORS -> users(chat, ChatUsersActivity.TYPE_ADMIN)
         AdminShortcut.MEMBERS -> users(chat, ChatUsersActivity.TYPE_USERS)
         AdminShortcut.PERMISSIONS -> users(chat, ChatUsersActivity.TYPE_KICKED)
         AdminShortcut.STATISTICS -> StatisticActivity.create(chat)
-        AdminShortcut.INVITE_LINKS -> ManageLinksActivity(chat.id, 0, 0)
+        AdminShortcut.INVITE_LINKS -> full?.let { info -> ManageLinksActivity(chat.id, 0, 0).apply { setInfo(info, info.exported_invite) } }
     }
 
     private fun users(chat: TLRPC.Chat, type: Int) = ChatUsersActivity(
@@ -172,7 +174,8 @@ private fun rights(chat: TLRPC.Chat, full: TLRPC.ChatFull?) = ChatRights(
     isSupergroup = ChatObject.isMegagroup(chat),
     isAdmin = chat.creator || ChatObject.hasAdminRights(chat),
     canBan = ChatObject.canBlockUsers(chat),
-    canInvite = ChatObject.canUserDoAdminAction(chat, ChatObject.ACTION_INVITE),
+    // Telegram's links screen loads the links from the chat's full info.
+    canInvite = full != null && ChatObject.canUserDoAdminAction(chat, ChatObject.ACTION_INVITE),
     canViewStats = full?.can_view_stats == true,
 )
 
