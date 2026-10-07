@@ -1,5 +1,6 @@
 package com.eltavine.sereingram.features.ghost
 
+import com.eltavine.sereingram.core.DialogIds
 import com.eltavine.sereingram.core.Options
 import org.telegram.messenger.MessagesController
 import org.telegram.tgnet.TLRPC
