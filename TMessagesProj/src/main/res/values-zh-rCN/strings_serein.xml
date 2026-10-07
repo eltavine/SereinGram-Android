@@ -77,7 +77,7 @@
     <string name="serein_ghost_quick_note">也可以在快捷设置中切换幽灵模式：在通知栏中编辑快捷开关，添加 SereinGram 的幽灵模式。</string>
     <string name="serein_ghost_on">幽灵模式已开启</string>
     <string name="serein_ghost_off">幽灵模式已关闭</string>
-    <string name="serein_ghost_shortcut_unsupported">此主屏幕无法添加快捷方式。</string>
+    <string name="serein_ghost_shortcut_unsupported">快捷方式需要 Android 8 或更高版本，以及支持添加快捷方式的主屏幕。</string>
     <string name="serein_message_menu_title">消息菜单</string>
     <string name="serein_message_menu_items">额外选项</string>
     <string name="serein_message_menu_block_sender">屏蔽用户</string>

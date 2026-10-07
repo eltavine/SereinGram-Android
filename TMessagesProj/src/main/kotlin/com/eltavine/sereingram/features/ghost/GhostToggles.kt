@@ -50,7 +50,8 @@ class GhostToggleActivity : Activity() {
 internal object GhostShortcut {
     /** Asks the launcher to pin the toggle; false when it cannot. */
     fun request(context: Context): Boolean {
-        if (!ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
+        // Before Android 8 the launcher starts the shortcut itself, which the toggle, not exported, refuses.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
             return false
         }
         val shortcut = ShortcutInfoCompat.Builder(context, ID)

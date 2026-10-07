@@ -77,7 +77,7 @@
     <string name="serein_ghost_quick_note">Ghost mode can also be switched from a tile in quick settings: edit the tiles in the notification shade and add SereinGram\'s ghost mode.</string>
     <string name="serein_ghost_on">Ghost mode is on</string>
     <string name="serein_ghost_off">Ghost mode is off</string>
-    <string name="serein_ghost_shortcut_unsupported">This home screen cannot add shortcuts.</string>
+    <string name="serein_ghost_shortcut_unsupported">Shortcuts need Android 8 or later and a home screen that can add them.</string>
     <string name="serein_message_menu_title">Message menu</string>
     <string name="serein_message_menu_items">Extra items</string>
     <string name="serein_message_menu_block_sender">Block user</string>
