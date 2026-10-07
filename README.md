@@ -70,7 +70,8 @@ page under Settings → SereinGram.
   ([NagramX #283](https://github.com/risin42/NagramX/issues/283)), or
   **reply to them privately**, after NagramX and OctoGram.
 - **Stop after each voice message** instead of playing the chat's next one,
-  after Cherrygram and NagramX.
+  after Cherrygram and NagramX, and **set how far a double tap jumps** in a
+  video, after exteraGram, Cherrygram and NagramXF.
 - **Ask before sending stickers and GIFs** tapped in their panel, after
   OctoGram.
 - **Read the QR code in a photo** from its menu, then open or copy what it

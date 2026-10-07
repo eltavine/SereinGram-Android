@@ -17,10 +17,10 @@
     "README.md"
   ],
   "budget": {
-    "all_files": 317,
-    "all_added_lines": 280,
-    "source_files": 29,
-    "source_added_lines": 60
+    "all_files": 318,
+    "all_added_lines": 285,
+    "source_files": 30,
+    "source_added_lines": 65
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -97,6 +97,9 @@
     "TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java": [
       "hooks.DialogsHooks.drawTitleStatus",
       "hooks.SearchHooks.allowsGlobalSearch"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/ui/PhotoViewer.java": [
+      "hooks.PlaybackHooks.doubleTapSeekMillis"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java": [
       "hooks.SettingsHooks.Entry",

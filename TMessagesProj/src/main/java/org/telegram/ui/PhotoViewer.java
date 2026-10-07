@@ -21342,17 +21342,18 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             boolean forward = x >= width / 3 * 2;
             if (canDoubleTapSeekVideo(e)) {
                 long old = current;
+                final long sereinStep = com.eltavine.sereingram.hooks.PlaybackHooks.doubleTapSeekMillis();
                 if (x >= width / 3 * 2) {
-                    current += 10000;
+                    current += sereinStep;
                 } else if (x < width / 3) {
-                    current -= 10000;
+                    current -= sereinStep;
                 }
                 if (old != current) {
                     boolean apply = true;
                     if (current > total) {
                         current = total;
                     } else if (current < 0) {
-                        if (current < -9000) {
+                        if (current < 1000 - sereinStep) {
                             apply = false;
                         }
                         current = 0;
@@ -21360,7 +21361,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     if (apply) {
                         videoForwardDrawable.setOneShootAnimation(true);
                         videoForwardDrawable.setLeftSide(x < width / 3);
-                        videoForwardDrawable.addTime(10000);
+                        videoForwardDrawable.addTime(sereinStep);
                         seekVideoOrWebTo(current);
                         containerView.invalidate();
                         videoPlayerSeekbar.setProgress(current / (float) total, true);

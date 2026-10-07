@@ -160,6 +160,9 @@
     <string name="serein_playback_title">播放</string>
     <string name="serein_playback_stop_after_voice">每条语音消息播完即停</string>
     <string name="serein_playback_stop_after_voice_note">一条语音或视频消息播完后，Telegram 会接着播放聊天中的下一条。开启后，播完你点开的那一条就会停止。</string>
+    <string name="serein_playback_videos">视频</string>
+    <string name="serein_playback_double_tap_seek">双击跳转</string>
+    <string name="serein_playback_double_tap_seek_note">在媒体查看器中播放视频时，双击画面左侧或右侧三分之一处会后退或前进这么多；Telegram 默认为 10 秒。</string>
     <string name="serein_sending_title">发送</string>
     <string name="serein_sending_ask_before_sticker">发送贴纸前确认</string>
     <string name="serein_sending_ask_before_gif">发送 GIF 前确认</string>

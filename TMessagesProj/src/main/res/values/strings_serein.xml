@@ -160,6 +160,9 @@
     <string name="serein_playback_title">Playback</string>
     <string name="serein_playback_stop_after_voice">Stop after each voice message</string>
     <string name="serein_playback_stop_after_voice_note">When a voice or video message ends, Telegram goes on to the next one in the chat. With this on, playback stops at the end of the one you started.</string>
+    <string name="serein_playback_videos">Videos</string>
+    <string name="serein_playback_double_tap_seek">Double-tap jump</string>
+    <string name="serein_playback_double_tap_seek_note">Double-tapping the left or right third of a playing video in the media viewer jumps back or ahead by this much; Telegram jumps 10 seconds.</string>
     <string name="serein_sending_title">Sending</string>
     <string name="serein_sending_ask_before_sticker">Ask before sending stickers</string>
     <string name="serein_sending_ask_before_gif">Ask before sending GIFs</string>
