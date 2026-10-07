@@ -18,7 +18,63 @@ SereinGram keeps the features of Nagram (see
 (see [README.NekoX.md](README.NekoX.md)), and ports selected features from
 [NagramX](https://github.com/risin42/NagramX),
 [NagramXF](https://github.com/Keeperorowner/NagramXF) and
-[AyuGram](https://github.com/AyuGram/AyuGram4A).
+[AyuGram](https://github.com/AyuGram/AyuGram4A), along with feature requests
+from their issue trackers. Each is written anew after the behaviour of the
+project or request named, not copied from its code, and each has its page
+under Settings → SereinGram.
+
+- **Message history**, after AyuGram: messages others delete and earlier
+  versions of edited messages are kept per account in a database of their
+  own. Kept deleted messages come back into their chats, stay on screen when
+  deleted while the chat is open, carry a "deleted" mark that can be any text,
+  and keep their downloaded media. A message's menu shows its earlier versions
+  and when it was deleted ([NagramXF #133](https://github.com/Keeperorowner/NagramXF/issues/133)),
+  and a chat's menu lists and clears its kept deleted messages. What the user
+  deletes is not kept.
+- **Ghost mode**, rounding out Nagram's after AyuGram and NagramX: it also
+  holds back reading channel comments and secret chats, and channel posts are
+  not counted as viewed. Chosen chats can see read receipts or typing, a chat
+  can be marked read on demand, a quick settings tile and a home screen
+  shortcut switch it ([NagramXF #181](https://github.com/Keeperorowner/NagramXF/issues/181)),
+  and a ghost beside the chat list title shows it is on
+  ([NagramX #231](https://github.com/risin42/NagramX/issues/231)).
+- **Bookmarks** on messages to jump back to
+  ([NagramX #190](https://github.com/risin42/NagramX/issues/190)).
+- **Local names** for people and chats that only this device shows
+  ([NagramX #254](https://github.com/risin42/NagramX/issues/254)).
+- **Block a sender** from their message in a group
+  ([NagramX #283](https://github.com/risin42/NagramX/issues/283)).
+- **The date beside the time** of older messages
+  ([NagramX #462](https://github.com/risin42/NagramX/issues/462)).
+- **Ask before opening any link**, after NagramX.
+- **Hide global search results** in the chat list search
+  ([NagramXF #10](https://github.com/Keeperorowner/NagramXF/issues/10),
+  [#168](https://github.com/Keeperorowner/NagramXF/issues/168)).
+- **Paste as plain text** in messages and captions
+  ([NagramX #415](https://github.com/risin42/NagramX/issues/415)).
+- **Message content in notifications while locked**
+  ([NagramX #299](https://github.com/risin42/NagramX/issues/299)).
+- **Hide elements**, after NagramX: the Premium and Help sections of the
+  settings, and the share button beside messages.
+- Crash reports and update checks no longer go to Nagram's services.
+
+## Architecture
+
+SereinGram's code is kept apart from Nagram's so that Nagram's updates can be
+merged:
+
+- `serein/` holds Gradle modules that are included on their own: `core`
+  (options, the module registry, fault isolation), `hooks` (the only API that
+  Nagram's code calls), `ports` (storage interfaces), `features/*` (the logic
+  of each feature in plain Kotlin) and `adapters/room` (Room databases).
+- `TMessagesProj/src/main/kotlin/com/eltavine/sereingram` connects them to
+  Telegram: `app/SereinApp` lists every module, `features/*` holds what each
+  feature needs from Telegram, `settings` draws the settings pages.
+- Nagram's files call SereinGram through one line per hook.
+  `Tools/serein/upstream_budget.py` caps how much of Nagram's code changes and
+  fails when a listed hook call disappears, ArchUnit tests keep the layers
+  apart, and commitlint checks every commit; all of them run in CI.
+  `./gradlew sereinCheck` runs the tests of every module.
 
 ## API and protocol documentation
 
