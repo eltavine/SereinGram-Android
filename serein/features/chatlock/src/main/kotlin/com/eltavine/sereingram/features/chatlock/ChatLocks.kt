@@ -7,12 +7,12 @@ import com.eltavine.sereingram.core.textOption
 
 /**
  * What asks to be unlocked before it opens, per account, after Cherrygram's and OctoGram's locks.
- * The options are secrets so that no backup can lift a lock.
+ * They stay out of backups so that no backup can lift a lock.
  */
 public object ChatLockOptions {
-    public val lockedChats: Option<String> = textOption("chat_lock_chats", scope = OptionScope.ACCOUNT, secret = true)
-    public val lockArchive: Option<Boolean> = booleanOption("chat_lock_archive", scope = OptionScope.ACCOUNT, secret = true)
-    public val lockSecretChats: Option<Boolean> = booleanOption("chat_lock_secret_chats", scope = OptionScope.ACCOUNT, secret = true)
+    public val lockedChats: Option<String> = textOption("chat_lock_chats", scope = OptionScope.ACCOUNT, backedUp = false)
+    public val lockArchive: Option<Boolean> = booleanOption("chat_lock_archive", scope = OptionScope.ACCOUNT, backedUp = false)
+    public val lockSecretChats: Option<Boolean> = booleanOption("chat_lock_secret_chats", scope = OptionScope.ACCOUNT, backedUp = false)
 
     public val all: List<Option<*>> = listOf(lockedChats, lockArchive, lockSecretChats)
 }

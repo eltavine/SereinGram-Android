@@ -37,7 +37,8 @@ public sealed class OptionType<T : Any> {
 /**
  * A setting declared by a module. The key is its storage key and never
  * changes once released; an unset value reads as [default]. A [secret], such
- * as an API key, is masked where it is shown and stays out of backups.
+ * as an API key, is masked where it is shown. Only options [backedUp] go into
+ * backups and come back from them; secrets never do.
  */
 public class Option<T : Any>(
     public val key: String,
@@ -45,9 +46,11 @@ public class Option<T : Any>(
     public val default: T,
     public val scope: OptionScope = OptionScope.DEVICE,
     public val secret: Boolean = false,
+    public val backedUp: Boolean = !secret,
 ) {
     init {
         require(KEY.matches(key)) { "option key \"$key\" must be lower_snake_case" }
+        require(!(secret && backedUp)) { "$this is a secret, which no backup may hold" }
     }
 
     override fun toString(): String = "Option($key)"
@@ -62,25 +65,29 @@ public fun booleanOption(
     default: Boolean = false,
     scope: OptionScope = OptionScope.DEVICE,
     secret: Boolean = false,
-): Option<Boolean> = Option(key, OptionType.Bool, default, scope, secret)
+    backedUp: Boolean = !secret,
+): Option<Boolean> = Option(key, OptionType.Bool, default, scope, secret, backedUp)
 
 public fun intOption(
     key: String,
     default: Int = 0,
     scope: OptionScope = OptionScope.DEVICE,
     secret: Boolean = false,
-): Option<Int> = Option(key, OptionType.Int32, default, scope, secret)
+    backedUp: Boolean = !secret,
+): Option<Int> = Option(key, OptionType.Int32, default, scope, secret, backedUp)
 
 public fun longOption(
     key: String,
     default: Long = 0,
     scope: OptionScope = OptionScope.DEVICE,
     secret: Boolean = false,
-): Option<Long> = Option(key, OptionType.Int64, default, scope, secret)
+    backedUp: Boolean = !secret,
+): Option<Long> = Option(key, OptionType.Int64, default, scope, secret, backedUp)
 
 public fun textOption(
     key: String,
     default: String = "",
     scope: OptionScope = OptionScope.DEVICE,
     secret: Boolean = false,
-): Option<String> = Option(key, OptionType.Text, default, scope, secret)
+    backedUp: Boolean = !secret,
+): Option<String> = Option(key, OptionType.Text, default, scope, secret, backedUp)

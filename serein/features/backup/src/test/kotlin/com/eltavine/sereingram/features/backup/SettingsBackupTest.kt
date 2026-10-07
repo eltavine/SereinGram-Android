@@ -21,7 +21,8 @@ class SettingsBackupTest {
     private val mark = textOption("some_mark")
     private val perAccount = booleanOption("some_account_flag", scope = OptionScope.ACCOUNT)
     private val key = textOption("some_api_key", secret = true)
-    private val all = listOf(flag, count, since, mark, perAccount, key)
+    private val address = textOption("some_api_address", backedUp = false)
+    private val all = listOf(flag, count, since, mark, perAccount, key, address)
 
     private fun options(): Options {
         val stores = HashMap<Pair<OptionScope, Int>, KeyValueStore>()
@@ -71,6 +72,16 @@ class SettingsBackupTest {
         val target = options().apply { set(key, "sk-target") }
         SettingsBackup.restore(target, all, account = 0, document)
         assertEquals("sk-target", target.get(key))
+    }
+
+    @Test
+    fun optionsThatAreNotBackedUpStayOutAndAreKept() {
+        val source = options().apply { set(address, "https://elsewhere.example") }
+        val document = SettingsBackup.write(source, all, account = 0)
+        assertFalse("elsewhere" in document)
+        val target = options().apply { set(address, "https://mine.example") }
+        SettingsBackup.restore(target, all, account = 0, document)
+        assertEquals("https://mine.example", target.get(address))
     }
 
     @Test

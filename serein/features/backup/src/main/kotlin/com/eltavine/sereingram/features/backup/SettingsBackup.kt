@@ -27,8 +27,8 @@ public sealed interface Restore {
 
 /**
  * SereinGram's settings as a JSON document, after Cherrygram's backups. A backup holds the
- * options of the device and of one account that differ from their defaults; secrets stay out
- * of it, and restoring one leaves them as they are.
+ * options of the device and of one account that differ from their defaults; options that are
+ * not [Option.backedUp], such as secrets, stay out of it, and restoring one leaves them as they are.
  */
 public object SettingsBackup {
     public const val FORMAT: String = "sereingram-settings"
@@ -82,7 +82,7 @@ public object SettingsBackup {
         return Restore.Done(changed, skipped)
     }
 
-    private fun backedUp(all: List<Option<*>>, scope: OptionScope) = all.filter { it.scope == scope && !it.secret }
+    private fun backedUp(all: List<Option<*>>, scope: OptionScope) = all.filter { it.scope == scope && it.backedUp }
 
     private fun section(scope: OptionScope) = when (scope) {
         OptionScope.DEVICE -> "device"

@@ -18,6 +18,13 @@ class OptionsTest {
     private val ghost = booleanOption("ghost_mode", scope = OptionScope.ACCOUNT)
 
     @Test
+    fun secretsAreNeverBackedUp() {
+        assertFalse(textOption("some_key", secret = true).backedUp)
+        assertTrue(textOption("some_name").backedUp)
+        assertFailsWith<IllegalArgumentException> { textOption("some_key", secret = true, backedUp = true) }
+    }
+
+    @Test
     fun unsetOptionsReadTheirDefault() {
         assertFalse(options.get(compact))
         assertEquals(100, options.get(limit))
