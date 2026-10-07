@@ -11,6 +11,7 @@ import com.eltavine.sereingram.features.declutter.DeclutterFeature
 import com.eltavine.sereingram.features.ghost.GhostFeature
 import com.eltavine.sereingram.features.history.HistoryFeature
 import com.eltavine.sereingram.features.links.LinksFeature
+import com.eltavine.sereingram.features.messagemenu.MessageMenuFeature
 import com.eltavine.sereingram.features.services.ServicesModule
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.settings.SettingsContributor
@@ -44,6 +45,7 @@ object SereinApp {
                 HistoryFeature { account -> historyStores.getOrPut(account) { RoomHistoryStore(application, account) } },
                 GhostFeature,
                 LinksFeature,
+                MessageMenuFeature,
             ),
         )
         modules.start(ModuleContext(options, Faults::report))

@@ -52,4 +52,8 @@
     <string name="serein_ghost_on">幽灵模式已开启</string>
     <string name="serein_ghost_off">幽灵模式已关闭</string>
     <string name="serein_ghost_shortcut_unsupported">此主屏幕无法添加快捷方式。</string>
+    <string name="serein_message_menu_title">消息菜单</string>
+    <string name="serein_message_menu_items">额外选项</string>
+    <string name="serein_message_menu_block_sender">屏蔽用户</string>
+    <string name="serein_message_menu_block_sender_note">在群组或频道评论中，长按他人发送的消息时提供屏蔽发送者的选项。</string>
 </resources>
