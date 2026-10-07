@@ -36,6 +36,21 @@ class MessageHooksTest {
     }
 
     @Test
+    fun reactionsShowUnlessAPolicyHidesThem() {
+        assertEquals(false, MessageHooks.hidesReactions(0, "message"))
+        val installs = listOf(
+            MessageHooks.reactionsPolicies.install { _, _ -> throw IllegalStateException() },
+            MessageHooks.reactionsPolicies.install { _, message -> message != "tagged" },
+        )
+        try {
+            assertEquals(true, MessageHooks.hidesReactions(0, "message"))
+            assertEquals(false, MessageHooks.hidesReactions(0, "tagged"))
+        } finally {
+            installs.forEach(AutoCloseable::close)
+        }
+    }
+
+    @Test
     fun loadListenersMayAddToTheBatch() {
         val install = HistoryHooks.loadListeners.install { _, _, _, _, messages, _, _ -> messages += "restored" }
         try {

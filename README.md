@@ -89,8 +89,9 @@ page under Settings → SereinGram.
 - **Message content in notifications while locked**
   ([NagramX #299](https://github.com/risin42/NagramX/issues/299)).
 - **Hide elements**, after NagramX and OctoGram: the Premium and Help
-  sections of the settings, the share button beside messages, and the gift
-  and message buttons under channels.
+  sections of the settings, the share button beside messages, reactions
+  under messages, after Swiftgram, and the gift and message buttons under
+  channels.
 - **A backup of SereinGram's settings** to keep as a file and restore, after
   Cherrygram; API keys and chat locks stay out of it.
 - Crash reports and update checks no longer go to Nagram's services.

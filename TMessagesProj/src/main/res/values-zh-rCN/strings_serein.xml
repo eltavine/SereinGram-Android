@@ -15,7 +15,8 @@
     <string name="serein_declutter_settings_note">Premium 分区包括 Telegram Premium、星星、TON、商业版与礼物；帮助分区包括提问、常见问题、功能介绍与隐私政策。</string>
     <string name="serein_declutter_chats">聊天</string>
     <string name="serein_declutter_hide_share">隐藏消息旁的分享按钮</string>
-    <string name="serein_declutter_hide_share_note">转发到收藏夹的消息保留此按钮，用于打开消息来源的聊天。</string>
+    <string name="serein_declutter_hide_reactions">隐藏消息下方的回应</string>
+    <string name="serein_declutter_chats_note">转发到收藏夹的消息保留分享按钮，用于打开消息来源的聊天；收藏夹中的消息也会保留其标签。</string>
     <string name="serein_declutter_channels">频道</string>
     <string name="serein_declutter_hide_channel_gift">隐藏礼物按钮</string>
     <string name="serein_declutter_hide_channel_message">隐藏向频道发消息的按钮</string>

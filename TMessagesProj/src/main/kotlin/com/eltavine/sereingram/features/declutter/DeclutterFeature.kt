@@ -4,15 +4,17 @@ import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ChatHooks
+import com.eltavine.sereingram.hooks.MessageHooks
 import com.eltavine.sereingram.hooks.SettingsHooks
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import org.telegram.messenger.MessageObject
 import org.telegram.messenger.R
 import org.telegram.ui.Components.chat.layouts.ChatActivityChannelButtonsLayout
 
-/** Hides Telegram elements, after NagramX's and OctoGram's options of the same names. */
+/** Hides Telegram elements, after NagramX's, OctoGram's and Swiftgram's options of the same names. */
 object DeclutterFeature : SereinModule, SettingsContributor {
     override val id: String = "declutter"
 
@@ -22,6 +24,10 @@ object DeclutterFeature : SereinModule, SettingsContributor {
         val options = context.options
         ChatHooks.shareButtonPolicies.install { _, _, saved ->
             allowShareButton(options.get(DeclutterOptions.hideShareButton), saved)
+        }
+        MessageHooks.reactionsPolicies.install { _, message ->
+            val tags = (message as MessageObject).messageOwner?.reactions?.reactions_as_tags == true
+            hidesReactions(options.get(DeclutterOptions.hideReactions), tags)
         }
         ChatHooks.channelButtonPolicies.install { button ->
             when (button) {
@@ -50,8 +56,9 @@ object DeclutterFeature : SereinModule, SettingsContributor {
                 header = R.string.serein_declutter_chats,
                 rows = listOf(
                     SettingsRow.Toggle(DeclutterOptions.hideShareButton, R.string.serein_declutter_hide_share),
+                    SettingsRow.Toggle(DeclutterOptions.hideReactions, R.string.serein_declutter_hide_reactions),
                 ),
-                note = R.string.serein_declutter_hide_share_note,
+                note = R.string.serein_declutter_chats_note,
             ),
             SettingsSection(
                 header = R.string.serein_declutter_channels,

@@ -15,7 +15,8 @@
     <string name="serein_declutter_settings_note">The Premium section holds Telegram Premium, Stars, TON, Business and gifts; the Help section holds questions, the FAQ, features and the privacy policy.</string>
     <string name="serein_declutter_chats">Chats</string>
     <string name="serein_declutter_hide_share">Hide the share button beside messages</string>
-    <string name="serein_declutter_hide_share_note">Messages forwarded to Saved Messages keep the button, which opens the chat they came from.</string>
+    <string name="serein_declutter_hide_reactions">Hide reactions under messages</string>
+    <string name="serein_declutter_chats_note">Messages forwarded to Saved Messages keep the share button, which opens the chat they came from, and saved messages keep their tags.</string>
     <string name="serein_declutter_channels">Channels</string>
     <string name="serein_declutter_hide_channel_gift">Hide the gift button</string>
     <string name="serein_declutter_hide_channel_message">Hide the button to message the channel</string>

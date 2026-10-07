@@ -721,6 +721,7 @@ public class MessageObject {
         if (isRepostPreview) {
             return false;
         }
+        if (com.eltavine.sereingram.hooks.MessageHooks.hidesReactions(currentAccount, this)) return false;
         return true;
     }
 

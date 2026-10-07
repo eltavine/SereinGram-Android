@@ -18,13 +18,26 @@ public object MessageHooks {
         public fun hidesReadReceipt(account: Int, message: Any): Boolean
     }
 
+    public fun interface ReactionsPolicy {
+        /** Whether the reactions of [message] are left out of its bubble. */
+        public fun hidesReactions(account: Int, message: Any): Boolean
+    }
+
     public val timeDecorators: Handlers<TimeDecorator> = Handlers()
     public val readReceiptPolicies: Handlers<ReadReceiptPolicy> = Handlers()
+    public val reactionsPolicies: Handlers<ReactionsPolicy> = Handlers()
 
     @JvmStatic
     public fun hidesReadReceipt(account: Int, message: Any): Boolean =
         readReceiptPolicies.all.any { policy ->
             Faults.guard("read receipt policy", fallback = false) { policy.hidesReadReceipt(account, message) }
+        }
+
+    /** Asked while bubbles are laid out and drawn, so policies answer from memory. */
+    @JvmStatic
+    public fun hidesReactions(account: Int, message: Any): Boolean =
+        reactionsPolicies.all.any { policy ->
+            Faults.guard("reactions policy", fallback = false) { policy.hidesReactions(account, message) }
         }
 
     /** Telegram's time text, passed through every installed decorator in turn. */
