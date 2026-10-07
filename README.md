@@ -74,6 +74,8 @@ page under Settings → SereinGram.
   video, after exteraGram, Cherrygram and NagramXF.
 - **Ask before sending stickers and GIFs** tapped in their panel, after
   OctoGram.
+- **Pinned reactions** offered first above a message's menu, after NagramX
+  and OctoGram.
 - **Read the QR code in a photo** from its menu, then open or copy what it
   says, after NagramX.
 - **The date beside the time** of older messages

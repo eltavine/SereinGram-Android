@@ -589,6 +589,7 @@ public class ReactionsContainerLayout extends FrameLayout implements Notificatio
 
     @SuppressLint("NotifyDataSetChanged")
     private void setVisibleReactionsList(List<ReactionsLayoutInBubble.VisibleReaction> visibleReactionsList, boolean animated) {
+        visibleReactionsList = com.eltavine.sereingram.hooks.ReactionHooks.arrange(currentAccount, visibleReactionsList);
         this.visibleReactionsList.clear();
         if (showCustomEmojiReaction()) {
             int i = 0;

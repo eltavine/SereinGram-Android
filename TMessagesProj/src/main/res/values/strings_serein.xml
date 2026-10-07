@@ -183,4 +183,8 @@
     <string name="serein_backup_not_a_backup">This file is not a backup of SereinGram\'s settings.</string>
     <string name="serein_backup_too_new">This backup comes from a newer SereinGram; update it to restore the backup.</string>
     <string name="serein_backup_failed">Could not read the file: %1$s</string>
+    <string name="serein_reactions_title">Reactions</string>
+    <string name="serein_reactions_pinned">Pinned reactions</string>
+    <string name="serein_reactions_pinned_hint">Not set</string>
+    <string name="serein_reactions_pinned_note">These emoji come first, in this order, among the reactions above a message\'s menu wherever the chat allows them. Type them one after another, for example 👍❤️🔥.</string>
 </resources>
