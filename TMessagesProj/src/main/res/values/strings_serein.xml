@@ -57,4 +57,7 @@
     <string name="serein_message_menu_items">Extra items</string>
     <string name="serein_message_menu_block_sender">Block user</string>
     <string name="serein_message_menu_block_sender_note">Offers to block the sender in the menu of a message someone else sent in a group or in a channel\'s comments.</string>
+    <string name="serein_timestamps_title">Message time</string>
+    <string name="serein_timestamps_show_date">Show the date beside the time</string>
+    <string name="serein_timestamps_show_date_note">Messages from before today show their day and month next to the time, or the full date when they are from an earlier year.</string>
 </resources>

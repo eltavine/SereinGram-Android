@@ -13,6 +13,7 @@ import com.eltavine.sereingram.features.history.HistoryFeature
 import com.eltavine.sereingram.features.links.LinksFeature
 import com.eltavine.sereingram.features.messagemenu.MessageMenuFeature
 import com.eltavine.sereingram.features.services.ServicesModule
+import com.eltavine.sereingram.features.timestamps.TimestampsFeature
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsRow
@@ -46,6 +47,7 @@ object SereinApp {
                 GhostFeature,
                 LinksFeature,
                 MessageMenuFeature,
+                TimestampsFeature,
             ),
         )
         modules.start(ModuleContext(options, Faults::report))

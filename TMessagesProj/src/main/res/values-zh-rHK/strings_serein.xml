@@ -57,4 +57,7 @@
     <string name="serein_message_menu_items">額外選項</string>
     <string name="serein_message_menu_block_sender">封鎖使用者</string>
     <string name="serein_message_menu_block_sender_note">在群組或頻道留言中，長按他人傳送的訊息時提供封鎖傳送者的選項。</string>
+    <string name="serein_timestamps_title">訊息時間</string>
+    <string name="serein_timestamps_show_date">在時間旁顯示日期</string>
+    <string name="serein_timestamps_show_date_note">今天以前的訊息會在時間旁顯示月和日，更早年份的訊息則顯示完整日期。</string>
 </resources>
