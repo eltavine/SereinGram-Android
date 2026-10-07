@@ -26,7 +26,7 @@ public object SettingsHooks {
         internal fun open(host: Any) = Faults.guard("settings entry", fallback = Unit) { open.invoke(host) }
     }
 
-    public val mainEntries: Handlers<Entry> = Handlers()
+    public val mainEntries: Handlers<Entry> = Handlers { it.id }
 
     public fun interface MainSettingsFilter {
         /** Edits the finished main settings list in place; its elements are Telegram's list items. */

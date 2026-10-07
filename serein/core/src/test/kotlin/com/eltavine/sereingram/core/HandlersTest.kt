@@ -2,6 +2,7 @@ package com.eltavine.sereingram.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class HandlersTest {
@@ -30,6 +31,17 @@ class HandlersTest {
         firstInstall.close()
         firstInstall.close()
         assertEquals(listOf("shared"), handlers.all.map { it.name() })
+    }
+
+    @Test
+    fun handlersWithAKeyCannotBeInstalledTwiceUnderIt() {
+        val handlers = Handlers<Handler> { it.name() }
+        val first = handlers.install { "menu item 7" }
+        assertFailsWith<IllegalArgumentException> { handlers.install { "menu item 7" } }
+        handlers.install { "menu item 8" }
+        first.close()
+        handlers.install { "menu item 7" }
+        assertEquals(listOf("menu item 8", "menu item 7"), handlers.all.map { it.name() })
     }
 
     @Test

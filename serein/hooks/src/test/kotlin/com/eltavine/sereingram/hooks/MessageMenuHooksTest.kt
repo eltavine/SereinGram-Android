@@ -2,6 +2,7 @@ package com.eltavine.sereingram.hooks
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -59,8 +60,21 @@ class MessageMenuHooksTest {
             assertEquals(0, items.size)
             assertEquals(0, options.size)
             assertEquals(0, icons.size)
+            assertFalse(MessageMenuHooks.select(5, 0, "edited", "chat"), "Telegram's own option 5 stays Telegram's")
         } finally {
             installs.forEach(AutoCloseable::close)
+        }
+    }
+
+    @Test
+    fun twoEntriesCannotShareAnOption() {
+        val install = MessageMenuHooks.entries.install(Entry(MessageMenuHooks.FIRST_OPTION + 3, shownFor = "edited"))
+        try {
+            assertFailsWith<IllegalArgumentException> {
+                MessageMenuHooks.entries.install(Entry(MessageMenuHooks.FIRST_OPTION + 3, shownFor = "plain"))
+            }
+        } finally {
+            install.close()
         }
     }
 }

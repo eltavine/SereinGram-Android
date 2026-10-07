@@ -22,7 +22,8 @@ public object MessageMenuHooks {
 
     public const val FIRST_OPTION: Int = 30_000
 
-    public val entries: Handlers<Entry> = Handlers()
+    /** One entry per option, so a selected option always reaches the entry that showed it. */
+    public val entries: Handlers<Entry> = Handlers { it.option }
 
     /** Appends the shown entries to Telegram's parallel lists of titles, options and icons. */
     @JvmStatic
@@ -48,6 +49,9 @@ public object MessageMenuHooks {
     /** Handles [option] when it is one of SereinGram's; false leaves it to Telegram. */
     @JvmStatic
     public fun select(option: Int, account: Int, message: Any, host: Any): Boolean {
+        if (option < FIRST_OPTION) {
+            return false
+        }
         val entry = entries.all.firstOrNull { it.option == option } ?: return false
         Faults.guard("message menu entry", fallback = Unit) { entry.onSelected(account, message, host) }
         return true

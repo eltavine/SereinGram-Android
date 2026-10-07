@@ -26,7 +26,8 @@ public object ChatMenuHooks {
 
     public const val FIRST_ID: Int = 40_000
 
-    public val entries: Handlers<Entry> = Handlers()
+    /** One entry per id, so a selected item always reaches the entry that showed it. */
+    public val entries: Handlers<Entry> = Handlers { it.id }
 
     @JvmStatic
     public fun fill(account: Int, dialogId: Long, menu: Menu) {
