@@ -149,4 +149,10 @@
     <string name="serein_playback_title">Playback</string>
     <string name="serein_playback_stop_after_voice">Stop after each voice message</string>
     <string name="serein_playback_stop_after_voice_note">When a voice or video message ends, Telegram goes on to the next one in the chat. With this on, playback stops at the end of the one you started.</string>
+    <string name="serein_sending_title">Sending</string>
+    <string name="serein_sending_ask_before_sticker">Ask before sending stickers</string>
+    <string name="serein_sending_ask_before_gif">Ask before sending GIFs</string>
+    <string name="serein_sending_ask_note">A tap in the sticker and GIF panel sends at once; with these on, it asks first, so a stray tap sends nothing.</string>
+    <string name="serein_sending_confirm_sticker">Send this sticker?</string>
+    <string name="serein_sending_confirm_gif">Send this GIF?</string>
 </resources>

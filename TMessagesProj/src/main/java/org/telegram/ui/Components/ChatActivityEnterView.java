@@ -13386,6 +13386,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                                 delegate.onMessageSend(null, notify, scheduleDate, 0, 0);
                             }
                         };
+                        if (com.eltavine.sereingram.hooks.SendHooks.asksBeforeSendingGif(currentAccount, parentFragment, runnable)) return;
                         if (!showConfirmAlert(runnable)) {
                             runnable.run();
                         }
@@ -13660,6 +13661,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                     }
                     MediaDataController.getInstance(currentAccount).addRecentSticker(MediaDataController.TYPE_IMAGE, parent, sticker, (int) (System.currentTimeMillis() / 1000), false);
                 };
+                if (com.eltavine.sereingram.hooks.SendHooks.asksBeforeSendingSticker(currentAccount, parentFragment, runnable)) return;
                 if (!showConfirmAlert(runnable)) {
                     runnable.run();
                 }

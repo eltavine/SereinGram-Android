@@ -22,6 +22,7 @@ import com.eltavine.sereingram.features.messagemenu.MessageMenuFeature
 import com.eltavine.sereingram.features.notifications.NotificationsFeature
 import com.eltavine.sereingram.features.playback.PlaybackFeature
 import com.eltavine.sereingram.features.search.SearchFeature
+import com.eltavine.sereingram.features.sending.SendingFeature
 import com.eltavine.sereingram.features.services.ServicesModule
 import com.eltavine.sereingram.features.timestamps.TimestampsFeature
 import com.eltavine.sereingram.features.transcription.TranscriptionFeature
@@ -73,6 +74,7 @@ object SereinApp {
                 NotificationsFeature,
                 PlaybackFeature,
                 SearchFeature,
+                SendingFeature,
                 TimestampsFeature,
                 TranscriptionFeature,
             ),

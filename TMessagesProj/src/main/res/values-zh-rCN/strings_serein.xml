@@ -149,4 +149,10 @@
     <string name="serein_playback_title">播放</string>
     <string name="serein_playback_stop_after_voice">每条语音消息播完即停</string>
     <string name="serein_playback_stop_after_voice_note">一条语音或视频消息播完后，Telegram 会接着播放聊天中的下一条。开启后，播完你点开的那一条就会停止。</string>
+    <string name="serein_sending_title">发送</string>
+    <string name="serein_sending_ask_before_sticker">发送贴纸前确认</string>
+    <string name="serein_sending_ask_before_gif">发送 GIF 前确认</string>
+    <string name="serein_sending_ask_note">在贴纸和 GIF 面板中点一下就会立即发送；开启后会先询问，误触不会发出任何内容。</string>
+    <string name="serein_sending_confirm_sticker">发送这张贴纸？</string>
+    <string name="serein_sending_confirm_gif">发送这个 GIF？</string>
 </resources>
