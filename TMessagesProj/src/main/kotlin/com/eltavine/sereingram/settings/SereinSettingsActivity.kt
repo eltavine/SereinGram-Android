@@ -38,6 +38,7 @@ class SereinSettingsActivity(
         is SettingsRow.Subpage -> UItem.asButton(id, row.icon, getString(row.page.title))
         is SettingsRow.Screen -> UItem.asButton(id, getString(row.title), row.value())
         is SettingsRow.Link -> UItem.asButton(id, getString(row.title), row.value())
+        is SettingsRow.Action -> UItem.asButton(id, getString(row.title))
     }
 
     override fun onResume() {
@@ -59,6 +60,7 @@ class SereinSettingsActivity(
             is SettingsRow.Subpage -> presentFragment(SereinSettingsActivity(row.page, options))
             is SettingsRow.Screen -> presentFragment(row.open(options))
             is SettingsRow.Link -> Browser.openUrl(parentActivity, row.url)
+            is SettingsRow.Action -> row.run(this)
             null -> Unit
         }
     }

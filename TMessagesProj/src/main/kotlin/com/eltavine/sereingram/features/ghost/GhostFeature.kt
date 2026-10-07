@@ -10,7 +10,10 @@ import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
+import org.telegram.ui.ActionBar.BaseFragment
+import org.telegram.ui.Components.BulletinFactory
 
 /**
  * Rounds out Nagram's ghost mode after AyuGram and NagramX: reads Nagram lets
@@ -53,6 +56,18 @@ object GhostFeature : SereinModule, SettingsContributor {
                 ),
                 note = R.string.serein_ghost_exceptions_note,
             ),
+            SettingsSection(
+                header = R.string.serein_ghost_quick,
+                rows = listOf(SettingsRow.Action(R.string.serein_ghost_add_shortcut, ::addShortcut)),
+                note = R.string.serein_ghost_quick_note,
+            ),
         ),
     )
+
+    private fun addShortcut(page: BaseFragment) {
+        val context = page.parentActivity ?: return
+        if (!GhostShortcut.request(context)) {
+            BulletinFactory.of(page).createSimpleBulletin(R.raw.error, getString(R.string.serein_ghost_shortcut_unsupported)).show()
+        }
+    }
 }

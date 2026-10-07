@@ -46,4 +46,10 @@
     <string name="serein_ghost_exceptions">例外聊天</string>
     <string name="serein_ghost_exceptions_note">幽靈模式對其他人隱藏你的已讀回條或輸入狀態時，這些聊天仍能看到。在聊天選單中選擇例外；在此長按聊天可移除其例外。</string>
     <string name="serein_ghost_exceptions_empty">還沒有例外聊天。可在聊天選單的「此聊天中的幽靈模式」中選擇。</string>
+    <string name="serein_ghost_quick">快速開關</string>
+    <string name="serein_ghost_add_shortcut">將開關新增至主畫面</string>
+    <string name="serein_ghost_quick_note">也可以在快速設定中切換幽靈模式：在通知欄中編輯快速設定方塊，新增 SereinGram 的幽靈模式。</string>
+    <string name="serein_ghost_on">幽靈模式已開啟</string>
+    <string name="serein_ghost_off">幽靈模式已關閉</string>
+    <string name="serein_ghost_shortcut_unsupported">此主畫面無法新增捷徑。</string>
 </resources>

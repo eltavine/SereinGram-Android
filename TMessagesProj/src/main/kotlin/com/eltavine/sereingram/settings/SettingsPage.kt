@@ -36,4 +36,7 @@ sealed interface SettingsRow {
     ) : SettingsRow
 
     class Link(@StringRes val title: Int, val url: String, val value: () -> CharSequence? = { null }) : SettingsRow
+
+    /** Does something once when tapped; [run] gets the page it was tapped on. */
+    class Action(@StringRes val title: Int, val run: (BaseFragment) -> Unit) : SettingsRow
 }

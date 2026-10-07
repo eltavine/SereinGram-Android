@@ -46,4 +46,10 @@
     <string name="serein_ghost_exceptions">Chats with exceptions</string>
     <string name="serein_ghost_exceptions_note">These chats see your read receipts or typing although ghost mode keeps them from everyone else. Choose them in a chat\'s menu; long press a chat here to remove its exceptions.</string>
     <string name="serein_ghost_exceptions_empty">No chat has exceptions yet. Choose them in a chat\'s menu, under ghost mode in this chat.</string>
+    <string name="serein_ghost_quick">Quick toggle</string>
+    <string name="serein_ghost_add_shortcut">Add a toggle to the home screen</string>
+    <string name="serein_ghost_quick_note">Ghost mode can also be switched from a tile in quick settings: edit the tiles in the notification shade and add SereinGram\'s ghost mode.</string>
+    <string name="serein_ghost_on">Ghost mode is on</string>
+    <string name="serein_ghost_off">Ghost mode is off</string>
+    <string name="serein_ghost_shortcut_unsupported">This home screen cannot add shortcuts.</string>
 </resources>
