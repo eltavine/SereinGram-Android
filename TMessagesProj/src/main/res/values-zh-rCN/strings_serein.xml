@@ -141,6 +141,7 @@
     <string name="serein_lock_prompt">解锁以打开</string>
     <string name="serein_lock_preview">🔒 已锁定</string>
     <string name="serein_lock_no_screen_lock">请先在本设备上设置屏幕锁，才能锁定聊天。</string>
+    <string name="serein_lock_open_in_app">已锁定的聊天需在 SereinGram 中打开。</string>
     <string name="serein_lock_list_note">长按聊天可将其解锁。</string>
     <string name="serein_lock_list_empty">还没有锁定的聊天。可在聊天菜单中锁定。</string>
     <string name="serein_transcription_title">语音转文字</string>

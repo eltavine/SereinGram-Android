@@ -141,6 +141,7 @@
     <string name="serein_lock_prompt">Unlock to open</string>
     <string name="serein_lock_preview">🔒 Locked</string>
     <string name="serein_lock_no_screen_lock">Set up a screen lock on this device to lock chats.</string>
+    <string name="serein_lock_open_in_app">Locked chats open from SereinGram itself.</string>
     <string name="serein_lock_list_note">Long press a chat to unlock it.</string>
     <string name="serein_lock_list_empty">No chat is locked yet. Lock one from its menu.</string>
     <string name="serein_transcription_title">Voice transcription</string>

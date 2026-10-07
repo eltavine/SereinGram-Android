@@ -58,6 +58,7 @@ public abstract class RightSlidingDialogContainer extends FrameLayout {
         if (isPaused) {
             return;
         }
+        if (!com.eltavine.sereingram.hooks.NavigationHooks.allowsPresenting(fragment, false, () -> presentFragment(navigationLayout, fragment))) return;
         this.navigationLayout = navigationLayout;
         if (fragment.onFragmentCreate()) {
             fragment.setInPreviewMode(true);

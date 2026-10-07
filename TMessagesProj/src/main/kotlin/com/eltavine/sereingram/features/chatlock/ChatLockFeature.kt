@@ -18,12 +18,12 @@ import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.DialogObject
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.MessagesController
 import org.telegram.messenger.R
 import org.telegram.ui.ActionBar.BaseFragment
-import org.telegram.ui.ActionBar.INavigationLayout
 import org.telegram.ui.ChatActivity
 import org.telegram.ui.DialogsActivity
 import org.telegram.ui.LaunchActivity
@@ -48,7 +48,7 @@ object ChatLockFeature : SereinModule, SettingsContributor {
 
     override fun start(context: ModuleContext) {
         val options = context.options
-        NavigationHooks.guards.install { layout, screen, params -> allows(options, layout, screen as BaseFragment, params) }
+        NavigationHooks.guards.install { screen, preview, retry -> allows(options, screen as BaseFragment, preview, retry) }
         ChatMenuHooks.entries.install(LockEntry(options))
         DialogsHooks.previewReplacers.install { account, dialogId -> lockedPreview(options, account, dialogId) }
     }
@@ -66,7 +66,7 @@ object ChatLockFeature : SereinModule, SettingsContributor {
     private fun isArchived(account: Int, dialogId: Long): Boolean =
         MessagesController.getInstance(account).dialogs_dict.get(dialogId)?.folder_id == 1
 
-    private fun allows(options: Options, layout: Any, screen: BaseFragment, params: Any): Boolean {
+    private fun allows(options: Options, screen: BaseFragment, preview: Boolean, retry: Runnable): Boolean {
         if (passes.remove(screen)) {
             return true
         }
@@ -74,20 +74,12 @@ object ChatLockFeature : SereinModule, SettingsContributor {
         if (!isLocked(target, settings(options, screen.currentAccount)) || window.isOpen()) {
             return true
         }
-        val navigation = params as INavigationLayout.NavigationParams
-        if (navigation.preview) {
+        if (preview) {
             return false
         }
-        val activity = LaunchActivity.instance ?: return true
-        val authenticators = BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.DEVICE_CREDENTIAL
-        if (BiometricManager.from(activity).canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) {
-            Toast.makeText(activity, R.string.serein_lock_no_screen_lock, Toast.LENGTH_LONG).show()
-            return true
-        }
-        authenticate(activity, authenticators) {
-            window.unlock()
+        unlocking {
             passes.add(screen)
-            (layout as INavigationLayout).presentFragment(navigation)
+            retry.run()
         }
         return false
     }
@@ -97,16 +89,26 @@ object ChatLockFeature : SereinModule, SettingsContributor {
      * opening a locked chat asks them to; within the moments after an unlock it runs at once.
      */
     internal fun liftingLock(lift: () -> Unit) {
-        val activity = LaunchActivity.instance
+        if (window.isOpen()) lift() else unlocking(lift)
+    }
+
+    // Asks for the device's credential in the app's main screen, the only place it can be asked.
+    private fun unlocking(then: () -> Unit) {
         val authenticators = BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.DEVICE_CREDENTIAL
-        // Without a screen lock nothing can be asked, and locks let everyone through anyway.
-        if (window.isOpen() || activity == null || BiometricManager.from(activity).canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) {
-            lift()
+        val activity = LaunchActivity.instance
+        if (activity == null) {
+            Toast.makeText(ApplicationLoader.applicationContext, R.string.serein_lock_open_in_app, Toast.LENGTH_LONG).show()
+            return
+        }
+        // Without a screen lock nothing can be asked, so locks let everyone through.
+        if (BiometricManager.from(activity).canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) {
+            Toast.makeText(activity, R.string.serein_lock_no_screen_lock, Toast.LENGTH_LONG).show()
+            then()
             return
         }
         authenticate(activity, authenticators) {
             window.unlock()
-            lift()
+            then()
         }
     }
 

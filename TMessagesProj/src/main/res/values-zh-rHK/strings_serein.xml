@@ -141,6 +141,7 @@
     <string name="serein_lock_prompt">解鎖以開啟</string>
     <string name="serein_lock_preview">🔒 已鎖定</string>
     <string name="serein_lock_no_screen_lock">請先在本裝置上設定螢幕鎖，才能鎖定聊天。</string>
+    <string name="serein_lock_open_in_app">已鎖定的聊天需在 SereinGram 中開啟。</string>
     <string name="serein_lock_list_note">長按聊天可將其解鎖。</string>
     <string name="serein_lock_list_empty">還沒有鎖定的聊天。可在聊天選單中鎖定。</string>
     <string name="serein_transcription_title">語音轉文字</string>
