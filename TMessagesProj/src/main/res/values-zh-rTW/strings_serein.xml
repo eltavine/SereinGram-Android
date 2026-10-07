@@ -115,4 +115,17 @@
     <string name="serein_shortcuts_title">聊天捷徑</string>
     <string name="serein_shortcuts_header">在群組或頻道的選單中</string>
     <string name="serein_shortcuts_note">每個捷徑只會在你有權開啟時出現，例如最近動作和權限只對管理員顯示。</string>
+    <string name="serein_lock_title">聊天鎖</string>
+    <string name="serein_lock_archive">鎖定封存</string>
+    <string name="serein_lock_secret">鎖定私密聊天</string>
+    <string name="serein_lock_chats">已鎖定的聊天</string>
+    <string name="serein_lock_note">已鎖定的聊天及其個人資料，以及開啟後的封存和私密聊天，開啟前都需要驗證指紋、臉孔或螢幕鎖，之後一分鐘內無須再次驗證。可在聊天選單中鎖定聊天。</string>
+    <string name="serein_lock_chat">鎖定聊天</string>
+    <string name="serein_unlock_chat">解鎖聊天</string>
+    <string name="serein_chat_locked">聊天已鎖定</string>
+    <string name="serein_chat_unlocked">聊天已解鎖</string>
+    <string name="serein_lock_prompt">解鎖以開啟</string>
+    <string name="serein_lock_no_screen_lock">請先在本裝置上設定螢幕鎖，才能鎖定聊天。</string>
+    <string name="serein_lock_list_note">長按聊天可將其解鎖。</string>
+    <string name="serein_lock_list_empty">還沒有鎖定的聊天。可在聊天選單中鎖定。</string>
 </resources>

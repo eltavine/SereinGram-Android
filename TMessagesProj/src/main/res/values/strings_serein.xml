@@ -115,4 +115,17 @@
     <string name="serein_shortcuts_title">Chat shortcuts</string>
     <string name="serein_shortcuts_header">In the menu of a group or channel</string>
     <string name="serein_shortcuts_note">Each screen shows up only where you may open it, for example recent actions and permissions for admins.</string>
+    <string name="serein_lock_title">Chat locks</string>
+    <string name="serein_lock_archive">Lock the archive</string>
+    <string name="serein_lock_secret">Lock secret chats</string>
+    <string name="serein_lock_chats">Locked chats</string>
+    <string name="serein_lock_note">Locked chats, with their profiles, and the archive and secret chats when chosen, ask for your fingerprint, face or screen lock before they open, and then stay open for a minute. Lock a chat from its menu.</string>
+    <string name="serein_lock_chat">Lock chat</string>
+    <string name="serein_unlock_chat">Unlock chat</string>
+    <string name="serein_chat_locked">Chat locked</string>
+    <string name="serein_chat_unlocked">Chat unlocked</string>
+    <string name="serein_lock_prompt">Unlock to open</string>
+    <string name="serein_lock_no_screen_lock">Set up a screen lock on this device to lock chats.</string>
+    <string name="serein_lock_list_note">Long press a chat to unlock it.</string>
+    <string name="serein_lock_list_empty">No chat is locked yet. Lock one from its menu.</string>
 </resources>
