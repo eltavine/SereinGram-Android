@@ -91,6 +91,8 @@ page under Settings → SereinGram.
   ([NagramX #415](https://github.com/risin42/NagramX/issues/415)).
 - **Message content in notifications while locked**
   ([NagramX #299](https://github.com/risin42/NagramX/issues/299)).
+- **A proxy tile** in quick settings that turns the chosen proxy on and off
+  ([NagramXF #35](https://github.com/Keeperorowner/NagramXF/issues/35)).
 - **Hide elements**, after NagramX and OctoGram: the Premium and Help
   sections of the settings, the share button beside messages, reactions
   under messages, after Swiftgram, and the gift and message buttons under

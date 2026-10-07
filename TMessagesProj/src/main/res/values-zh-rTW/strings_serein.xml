@@ -187,4 +187,5 @@
     <string name="serein_reactions_pinned">釘選回應</string>
     <string name="serein_reactions_pinned_hint">未設定</string>
     <string name="serein_reactions_pinned_note">在訊息選單上方的回應中，這些表情符號會依此順序排在最前（如果該聊天允許）。依序輸入即可，例如 👍❤️🔥。</string>
+    <string name="serein_proxy_tile_none">未設定</string>
 </resources>
