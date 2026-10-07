@@ -3,6 +3,7 @@ package com.eltavine.sereingram.features.history
 import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.SereinModule
+import com.eltavine.sereingram.hooks.ChatMenuHooks
 import com.eltavine.sereingram.hooks.HistoryHooks
 import com.eltavine.sereingram.hooks.MessageHooks
 import com.eltavine.sereingram.hooks.MessageMenuHooks
@@ -35,6 +36,7 @@ class HistoryFeature(private val stores: (account: Int) -> HistoryStore) : Serei
         MessageHooks.timeDecorators.install(restorer::decorateTime)
         MessageMenuHooks.entries.install(EditHistoryEntry(stores, revised))
         MessageMenuHooks.entries.install(DeletedAtEntry(kept))
+        ChatMenuHooks.entries.install(DeletedMessagesEntry(context.options, stores))
     }
 
     override val settingsIcon: Int = R.drawable.msg_recent
