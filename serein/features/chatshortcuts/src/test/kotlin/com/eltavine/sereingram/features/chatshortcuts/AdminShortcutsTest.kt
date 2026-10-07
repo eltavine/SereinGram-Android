@@ -2,6 +2,8 @@ package com.eltavine.sereingram.features.chatshortcuts
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class AdminShortcutsTest {
     private fun rights(
@@ -39,7 +41,19 @@ class AdminShortcutsTest {
     }
 
     @Test
+    fun onlyAdminsWhoMayBanRestrictOtherMembersOfSupergroups() {
+        val moderator = rights(isAdmin = true, canBan = true)
+        assertTrue(offersRestriction(enabled = true, moderator, senderId = 7, isSelf = false))
+        assertFalse(offersRestriction(enabled = false, moderator, senderId = 7, isSelf = false))
+        assertFalse(offersRestriction(enabled = true, moderator, senderId = 7, isSelf = true))
+        assertFalse(offersRestriction(enabled = true, moderator, senderId = -100, isSelf = false))
+        assertFalse(offersRestriction(enabled = true, rights(isAdmin = true), senderId = 7, isSelf = false))
+        assertFalse(offersRestriction(enabled = true, rights(isSupergroup = false, isAdmin = true, canBan = true), senderId = 7, isSelf = false))
+    }
+
+    @Test
     fun storageKeysNeverChange() {
+        assertEquals("shortcuts_restrict_member", MessageShortcuts.restrictMember.key)
         assertEquals(
             listOf(
                 "shortcuts_recent_actions",

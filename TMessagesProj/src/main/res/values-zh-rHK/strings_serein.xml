@@ -122,6 +122,10 @@
     <string name="serein_shortcuts_title">聊天捷徑</string>
     <string name="serein_shortcuts_header">在群組或頻道的選單中</string>
     <string name="serein_shortcuts_note">每個捷徑只會在你有權開啟時出現，例如最近動作和權限只對管理員顯示。</string>
+    <string name="serein_shortcuts_message_header">訊息選單中</string>
+    <string name="serein_shortcuts_restrict">限制成員</string>
+    <string name="serein_shortcuts_restrict_note">可封鎖成員的管理員可在超級群組中直接從訊息開啟傳送者的權限限制，並可在其中將其封鎖。</string>
+    <string name="serein_shortcuts_restrict_admin">無法限制管理員。</string>
     <string name="serein_lock_title">聊天鎖</string>
     <string name="serein_lock_archive">鎖定封存</string>
     <string name="serein_lock_secret">鎖定私密聊天</string>

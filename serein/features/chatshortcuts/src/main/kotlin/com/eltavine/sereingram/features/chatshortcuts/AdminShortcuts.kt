@@ -27,6 +27,18 @@ public class ChatRights(
     public val canViewStats: Boolean,
 )
 
+/** Admin items in the menu of a message, after Swiftgram's. */
+public object MessageShortcuts {
+    public val restrictMember: Option<Boolean> = booleanOption("shortcuts_restrict_member", default = true)
+}
+
+/**
+ * Whether the menu of a message from [senderId] offers to restrict them: Telegram restricts
+ * members of supergroups only, and only for admins who may ban.
+ */
+public fun offersRestriction(enabled: Boolean, rights: ChatRights, senderId: Long, isSelf: Boolean): Boolean =
+    enabled && rights.isSupergroup && rights.canBan && senderId > 0 && !isSelf
+
 /** Whether [shortcut] leads somewhere the user may go in a chat with [rights]. */
 public fun offers(shortcut: AdminShortcut, rights: ChatRights): Boolean = when (shortcut) {
     AdminShortcut.RECENT_ACTIONS -> rights.isAdmin && (rights.isChannel || rights.isSupergroup)
