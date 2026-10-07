@@ -34,8 +34,15 @@ class SereinSettingsActivity(
 
     private fun item(id: Int, row: SettingsRow): UItem = when (row) {
         is SettingsRow.Toggle -> UItem.asCheck(id, getString(row.title)).setChecked(options.get(row.option, account(row.option)))
+        is SettingsRow.Switch -> UItem.asCheck(id, getString(row.title)).setChecked(row.isOn())
         is SettingsRow.Subpage -> UItem.asButton(id, row.icon, getString(row.page.title))
+        is SettingsRow.Screen -> UItem.asButton(id, getString(row.title), row.value())
         is SettingsRow.Link -> UItem.asButton(id, getString(row.title), row.value())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listView?.adapter?.update(true)
     }
 
     override fun onClick(item: UItem, view: View, position: Int, x: Float, y: Float) {
@@ -45,7 +52,12 @@ class SereinSettingsActivity(
                 options.set(row.option, !options.get(row.option, account), account)
                 listView.adapter.update(true)
             }
+            is SettingsRow.Switch -> {
+                row.toggle()
+                listView.adapter.update(true)
+            }
             is SettingsRow.Subpage -> presentFragment(SereinSettingsActivity(row.page, options))
+            is SettingsRow.Screen -> presentFragment(row.open())
             is SettingsRow.Link -> Browser.openUrl(parentActivity, row.url)
             null -> Unit
         }

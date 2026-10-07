@@ -8,6 +8,7 @@ import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.ModuleRegistry
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.features.declutter.DeclutterFeature
+import com.eltavine.sereingram.features.ghost.GhostFeature
 import com.eltavine.sereingram.features.history.HistoryFeature
 import com.eltavine.sereingram.features.links.LinksFeature
 import com.eltavine.sereingram.features.services.ServicesModule
@@ -41,6 +42,7 @@ object SereinApp {
                 ServicesModule,
                 DeclutterFeature,
                 HistoryFeature { account -> historyStores.getOrPut(account) { RoomHistoryStore(application, account) } },
+                GhostFeature,
                 LinksFeature,
             ),
         )

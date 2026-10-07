@@ -496,6 +496,7 @@ public class ConnectionsManager extends BaseController {
             if (!ayuGhostShouldSend(object)) {
                 return;
             }
+            if (!com.eltavine.sereingram.hooks.RequestHooks.intercept(currentAccount, object)) return;
             onCompleteOrig = ayuGhostApplyCallbackHooks(object, onCompleteOrig);
         }
         final var onComplete = onCompleteOrig;

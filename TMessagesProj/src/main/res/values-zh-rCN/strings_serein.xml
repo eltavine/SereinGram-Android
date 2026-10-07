@@ -33,4 +33,8 @@
     <string name="serein_links_opening">打开</string>
     <string name="serein_links_confirm_all">打开链接前询问</string>
     <string name="serein_links_confirm_all_note">在浏览器中打开链接前显示完整地址并询问。指向 Telegram 自身的链接仍会直接打开。</string>
+    <string name="serein_ghost_title">幽灵模式</string>
+    <string name="serein_ghost_active">启用幽灵模式</string>
+    <string name="serein_ghost_options">幽灵模式选项</string>
+    <string name="serein_ghost_note">幽灵模式不会发送你的已读回执、在线状态、输入状态和动态浏览记录。不发送已读回执时，SereinGram 也不会发送频道评论和私密聊天的已读，你浏览的频道帖子也不会计入浏览量。</string>
 </resources>
