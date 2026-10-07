@@ -37,4 +37,13 @@
     <string name="serein_ghost_active">启用幽灵模式</string>
     <string name="serein_ghost_options">幽灵模式选项</string>
     <string name="serein_ghost_note">幽灵模式不会发送你的已读回执、在线状态、输入状态和动态浏览记录。不发送已读回执时，SereinGram 也不会发送频道评论和私密聊天的已读，你浏览的频道帖子也不会计入浏览量。</string>
+    <string name="serein_ghost_chat">此聊天中的幽灵模式</string>
+    <string name="serein_ghost_chat_note">让此聊天看到幽灵模式对其他人隐藏的内容。</string>
+    <string name="serein_ghost_chat_reads">已读回执</string>
+    <string name="serein_ghost_chat_typing">输入状态</string>
+    <string name="serein_ghost_exception_both">已读回执和输入状态</string>
+    <string name="serein_ghost_mark_read">标为已读</string>
+    <string name="serein_ghost_exceptions">例外聊天</string>
+    <string name="serein_ghost_exceptions_note">幽灵模式对其他人隐藏你的已读回执或输入状态时，这些聊天仍能看到。在聊天菜单中选择例外；在此长按聊天可移除其例外。</string>
+    <string name="serein_ghost_exceptions_empty">还没有例外聊天。可在聊天菜单的“此聊天中的幽灵模式”中选择。</string>
 </resources>

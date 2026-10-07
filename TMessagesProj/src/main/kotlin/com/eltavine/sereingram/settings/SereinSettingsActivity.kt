@@ -57,7 +57,7 @@ class SereinSettingsActivity(
                 listView.adapter.update(true)
             }
             is SettingsRow.Subpage -> presentFragment(SereinSettingsActivity(row.page, options))
-            is SettingsRow.Screen -> presentFragment(row.open())
+            is SettingsRow.Screen -> presentFragment(row.open(options))
             is SettingsRow.Link -> Browser.openUrl(parentActivity, row.url)
             null -> Unit
         }

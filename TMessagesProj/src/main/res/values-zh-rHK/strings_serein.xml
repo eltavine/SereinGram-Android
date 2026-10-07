@@ -37,4 +37,13 @@
     <string name="serein_ghost_active">啟用幽靈模式</string>
     <string name="serein_ghost_options">幽靈模式選項</string>
     <string name="serein_ghost_note">幽靈模式不會傳送你的已讀回條、上線狀態、輸入狀態和限時動態瀏覽記錄。不傳送已讀回條時，SereinGram 也不會傳送頻道留言和私密聊天的已讀，你瀏覽的頻道貼文也不會計入瀏覽次數。</string>
+    <string name="serein_ghost_chat">此聊天中的幽靈模式</string>
+    <string name="serein_ghost_chat_note">讓此聊天看到幽靈模式對其他人隱藏的內容。</string>
+    <string name="serein_ghost_chat_reads">已讀回條</string>
+    <string name="serein_ghost_chat_typing">輸入狀態</string>
+    <string name="serein_ghost_exception_both">已讀回條和輸入狀態</string>
+    <string name="serein_ghost_mark_read">標為已讀</string>
+    <string name="serein_ghost_exceptions">例外聊天</string>
+    <string name="serein_ghost_exceptions_note">幽靈模式對其他人隱藏你的已讀回條或輸入狀態時，這些聊天仍能看到。在聊天選單中選擇例外；在此長按聊天可移除其例外。</string>
+    <string name="serein_ghost_exceptions_empty">還沒有例外聊天。可在聊天選單的「此聊天中的幽靈模式」中選擇。</string>
 </resources>

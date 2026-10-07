@@ -330,6 +330,7 @@ public class ConnectionsManager extends BaseController {
     }
 
     private boolean ayuGhostShouldSend(TLObject object) {
+        if (com.eltavine.sereingram.hooks.RequestHooks.exemptsFromGhostMode(currentAccount, object)) return true;
         // --- 不发送动态已读 ---
         if (!NekoConfig.sendReadStoryPackets &&
                 (object instanceof TL_stories.TL_stories_readStories ||

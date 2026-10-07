@@ -3981,6 +3981,7 @@ public class ChatActivity extends BaseFragment implements
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(final int id) {
+                if (com.eltavine.sereingram.hooks.ChatMenuHooks.select(id, currentAccount, dialog_id, ChatActivity.this)) return;
                 if (id == -1) {
                     if (isInPollAddOptionMode()) {
                         pollAddOptionModeClose();
@@ -4834,6 +4835,7 @@ public class ChatActivity extends BaseFragment implements
                 if (ChatObject.isMegagroup(currentChat) || currentChat != null && !ChatObject.isChannel(currentChat)) {
                     headerItem.lazilyAddSubItem(nkheaderbtn_zibi, R.drawable.msg_delete, LocaleController.getString("DeleteAllFromSelf", R.string.DeleteAllFromSelf));
                 }
+                com.eltavine.sereingram.hooks.ChatMenuHooks.fill(currentAccount, dialog_id, (sereinId, sereinIcon, sereinTitle) -> headerItem.lazilyAddSubItem(sereinId, sereinIcon, sereinTitle));
 
                 if (currentChat != null && !ChatObject.isChannel(currentChat) && currentChat.creator) {
                     headerItem.lazilyAddSubItem(nkheaderbtn_upgrade, R.drawable.ic_upward, LocaleController.getString("UpgradeGroup", R.string.UpgradeGroup));

@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 307,
-    "all_added_lines": 254,
+    "all_added_lines": 257,
     "source_files": 19,
-    "source_added_lines": 34
+    "source_added_lines": 37
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -38,6 +38,7 @@
       "hooks.HistoryHooks.beforeMessageEdited"
     ],
     "TMessagesProj/src/main/java/org/telegram/tgnet/ConnectionsManager.java": [
+      "hooks.RequestHooks.exemptsFromGhostMode",
       "hooks.RequestHooks.intercept"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java": [
@@ -45,6 +46,8 @@
       "hooks.MessageHooks.decorateTime"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java": [
+      "hooks.ChatMenuHooks.fill",
+      "hooks.ChatMenuHooks.select",
       "hooks.HistoryHooks.removedFromChat",
       "hooks.MessageMenuHooks.fill",
       "hooks.MessageMenuHooks.select"

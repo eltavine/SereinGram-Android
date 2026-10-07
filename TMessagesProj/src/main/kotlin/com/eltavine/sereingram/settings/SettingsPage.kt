@@ -3,6 +3,7 @@ package com.eltavine.sereingram.settings
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.eltavine.sereingram.core.Option
+import com.eltavine.sereingram.core.Options
 import org.telegram.ui.ActionBar.BaseFragment
 
 /** A page of SereinGram settings; features declare them and [SereinSettingsActivity] draws them. */
@@ -28,7 +29,11 @@ sealed interface SettingsRow {
     class Subpage(val page: SettingsPage, @DrawableRes val icon: Int) : SettingsRow
 
     /** Opens a screen that is not a [SettingsPage], such as one of Nagram's. */
-    class Screen(@StringRes val title: Int, val open: () -> BaseFragment, val value: () -> CharSequence? = { null }) : SettingsRow
+    class Screen(
+        @StringRes val title: Int,
+        val open: (Options) -> BaseFragment,
+        val value: () -> CharSequence? = { null },
+    ) : SettingsRow
 
     class Link(@StringRes val title: Int, val url: String, val value: () -> CharSequence? = { null }) : SettingsRow
 }
