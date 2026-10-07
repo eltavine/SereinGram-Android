@@ -49,13 +49,14 @@ page under Settings → SereinGram.
   and a ghost beside the chat list title shows it is on
   ([NagramX #231](https://github.com/risin42/NagramX/issues/231)).
 - **Chat locks**, after Cherrygram and OctoGram: chats, the archive and
-  secret chats open only after a fingerprint, face or the screen lock, and
-  the chat list hides what locked chats show
-  ([Swiftgram #56](https://github.com/Swiftgram/Telegram-iOS/issues/56)).
+  secret chats open only after a fingerprint, face or the screen lock, which
+  turning a lock off asks for as well, and the chat list hides what locked
+  chats show ([Swiftgram #56](https://github.com/Swiftgram/Telegram-iOS/issues/56)).
 - **Admin shortcuts** in a chat's menu, after Cherrygram, exteraGram,
   OctoGram and NagramX: recent actions, administrators, members,
   permissions, statistics and invite links
-  ([Swiftgram #41](https://github.com/Swiftgram/Telegram-iOS/issues/41)).
+  ([Swiftgram #41](https://github.com/Swiftgram/Telegram-iOS/issues/41)),
+  and restricting the sender of a message from its menu, after Swiftgram.
 - **Voice transcription with one's own service**, after NagramX, Cherrygram
   and OctoGram: voice and video messages are turned into text by any service
   that speaks OpenAI's transcription API, without Telegram Premium
@@ -72,6 +73,8 @@ page under Settings → SereinGram.
   after Cherrygram and NagramX.
 - **Ask before sending stickers and GIFs** tapped in their panel, after
   OctoGram.
+- **Read the QR code in a photo** from its menu, then open or copy what it
+  says, after NagramX.
 - **The date beside the time** of older messages
   ([NagramX #462](https://github.com/risin42/NagramX/issues/462)), and **one
   check** on one's messages after they were read
@@ -85,8 +88,11 @@ page under Settings → SereinGram.
   ([NagramX #415](https://github.com/risin42/NagramX/issues/415)).
 - **Message content in notifications while locked**
   ([NagramX #299](https://github.com/risin42/NagramX/issues/299)).
-- **Hide elements**, after NagramX: the Premium and Help sections of the
-  settings, and the share button beside messages.
+- **Hide elements**, after NagramX and OctoGram: the Premium and Help
+  sections of the settings, the share button beside messages, and the gift
+  and message buttons under channels.
+- **A backup of SereinGram's settings** to keep as a file and restore, after
+  Cherrygram; API keys and chat locks stay out of it.
 - Crash reports and update checks no longer go to Nagram's services.
 
 ## Architecture
