@@ -161,4 +161,10 @@
     <string name="serein_sending_ask_note">在贴纸和 GIF 面板中点一下就会立即发送；开启后会先询问，误触不会发出任何内容。</string>
     <string name="serein_sending_confirm_sticker">发送这张贴纸？</string>
     <string name="serein_sending_confirm_gif">发送这个 GIF？</string>
+    <string name="serein_qr_title">二维码</string>
+    <string name="serein_qr_scan_in_menu">识别图片中的二维码</string>
+    <string name="serein_qr_scan_in_menu_note">已下载的照片或图片的菜单中会提供识别其中二维码的选项，之后可打开或复制识别结果。</string>
+    <string name="serein_qr_scan">识别二维码</string>
+    <string name="serein_qr_found">二维码内容</string>
+    <string name="serein_qr_none">未在此图片中发现二维码。</string>
 </resources>

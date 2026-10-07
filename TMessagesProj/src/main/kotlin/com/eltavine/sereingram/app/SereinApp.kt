@@ -21,6 +21,7 @@ import com.eltavine.sereingram.features.localnames.LocalNamesFeature
 import com.eltavine.sereingram.features.messagemenu.MessageMenuFeature
 import com.eltavine.sereingram.features.notifications.NotificationsFeature
 import com.eltavine.sereingram.features.playback.PlaybackFeature
+import com.eltavine.sereingram.features.qrcode.QrCodeFeature
 import com.eltavine.sereingram.features.search.SearchFeature
 import com.eltavine.sereingram.features.sending.SendingFeature
 import com.eltavine.sereingram.features.services.ServicesModule
@@ -73,6 +74,7 @@ object SereinApp {
                 MessageMenuFeature,
                 NotificationsFeature,
                 PlaybackFeature,
+                QrCodeFeature,
                 SearchFeature,
                 SendingFeature,
                 TimestampsFeature,

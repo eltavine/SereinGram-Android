@@ -161,4 +161,10 @@
     <string name="serein_sending_ask_note">A tap in the sticker and GIF panel sends at once; with these on, it asks first, so a stray tap sends nothing.</string>
     <string name="serein_sending_confirm_sticker">Send this sticker?</string>
     <string name="serein_sending_confirm_gif">Send this GIF?</string>
+    <string name="serein_qr_title">QR codes</string>
+    <string name="serein_qr_scan_in_menu">Scan QR codes in photos</string>
+    <string name="serein_qr_scan_in_menu_note">The menu of a downloaded photo or image offers to read the QR code in it, then to open or copy what it says.</string>
+    <string name="serein_qr_scan">Scan QR code</string>
+    <string name="serein_qr_found">QR code</string>
+    <string name="serein_qr_none">No QR code was found in this image.</string>
 </resources>

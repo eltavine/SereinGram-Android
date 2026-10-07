@@ -21,6 +21,8 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-gradlePlugin = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
 # Matches the Ktor client Nagram ships.
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version = "3.3.0" }
+# Matches the ZXing Telegram scans and draws QR codes with.
+zxing-core = { module = "com.google.zxing:core", version = "3.5.4" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-platformLauncher = { module = "org.junit.platform:junit-platform-launcher" }
 junit4 = { module = "junit:junit", version.ref = "junit4" }

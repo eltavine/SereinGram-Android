@@ -161,4 +161,10 @@
     <string name="serein_sending_ask_note">在貼圖和 GIF 面板中點一下就會立即傳送；開啟後會先詢問，誤觸不會送出任何內容。</string>
     <string name="serein_sending_confirm_sticker">傳送這張貼圖？</string>
     <string name="serein_sending_confirm_gif">傳送這個 GIF？</string>
+    <string name="serein_qr_title">QR 碼</string>
+    <string name="serein_qr_scan_in_menu">辨識圖片中的 QR 碼</string>
+    <string name="serein_qr_scan_in_menu_note">已下載的相片或圖片的選單中會提供辨識其中 QR 碼的選項，之後可開啟或複製辨識結果。</string>
+    <string name="serein_qr_scan">辨識 QR 碼</string>
+    <string name="serein_qr_found">QR 碼內容</string>
+    <string name="serein_qr_none">未在此圖片中找到 QR 碼。</string>
 </resources>
