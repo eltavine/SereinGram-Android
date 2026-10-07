@@ -191,4 +191,5 @@
     <string name="serein_reactions_pinned_hint">未设置</string>
     <string name="serein_reactions_pinned_note">在消息菜单上方的回应中，这些表情会按此顺序排在最前（如果该聊天允许）。依次输入即可，例如 👍❤️🔥。</string>
     <string name="serein_proxy_tile_none">未设置</string>
+    <string name="serein_update_check_off">SereinGram 不检查更新。新版本发布在 GitHub 上。</string>
 </resources>

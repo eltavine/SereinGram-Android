@@ -178,7 +178,7 @@ public class UpdateHelper extends BaseRemoteHelper {
 
     public void checkNewVersionAvailable(Delegate delegate, boolean updateAlways_) {
         if (!com.eltavine.sereingram.hooks.UpstreamServices.allowUpdateCheck()) {
-            delegate.onTLResponse(null, null);
+            delegate.onTLResponse(null, org.telegram.messenger.LocaleController.getString(org.telegram.messenger.R.string.serein_update_check_off));
             return;
         }
         updateAlways = updateAlways_;
