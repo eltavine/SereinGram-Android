@@ -23,8 +23,10 @@ class GhostTileService : TileService() {
     }
 
     override fun onClick() {
-        NagramGhost.setActive(!NagramGhost.isActive)
-        render()
+        unlockAndRun {
+            NagramGhost.setActive(!NagramGhost.isActive)
+            render()
+        }
     }
 
     private fun render() {
