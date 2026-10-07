@@ -9,11 +9,11 @@ import java.util.concurrent.ConcurrentHashMap
 
 /** Option storage in SharedPreferences: `serein` for the device, `serein_account<N>` per account. */
 internal class PreferencesStores(private val context: Context) : Options.StoreProvider {
-    private val stores = ConcurrentHashMap<Int, KeyValueStore>()
+    private val stores = ConcurrentHashMap<String, KeyValueStore>()
 
-    override fun store(scope: OptionScope, account: Int): KeyValueStore = stores.getOrPut(account) {
+    override fun store(scope: OptionScope, account: Int): KeyValueStore {
         val name = if (scope == OptionScope.DEVICE) "serein" else "serein_account$account"
-        PreferencesStore(context.getSharedPreferences(name, Context.MODE_PRIVATE))
+        return stores.getOrPut(name) { PreferencesStore(context.getSharedPreferences(name, Context.MODE_PRIVATE)) }
     }
 }
 
