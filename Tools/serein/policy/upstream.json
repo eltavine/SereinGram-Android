@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "upstream": "https://github.com/NextAlone/Nagram.git#main",
   "base": "b8db62a65e1e4dee34d92bff412548ef628ddb06",
   "owned": [
@@ -20,7 +20,43 @@
     "all_files": 306,
     "all_added_lines": 253,
     "source_files": 18,
-    "source_added_lines": 33,
-    "hook_calls": 17
+    "source_added_lines": 33
+  },
+  "hooks": {
+    "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
+      "hooks.LinkHooks.confirmsBeforeOpening"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/messenger/ApplicationLoader.java": [
+      "app.SereinApp.onCreate"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/messenger/MessagesController.java": [
+      "hooks.HistoryHooks.beforeMessagesDeleted",
+      "hooks.HistoryHooks.beforeUserDeletes"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/messenger/MessagesStorage.java": [
+      "hooks.HistoryHooks.afterHistoryLoaded",
+      "hooks.HistoryHooks.beforeMessageEdited"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/ui/Cells/ChatMessageCell.java": [
+      "hooks.ChatHooks.allowShareButton",
+      "hooks.MessageHooks.decorateTime"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/ui/ChatActivity.java": [
+      "hooks.HistoryHooks.removedFromChat",
+      "hooks.MessageMenuHooks.fill",
+      "hooks.MessageMenuHooks.select"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java": [
+      "hooks.SettingsHooks.Entry",
+      "hooks.SettingsHooks.filterMainSettings",
+      "hooks.SettingsHooks.mainSettingsEntries",
+      "hooks.SettingsHooks.openMainSettingsEntry"
+    ],
+    "TMessagesProj/src/main/java/tw/nekomimi/nekogram/helpers/AnalyticsHelper.java": [
+      "hooks.UpstreamServices.allowCrashReports"
+    ],
+    "TMessagesProj/src/main/java/tw/nekomimi/nekogram/helpers/remote/UpdateHelper.java": [
+      "hooks.UpstreamServices.allowUpdateCheck"
+    ]
   }
 }
