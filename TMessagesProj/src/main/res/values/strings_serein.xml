@@ -66,4 +66,7 @@
     <string name="serein_input_title">Message field</string>
     <string name="serein_input_plain_paste">Paste as plain text</string>
     <string name="serein_input_plain_paste_note">Text pasted into messages and captions loses the bold, links, tables and other formatting it was copied with. Needs Android 6.0 or later.</string>
+    <string name="serein_notifications_title">Notifications</string>
+    <string name="serein_notifications_content_when_locked">Show messages while locked</string>
+    <string name="serein_notifications_content_when_locked_note">While a passcode locks SereinGram, notifications only say that a message arrived. With this on they show who wrote and what, as when the app is unlocked. Secret chats stay hidden.</string>
 </resources>

@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 308,
-    "all_added_lines": 259,
+    "all_added_lines": 261,
     "source_files": 20,
-    "source_added_lines": 39
+    "source_added_lines": 41
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -36,6 +36,10 @@
     "TMessagesProj/src/main/java/org/telegram/messenger/MessagesStorage.java": [
       "hooks.HistoryHooks.afterHistoryLoaded",
       "hooks.HistoryHooks.beforeMessageEdited"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/messenger/NotificationsController.java": [
+      "hooks.NotificationHooks.showsContentWhenLocked",
+      "hooks.NotificationHooks.showsContentWhenLocked"
     ],
     "TMessagesProj/src/main/java/org/telegram/tgnet/ConnectionsManager.java": [
       "hooks.RequestHooks.exemptsFromGhostMode",

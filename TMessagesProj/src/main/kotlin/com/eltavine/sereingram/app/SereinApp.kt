@@ -13,6 +13,7 @@ import com.eltavine.sereingram.features.history.HistoryFeature
 import com.eltavine.sereingram.features.input.InputFeature
 import com.eltavine.sereingram.features.links.LinksFeature
 import com.eltavine.sereingram.features.messagemenu.MessageMenuFeature
+import com.eltavine.sereingram.features.notifications.NotificationsFeature
 import com.eltavine.sereingram.features.search.SearchFeature
 import com.eltavine.sereingram.features.services.ServicesModule
 import com.eltavine.sereingram.features.timestamps.TimestampsFeature
@@ -50,6 +51,7 @@ object SereinApp {
                 InputFeature,
                 LinksFeature,
                 MessageMenuFeature,
+                NotificationsFeature,
                 SearchFeature,
                 TimestampsFeature,
             ),

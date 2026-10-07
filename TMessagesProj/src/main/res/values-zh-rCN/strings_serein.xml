@@ -66,4 +66,7 @@
     <string name="serein_input_title">输入框</string>
     <string name="serein_input_plain_paste">以纯文本粘贴</string>
     <string name="serein_input_plain_paste_note">粘贴到消息和说明中的文字会去掉复制时带有的粗体、链接、表格等格式。需要 Android 6.0 或更高版本。</string>
+    <string name="serein_notifications_title">通知</string>
+    <string name="serein_notifications_content_when_locked">锁定时显示消息内容</string>
+    <string name="serein_notifications_content_when_locked_note">SereinGram 被密码锁定时，通知只会提示收到了消息。开启后，通知会像解锁时一样显示发送者和内容。私密聊天仍会隐藏。</string>
 </resources>
