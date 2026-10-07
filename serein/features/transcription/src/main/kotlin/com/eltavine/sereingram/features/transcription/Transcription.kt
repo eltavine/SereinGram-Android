@@ -12,7 +12,7 @@ import com.eltavine.sereingram.core.textOption
 public object TranscriptionOptions {
     public val enabled: Option<Boolean> = booleanOption("transcription_enabled")
     public val baseUrl: Option<String> = textOption("transcription_base_url", default = "https://api.openai.com/v1")
-    public val apiKey: Option<String> = textOption("transcription_api_key")
+    public val apiKey: Option<String> = textOption("transcription_api_key", secret = true)
     public val model: Option<String> = textOption("transcription_model", default = "whisper-1")
 
     /** An ISO 639-1 code that helps the service; empty lets it find out. */

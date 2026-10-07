@@ -113,7 +113,7 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
                 header = R.string.serein_transcription_service,
                 rows = listOf(
                     SettingsRow.Text(TranscriptionOptions.baseUrl, R.string.serein_transcription_base_url, R.string.serein_transcription_base_url_hint),
-                    SettingsRow.Text(TranscriptionOptions.apiKey, R.string.serein_transcription_api_key, R.string.serein_transcription_api_key_hint, secret = true),
+                    SettingsRow.Text(TranscriptionOptions.apiKey, R.string.serein_transcription_api_key, R.string.serein_transcription_api_key_hint),
                     SettingsRow.Text(TranscriptionOptions.model, R.string.serein_transcription_model, R.string.serein_transcription_model_hint),
                     SettingsRow.Text(TranscriptionOptions.language, R.string.serein_transcription_language, R.string.serein_transcription_language_hint),
                 ),

@@ -28,7 +28,7 @@ sealed interface SettingsRow {
         val option: Option<String>,
         @StringRes val title: Int,
         @StringRes val placeholder: Int,
-        val secret: Boolean = false,
+        val secret: Boolean = option.secret,
     ) : SettingsRow
 
     /** A switch for state kept outside SereinGram's options, such as one of Nagram's settings. */
