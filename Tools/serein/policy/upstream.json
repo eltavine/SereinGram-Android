@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 307,
-    "all_added_lines": 257,
+    "all_added_lines": 258,
     "source_files": 19,
-    "source_added_lines": 37
+    "source_added_lines": 38
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -51,6 +51,9 @@
       "hooks.HistoryHooks.removedFromChat",
       "hooks.MessageMenuHooks.fill",
       "hooks.MessageMenuHooks.select"
+    ],
+    "TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java": [
+      "hooks.SearchHooks.allowsGlobalSearch"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java": [
       "hooks.SettingsHooks.Entry",

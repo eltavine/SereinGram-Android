@@ -60,4 +60,7 @@
     <string name="serein_timestamps_title">消息时间</string>
     <string name="serein_timestamps_show_date">在时间旁显示日期</string>
     <string name="serein_timestamps_show_date_note">今天以前的消息会在时间旁显示月和日，更早年份的消息则显示完整日期。</string>
+    <string name="serein_search_title">搜索</string>
+    <string name="serein_search_hide_global">隐藏全局搜索结果</string>
+    <string name="serein_search_hide_global_note">在聊天列表中搜索时，不再列出你未加入的公开用户、群组和频道；你的聊天、联系人和消息仍可搜索到。下次启动 SereinGram 时生效。</string>
 </resources>

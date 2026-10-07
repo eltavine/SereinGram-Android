@@ -60,4 +60,7 @@
     <string name="serein_timestamps_title">Message time</string>
     <string name="serein_timestamps_show_date">Show the date beside the time</string>
     <string name="serein_timestamps_show_date_note">Messages from before today show their day and month next to the time, or the full date when they are from an earlier year.</string>
+    <string name="serein_search_title">Search</string>
+    <string name="serein_search_hide_global">Hide global search results</string>
+    <string name="serein_search_hide_global_note">Searching from the chat list no longer lists public people, groups and channels you are not in; your chats, contacts and messages are still found. Applies the next time SereinGram starts.</string>
 </resources>

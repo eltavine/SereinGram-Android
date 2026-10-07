@@ -12947,6 +12947,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     }
 
     public boolean getAllowGlobalSearch() {
+        if (!com.eltavine.sereingram.hooks.SearchHooks.allowsGlobalSearch()) return false;
         return allowGlobalSearch;
     }
 
