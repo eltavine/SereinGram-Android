@@ -169,7 +169,7 @@
     <string name="serein_sending_title">发送</string>
     <string name="serein_sending_ask_before_sticker">发送贴纸前确认</string>
     <string name="serein_sending_ask_before_gif">发送 GIF 前确认</string>
-    <string name="serein_sending_ask_note">在贴纸和 GIF 面板中点一下就会立即发送；开启后会先询问，误触不会发出任何内容。</string>
+    <string name="serein_sending_ask_note">在聊天的贴纸和 GIF 面板中点一下就会立即发送；开启后会先询问。输入表情时推荐的贴纸，以及回复动态时发送的贴纸和 GIF，仍会立即发出。</string>
     <string name="serein_sending_confirm_sticker">发送这张贴纸？</string>
     <string name="serein_sending_confirm_gif">发送这个 GIF？</string>
     <string name="serein_qr_title">二维码</string>

@@ -169,7 +169,7 @@
     <string name="serein_sending_title">傳送</string>
     <string name="serein_sending_ask_before_sticker">傳送貼圖前確認</string>
     <string name="serein_sending_ask_before_gif">傳送 GIF 前確認</string>
-    <string name="serein_sending_ask_note">在貼圖和 GIF 面板中點一下就會立即傳送；開啟後會先詢問，誤觸不會送出任何內容。</string>
+    <string name="serein_sending_ask_note">在聊天的貼圖和 GIF 面板中點一下就會立即傳送；開啟後會先詢問。輸入表情符號時建議的貼圖，以及回覆限時動態時傳送的貼圖和 GIF，仍會立即送出。</string>
     <string name="serein_sending_confirm_sticker">傳送這張貼圖？</string>
     <string name="serein_sending_confirm_gif">傳送這個 GIF？</string>
     <string name="serein_qr_title">QR 碼</string>

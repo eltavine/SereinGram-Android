@@ -169,7 +169,7 @@
     <string name="serein_sending_title">Sending</string>
     <string name="serein_sending_ask_before_sticker">Ask before sending stickers</string>
     <string name="serein_sending_ask_before_gif">Ask before sending GIFs</string>
-    <string name="serein_sending_ask_note">A tap in the sticker and GIF panel sends at once; with these on, it asks first, so a stray tap sends nothing.</string>
+    <string name="serein_sending_ask_note">A tap in a chat\'s sticker and GIF panel sends at once; with these on, it asks first. Stickers suggested while you type an emoji, and stickers and GIFs sent as replies to stories, still go at once.</string>
     <string name="serein_sending_confirm_sticker">Send this sticker?</string>
     <string name="serein_sending_confirm_gif">Send this GIF?</string>
     <string name="serein_qr_title">QR codes</string>
