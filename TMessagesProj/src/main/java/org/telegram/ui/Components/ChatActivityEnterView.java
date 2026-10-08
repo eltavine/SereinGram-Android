@@ -6217,7 +6217,7 @@ public class ChatActivityEnterView extends FrameLayout implements
 
             @Override
             public boolean onTextContextMenuItem(int id) {
-                if (id == android.R.id.paste && handleRichHtmlPaste()) {
+                if (id == android.R.id.paste && !com.eltavine.sereingram.hooks.InputHooks.pastesPlainText() && handleRichHtmlPaste()) {
                     return true;
                 }
                 return super.onTextContextMenuItem(id);
