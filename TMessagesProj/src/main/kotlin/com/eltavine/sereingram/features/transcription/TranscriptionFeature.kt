@@ -30,6 +30,7 @@ import org.telegram.messenger.R
 import org.telegram.tgnet.TLRPC
 import org.telegram.ui.Components.TranscribeButton
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 
 /** Transcribes voice and video messages with a speech-to-text service of the user's choice. */
 object TranscriptionFeature : SereinModule, SettingsContributor {
@@ -54,6 +55,10 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
     private class Provider(private val options: Options) : TranscriptionHooks.Provider {
         // Account, chat and message of each transcription under way.
         private val transcribing: MutableSet<Triple<Int, Long, Int>> = ConcurrentHashMap.newKeySet()
+
+        // Telegram finds the message a transcription is for by its id, or by message and chat when no message has
+        // the id; Telegram's own ids are positive and most messages have none, so SereinGram's are negative.
+        private val transcriptionIds = AtomicLong()
 
         // Runs whenever a message is drawn, so the cheap checks come first.
         override fun offers(account: Int, message: Any): Boolean {
@@ -91,15 +96,15 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
                 return true
             }
             (button as TranscribeButton).setLoading(true, true)
+            val id = transcriptionIds.decrementAndGet()
             scope.launch {
                 val result = runCatching { client.transcribe(config, file) }
                 AndroidUtilities.runOnUIThread {
                     transcribing.remove(key)
-                    result.onSuccess { show(shown, it) }.onFailure { error ->
+                    result.onSuccess { show(shown, id, it) }.onFailure { error ->
                         Faults.report("transcription", error)
                         toast(LocaleController.formatString(R.string.serein_transcription_failed, error.message.orEmpty()))
-                        // With an id, Telegram finds the message among those shown now and draws it anew.
-                        NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.voiceTranscriptionUpdate, shown, 0L, null)
+                        NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.voiceTranscriptionUpdate, shown, id, null)
                     }
                 }
             }
@@ -110,11 +115,11 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
     }
 
     // Telegram's own transcriptions end the same way, which redraws the message.
-    private fun show(message: MessageObject, text: String) {
+    private fun show(message: MessageObject, id: Long, text: String) {
         message.messageOwner.voiceTranscription = text
         message.messageOwner.voiceTranscriptionOpen = true
         TranscribeButton.openVideoTranscription(message)
-        TranscribeButton.finishTranscription(message, 0, text)
+        TranscribeButton.finishTranscription(message, id, text)
     }
 
     private fun config(options: Options) = TranscriptionConfig(
