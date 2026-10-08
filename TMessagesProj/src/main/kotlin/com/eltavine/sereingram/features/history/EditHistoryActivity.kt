@@ -33,7 +33,7 @@ internal class EditHistoryEntry(
 
     override fun isShown(account: Int, message: Any): Boolean {
         val shown = message as MessageObject
-        return revised.contains(account, shown.dialogId, shown.id)
+        return isInHistory(shown) && revised.contains(account, shown.dialogId, shown.id)
     }
 
     override fun onSelected(account: Int, message: Any, host: Any) {

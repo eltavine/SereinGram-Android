@@ -84,7 +84,7 @@ internal class HistoryRestorer(
 
     fun decorateTime(account: Int, message: Any, time: String): String {
         val shown = message as MessageObject
-        if (kept[account, shown.dialogId, shown.id] == null) {
+        if (!isInHistory(shown) || kept[account, shown.dialogId, shown.id] == null) {
             return time
         }
         val mark = options.get(HistoryOptions.deletedMark).ifBlank { LocaleController.getString(R.string.serein_history_deleted_mark) }

@@ -15,8 +15,11 @@ internal class BookmarkMessageEntry(private val feature: BookmarksFeature) : Mes
 
     override val icon: Int = R.drawable.msg_fave
 
-    // Messages of secret chats and ones not yet sent have no lasting id.
-    override fun isShown(account: Int, message: Any): Boolean = (message as MessageObject).id > 0 && !message.isSponsored
+    // Messages of secret chats and ones not yet sent have no lasting id; scheduled ones and quick replies have ids of their own.
+    override fun isShown(account: Int, message: Any): Boolean {
+        val shown = message as MessageObject
+        return shown.id > 0 && !shown.isSponsored && !shown.scheduled && !shown.isQuickReply
+    }
 
     override fun title(account: Int, message: Any): CharSequence {
         val shown = message as MessageObject

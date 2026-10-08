@@ -22,6 +22,9 @@ internal class DeletedAtEntry(private val kept: MessageMap<Long>) : MessageMenuH
 
     private fun deletedAt(account: Int, message: Any): Long? {
         val shown = message as MessageObject
-        return kept[account, shown.dialogId, shown.id]
+        return if (isInHistory(shown)) kept[account, shown.dialogId, shown.id] else null
     }
 }
+
+/** Scheduled messages and quick replies number their ids apart from a chat's history. */
+internal fun isInHistory(message: MessageObject): Boolean = !message.scheduled && !message.isQuickReply
