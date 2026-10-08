@@ -1,0 +1,44 @@
+name: Restore SereinGram's native libraries
+description: Puts the native libraries that the native jobs cached for this commit where Gradle packages them.
+
+inputs:
+  ndk-version:
+    description: The NDK the libraries were built with.
+    required: true
+  signing-sha1:
+    description: The SHA-1 of the release signing certificate the libraries check APKs against, if any.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Key of the armeabi-v7a library.
+      id: armeabi-v7a
+      uses: ./.github/actions/native-cache-key
+      with:
+        abi: armeabi-v7a
+        ndk-version: ${{ inputs.ndk-version }}
+        signing-sha1: ${{ inputs.signing-sha1 }}
+
+    - name: Key of the arm64-v8a library.
+      id: arm64-v8a
+      uses: ./.github/actions/native-cache-key
+      with:
+        abi: arm64-v8a
+        ndk-version: ${{ inputs.ndk-version }}
+        signing-sha1: ${{ inputs.signing-sha1 }}
+
+    - name: Native library (armeabi-v7a).
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: TMessagesProj/src/main/libs
+        key: ${{ steps.armeabi-v7a.outputs.key }}
+        fail-on-cache-miss: true
+
+    - name: Native library (arm64-v8a).
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: TMessagesProj/src/main/libs
+        key: ${{ steps.arm64-v8a.outputs.key }}
+        fail-on-cache-miss: true

@@ -1,0 +1,36 @@
+name: SereinGram native library cache key
+description: The key that the Telegram native library of one ABI is cached under, the same in every workflow.
+
+inputs:
+  abi:
+    description: The ABI the library is built for.
+    required: true
+  ndk-version:
+    description: The NDK the library is built with.
+    required: true
+  signing-sha1:
+    description: The SHA-1 of the release signing certificate the library checks APKs against, if any.
+    required: false
+    default: ""
+
+outputs:
+  key:
+    description: The cache key.
+    value: ${{ steps.key.outputs.key }}
+
+runs:
+  using: composite
+  steps:
+    # Submodules are pointers that hashFiles does not see, hence their commits, read from the
+    # commit so that a checked out submodule changes nothing. The build scripts, Gradle's CMake
+    # arguments, the NDK and the signing SHA-1 shape the library too.
+    - name: Read the submodules' commits.
+      shell: bash
+      run: git ls-tree -r HEAD | awk '$1 == "160000"' > native_status
+
+    - name: Compute the key.
+      id: key
+      shell: bash
+      env:
+        KEY: native-${{ hashFiles('TMessagesProj/jni/**', 'native_status', 'run', 'bin/**', 'TMessagesProj/build.gradle', 'build-logic/**/*.kt') }}-${{ inputs.ndk-version }}-${{ inputs.signing-sha1 }}-${{ inputs.abi }}
+      run: echo "key=$KEY" >> "$GITHUB_OUTPUT"

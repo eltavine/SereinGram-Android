@@ -12,6 +12,7 @@
     "TMessagesProj/src/test/kotlin/com/eltavine/",
     "TMessagesProj/src/main/res/values*/strings_serein.xml",
     "TMessagesProj/src/main/res/drawable*/serein_*",
+    ".github/actions/",
     ".github/workflows/serein-*",
     ".github/dependabot.yml",
     "BRANDING.md",
