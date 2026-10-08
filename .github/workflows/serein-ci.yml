@@ -47,6 +47,9 @@ jobs:
           uvx ruff@0.16.10 check Tools/serein
           uvx ruff@0.16.10 format --check Tools/serein
 
+      - name: The release script works.
+        run: uv run --with pytest==8.4.2 --with httpx==0.28.1 pytest -q Tools/serein/ci
+
       - name: The brand string overlay matches upstream strings.
         run: |
           uv run Tools/serein/brand/generate_strings.py
