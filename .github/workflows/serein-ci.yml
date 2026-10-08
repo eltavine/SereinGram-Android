@@ -40,6 +40,13 @@ jobs:
       - name: Upstream files stay within the intrusion budget.
         run: uv run Tools/serein/upstream_budget.py
 
+      - name: SereinGram's workflows and scripts pass their linters.
+        run: |
+          uvx --from actionlint-py==1.7.12.25 actionlint
+          shellcheck Tools/serein/*.sh
+          uvx ruff@0.16.10 check Tools/serein
+          uvx ruff@0.16.10 format --check Tools/serein
+
       - name: The brand string overlay matches upstream strings.
         run: |
           uv run Tools/serein/brand/generate_strings.py
