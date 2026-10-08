@@ -4,10 +4,12 @@ import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ReactionHooks
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.R
 import org.telegram.ui.Components.Reactions.ReactionsLayoutInBubble
 
@@ -33,11 +35,26 @@ object ReactionsFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg_reactions
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.MESSAGES
+
+    override val settingsTint: SettingsTint = SettingsTint.RED
+
+    override val settingsOrder: Int = 3
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_reactions_title,
-        listOf(
+        summary = R.string.serein_reactions_summary,
+        sections = listOf(
             SettingsSection(
-                rows = listOf(SettingsRow.Text(ReactionOptions.pinned, R.string.serein_reactions_pinned, R.string.serein_reactions_pinned_hint)),
+                rows = listOf(
+                    SettingsRow.Text(
+                        ReactionOptions.pinned,
+                        R.string.serein_reactions_pinned,
+                        placeholder = R.string.serein_reactions_pinned_hint,
+                        hint = R.string.serein_reactions_pinned_example,
+                        summary = R.string.serein_reactions_pinned_info,
+                    ),
+                ),
                 note = R.string.serein_reactions_pinned_note,
             ),
         ),

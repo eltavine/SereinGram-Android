@@ -5,10 +5,12 @@ import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.SendHooks
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
 import org.telegram.ui.ActionBar.AlertDialog
@@ -48,13 +50,24 @@ object SendingFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg_emoji_stickers
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.CHATS
+
+    override val settingsTint: SettingsTint = SettingsTint.PURPLE
+
+    override val settingsOrder: Int = 3
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_sending_title,
-        listOf(
+        summary = R.string.serein_sending_summary,
+        sections = listOf(
             SettingsSection(
                 rows = listOf(
-                    SettingsRow.Toggle(SendingOptions.askBeforeSticker, R.string.serein_sending_ask_before_sticker),
-                    SettingsRow.Toggle(SendingOptions.askBeforeGif, R.string.serein_sending_ask_before_gif),
+                    SettingsRow.Toggle(
+                        SendingOptions.askBeforeSticker,
+                        R.string.serein_sending_ask_before_sticker,
+                        summary = R.string.serein_sending_ask_before_sticker_info,
+                    ),
+                    SettingsRow.Toggle(SendingOptions.askBeforeGif, R.string.serein_sending_ask_before_gif, summary = R.string.serein_sending_ask_before_gif_info),
                 ),
                 note = R.string.serein_sending_ask_note,
             ),

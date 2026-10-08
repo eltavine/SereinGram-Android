@@ -6,10 +6,12 @@ import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ChatHooks
 import com.eltavine.sereingram.hooks.MessageHooks
 import com.eltavine.sereingram.hooks.SettingsHooks
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.R
 import org.telegram.ui.Components.chat.layouts.ChatActivityChannelButtonsLayout
@@ -43,32 +45,51 @@ object DeclutterFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg_archive_hide
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.INTERFACE
+
+    override val settingsTint: SettingsTint = SettingsTint.GRAY
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_declutter_title,
-        listOf(
+        summary = R.string.serein_declutter_summary,
+        sections = listOf(
             SettingsSection(
                 header = R.string.serein_declutter_settings,
                 rows = listOf(
-                    SettingsRow.Toggle(DeclutterOptions.hidePremiumSection, R.string.serein_declutter_hide_premium),
-                    SettingsRow.Toggle(DeclutterOptions.hideHelpSection, R.string.serein_declutter_hide_help),
+                    SettingsRow.Toggle(
+                        DeclutterOptions.hidePremiumSection,
+                        R.string.serein_declutter_hide_premium,
+                        summary = R.string.serein_declutter_hide_premium_info,
+                    ),
+                    SettingsRow.Toggle(DeclutterOptions.hideHelpSection, R.string.serein_declutter_hide_help, summary = R.string.serein_declutter_hide_help_info),
                 ),
-                note = R.string.serein_declutter_settings_note,
             ),
             SettingsSection(
                 header = R.string.serein_declutter_chats,
                 rows = listOf(
-                    SettingsRow.Toggle(DeclutterOptions.hideShareButton, R.string.serein_declutter_hide_share),
-                    SettingsRow.Toggle(DeclutterOptions.hideReactions, R.string.serein_declutter_hide_reactions),
+                    SettingsRow.Toggle(DeclutterOptions.hideShareButton, R.string.serein_declutter_hide_share, summary = R.string.serein_declutter_hide_share_info),
+                    SettingsRow.Toggle(
+                        DeclutterOptions.hideReactions,
+                        R.string.serein_declutter_hide_reactions,
+                        summary = R.string.serein_declutter_hide_reactions_info,
+                    ),
                 ),
                 note = R.string.serein_declutter_chats_note,
             ),
             SettingsSection(
                 header = R.string.serein_declutter_channels,
                 rows = listOf(
-                    SettingsRow.Toggle(DeclutterOptions.hideChannelGiftButton, R.string.serein_declutter_hide_channel_gift),
-                    SettingsRow.Toggle(DeclutterOptions.hideChannelMessageButton, R.string.serein_declutter_hide_channel_message),
+                    SettingsRow.Toggle(
+                        DeclutterOptions.hideChannelGiftButton,
+                        R.string.serein_declutter_hide_channel_gift,
+                        summary = R.string.serein_declutter_hide_channel_gift_info,
+                    ),
+                    SettingsRow.Toggle(
+                        DeclutterOptions.hideChannelMessageButton,
+                        R.string.serein_declutter_hide_channel_message,
+                        summary = R.string.serein_declutter_hide_channel_message_info,
+                    ),
                 ),
-                note = R.string.serein_declutter_channels_note,
             ),
         ),
     )

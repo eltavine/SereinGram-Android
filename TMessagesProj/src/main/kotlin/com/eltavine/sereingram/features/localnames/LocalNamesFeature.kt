@@ -6,10 +6,12 @@ import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ChatMenuHooks
 import com.eltavine.sereingram.hooks.PeerHooks
 import com.eltavine.sereingram.ports.LocalNameStore
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.MessagesController
 import org.telegram.messenger.MessagesStorage
@@ -146,11 +148,24 @@ class LocalNamesFeature(stores: (account: Int) -> LocalNameStore) : SereinModule
 
     override val settingsIcon: Int = R.drawable.msg_edit
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.CHATS
+
+    override val settingsTint: SettingsTint = SettingsTint.GREEN
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_local_names_title,
-        listOf(
+        summary = R.string.serein_local_names_summary,
+        sections = listOf(
             SettingsSection(
-                rows = listOf(SettingsRow.Screen(R.string.serein_local_names_all, { LocalNamesActivity(this) })),
+                rows = listOf(
+                    SettingsRow.Screen(
+                        R.string.serein_local_names_all,
+                        open = { LocalNamesActivity(this) },
+                        summary = R.string.serein_local_names_all_info,
+                        icon = R.drawable.msg_edit,
+                        value = { state -> names.all(state.account).size.takeIf { it > 0 }?.toString() },
+                    ),
+                ),
                 note = R.string.serein_local_names_note,
             ),
         ),

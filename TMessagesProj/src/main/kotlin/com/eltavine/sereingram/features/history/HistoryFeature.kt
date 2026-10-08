@@ -9,12 +9,15 @@ import com.eltavine.sereingram.hooks.HistoryHooks
 import com.eltavine.sereingram.hooks.MessageHooks
 import com.eltavine.sereingram.hooks.MessageMenuHooks
 import com.eltavine.sereingram.ports.HistoryStore
+import com.eltavine.sereingram.settings.SettingsCategory
+import com.eltavine.sereingram.settings.SettingsCondition
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
+import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
-import org.telegram.messenger.UserConfig
 import java.io.File
 import java.util.concurrent.Executors
 
@@ -66,43 +69,85 @@ class HistoryFeature(
 
     override val settingsIcon: Int = R.drawable.msg_recent
 
-    override val settingsPage: SettingsPage = SettingsPage(
-        R.string.serein_history_title,
-        listOf(
-            SettingsSection(
-                header = R.string.serein_history_save,
-                rows = listOf(
-                    SettingsRow.Toggle(HistoryOptions.saveDeleted, R.string.serein_history_save_deleted),
-                    SettingsRow.Toggle(HistoryOptions.saveEdits, R.string.serein_history_save_edits),
-                    SettingsRow.Toggle(HistoryOptions.saveInBotChats, R.string.serein_history_save_in_bots),
+    override val settingsCategory: SettingsCategory = SettingsCategory.MESSAGES
+
+    override val settingsTint: SettingsTint = SettingsTint.BLUE
+
+    override val settingsPage: SettingsPage = run {
+        val keepsDeleted = SettingsCondition.isOn(HistoryOptions.saveDeleted)
+        val copiesMedia = keepsDeleted and SettingsCondition.isOn(HistoryOptions.backupMedia)
+        SettingsPage(
+            R.string.serein_history_title,
+            summary = R.string.serein_history_summary,
+            status = { state -> getString(R.string.serein_settings_on).takeIf { state[HistoryOptions.saveDeleted] || state[HistoryOptions.saveEdits] } },
+            sections = listOf(
+                SettingsSection(
+                    header = R.string.serein_history_save,
+                    rows = listOf(
+                        SettingsRow.Toggle(HistoryOptions.saveDeleted, R.string.serein_history_save_deleted, summary = R.string.serein_history_save_deleted_info),
+                        SettingsRow.Toggle(HistoryOptions.saveEdits, R.string.serein_history_save_edits, summary = R.string.serein_history_save_edits_info),
+                        SettingsRow.Toggle(
+                            HistoryOptions.saveInBotChats,
+                            R.string.serein_history_save_in_bots,
+                            summary = R.string.serein_history_save_in_bots_info,
+                            enabledWhen = keepsDeleted or SettingsCondition.isOn(HistoryOptions.saveEdits),
+                        ),
+                    ),
+                    note = R.string.serein_history_save_note,
                 ),
-                note = R.string.serein_history_save_note,
-            ),
-            SettingsSection(
-                rows = listOf(
-                    SettingsRow.Screen(R.string.serein_history_deleted_all, {
-                        val account = UserConfig.selectedAccount
-                        DeletedChatsActivity(stores(account)) { dialogId -> mediaBackups.forgetChat(account, dialogId) }
-                    }),
+                SettingsSection(
+                    rows = listOf(
+                        SettingsRow.Screen(
+                            R.string.serein_history_deleted_all,
+                            open = { state -> DeletedChatsActivity(stores(state.account)) { dialogId -> mediaBackups.forgetChat(state.account, dialogId) } },
+                            summary = R.string.serein_history_deleted_all_info,
+                            icon = R.drawable.msg_delete,
+                        ),
+                    ),
+                ),
+                SettingsSection(
+                    header = R.string.serein_history_media,
+                    rows = listOf(
+                        SettingsRow.Toggle(
+                            HistoryOptions.backupMedia,
+                            R.string.serein_history_backup_media,
+                            summary = R.string.serein_history_backup_media_info,
+                            enabledWhen = keepsDeleted,
+                        ),
+                        SettingsRow.Toggle(
+                            HistoryOptions.backupInPrivateChats,
+                            R.string.serein_history_backup_private,
+                            summary = R.string.serein_history_backup_private_info,
+                            enabledWhen = copiesMedia,
+                        ),
+                        SettingsRow.Toggle(
+                            HistoryOptions.backupInGroups,
+                            R.string.serein_history_backup_groups,
+                            summary = R.string.serein_history_backup_groups_info,
+                            enabledWhen = copiesMedia,
+                        ),
+                        SettingsRow.Toggle(
+                            HistoryOptions.backupInChannels,
+                            R.string.serein_history_backup_channels,
+                            summary = R.string.serein_history_backup_channels_info,
+                            enabledWhen = copiesMedia,
+                        ),
+                    ),
+                    note = R.string.serein_history_backup_note,
+                ),
+                SettingsSection(
+                    header = R.string.serein_history_appearance,
+                    rows = listOf(
+                        SettingsRow.Text(
+                            HistoryOptions.deletedMark,
+                            R.string.serein_history_deleted_mark_title,
+                            placeholder = R.string.serein_history_deleted_mark,
+                            summary = R.string.serein_history_deleted_mark_info,
+                        ),
+                    ),
+                    note = R.string.serein_history_deleted_mark_note,
                 ),
             ),
-            SettingsSection(
-                header = R.string.serein_history_media,
-                rows = listOf(
-                    SettingsRow.Toggle(HistoryOptions.backupMedia, R.string.serein_history_backup_media),
-                    SettingsRow.Toggle(HistoryOptions.backupInPrivateChats, R.string.serein_history_backup_private),
-                    SettingsRow.Toggle(HistoryOptions.backupInGroups, R.string.serein_history_backup_groups),
-                    SettingsRow.Toggle(HistoryOptions.backupInChannels, R.string.serein_history_backup_channels),
-                ),
-                note = R.string.serein_history_backup_note,
-            ),
-            SettingsSection(
-                header = R.string.serein_history_appearance,
-                rows = listOf(
-                    SettingsRow.Text(HistoryOptions.deletedMark, R.string.serein_history_deleted_mark_title, R.string.serein_history_deleted_mark),
-                ),
-                note = R.string.serein_history_deleted_mark_note,
-            ),
-        ),
-    )
+        )
+    }
 }

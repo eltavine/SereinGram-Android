@@ -8,10 +8,12 @@ import com.eltavine.sereingram.hooks.ChatMenuHooks
 import com.eltavine.sereingram.hooks.MessageMenuHooks
 import com.eltavine.sereingram.ports.Bookmark
 import com.eltavine.sereingram.ports.BookmarkStore
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.R
@@ -110,11 +112,25 @@ class BookmarksFeature(private val stores: (account: Int) -> BookmarkStore) : Se
 
     override val settingsIcon: Int = R.drawable.msg_fave
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.MESSAGES
+
+    override val settingsTint: SettingsTint = SettingsTint.ORANGE
+
+    override val settingsOrder: Int = 1
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_bookmarks_title,
-        listOf(
+        summary = R.string.serein_bookmarks_summary,
+        sections = listOf(
             SettingsSection(
-                rows = listOf(SettingsRow.Screen(R.string.serein_bookmarks_all, { BookmarksActivity(this, dialogId = null, chat = null) })),
+                rows = listOf(
+                    SettingsRow.Screen(
+                        R.string.serein_bookmarks_all,
+                        open = { BookmarksActivity(this, dialogId = null, chat = null) },
+                        summary = R.string.serein_bookmarks_all_info,
+                        icon = R.drawable.msg_fave,
+                    ),
+                ),
                 note = R.string.serein_bookmarks_note,
             ),
         ),

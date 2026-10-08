@@ -5,29 +5,46 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.Option
+import com.eltavine.sereingram.core.OptionScope
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.ui.Restarts
+import okio.buffer
+import okio.source
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.LocaleController.formatString
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
 import org.telegram.messenger.UserConfig
-import org.telegram.messenger.Utilities
 import org.telegram.ui.ActionBar.BaseFragment
-import okio.buffer
-import okio.source
 import org.telegram.ui.Components.BulletinFactory
 import java.io.File
+import java.util.concurrent.Executors
 
 /** SereinGram's settings of the device and the current account as a file to keep, and back. */
 object BackupSettings {
-    fun section(options: Options, all: List<Option<*>>): SettingsSection = SettingsSection(
+    // Reading a picked file may wait on its provider, such as a cloud drive, which would hold up Telegram's own queues.
+    private val io = Executors.newSingleThreadExecutor { Thread(it, "serein-backup") }
+
+    /** [restarting] are the options that take effect once the app starts again, which a restore then offers to do. */
+    fun section(options: Options, all: List<Option<*>>, restarting: List<Option<*>> = emptyList()): SettingsSection = SettingsSection(
         header = R.string.serein_backup_header,
         rows = listOf(
-            SettingsRow.Action(R.string.serein_backup_export) { page -> export(page, options, all) },
-            SettingsRow.PickFile(R.string.serein_backup_import, MIME_TYPES) { page, uri -> import(page, options, all, uri) },
+            SettingsRow.Action(
+                R.string.serein_backup_export,
+                run = { page -> export(page as BaseFragment, options, all) },
+                summary = R.string.serein_backup_export_info,
+                icon = R.drawable.msg_share,
+            ),
+            SettingsRow.PickFile(
+                R.string.serein_backup_import,
+                MIME_TYPES,
+                picked = { page, uri -> import(page as BaseFragment, options, all, restarting, Uri.parse(uri)) },
+                summary = R.string.serein_backup_import_info,
+                icon = R.drawable.msg_download,
+            ),
         ),
         note = R.string.serein_backup_note,
     )
@@ -36,13 +53,13 @@ object BackupSettings {
         val context = page.parentActivity ?: return
         val account = page.currentAccount
         val user = UserConfig.getInstance(account).clientUserId
-        Utilities.globalQueue.postRunnable {
+        io.execute {
             val file = Faults.guard("settings backup", fallback = null) {
                 File(context.cacheDir, "media/sereingram-settings.json").apply {
                     parentFile?.mkdirs()
                     writeText(SettingsBackup.write(options, all, account, user))
                 }
-            } ?: return@postRunnable
+            } ?: return@execute
             AndroidUtilities.runOnUIThread {
                 val uri = FileProvider.getUriForFile(context, ApplicationLoader.getApplicationId() + ".provider", file)
                 val share = Intent(Intent.ACTION_SEND)
@@ -54,17 +71,23 @@ object BackupSettings {
         }
     }
 
-    private fun import(page: BaseFragment, options: Options, all: List<Option<*>>, uri: Uri) {
+    private fun import(page: BaseFragment, options: Options, all: List<Option<*>>, restarting: List<Option<*>>, uri: Uri) {
         val context = page.parentActivity ?: return
         val account = page.currentAccount
         val user = UserConfig.getInstance(account).clientUserId
-        Utilities.globalQueue.postRunnable {
+        io.execute {
+            val before = restarting.associateWith { options.get(it, owner(it, account)) }
             val result = runCatching {
                 val document = context.contentResolver.openInputStream(uri)?.source()?.buffer()?.use { file ->
                     if (file.request(MAX_BYTES + 1L)) null else file.readUtf8()
                 }
                 if (document == null) Restore.NotABackup else SettingsBackup.restore(options, all, account, user, document)
             }
+            val restart = result.getOrNull() is Restore.Done && restarting.map { option ->
+                val now = options.get(option, owner(option, account))
+                before.getValue(option).let { was -> if (was != now) Restarts.changing(option, was) }
+                Restarts.pending(option, now)
+            }.any { it }
             AndroidUtilities.runOnUIThread {
                 val message = result.fold(
                     onSuccess = { restore ->
@@ -84,10 +107,15 @@ object BackupSettings {
                     },
                 )
                 val done = result.getOrNull() is Restore.Done
-                BulletinFactory.of(page).createSimpleBulletin(if (done) R.raw.done else R.raw.error, message).show()
+                when {
+                    restart -> Restarts.offer(page, message, R.raw.done)
+                    else -> BulletinFactory.of(page).createSimpleBulletin(if (done) R.raw.done else R.raw.error, message).show()
+                }
             }
         }
     }
+
+    private fun owner(option: Option<*>, account: Int) = if (option.scope == OptionScope.ACCOUNT) account else Options.NO_ACCOUNT
 
     // Pickers label JSON files differently, and some apps share them as plain text.
     private val MIME_TYPES = listOf("application/json", "text/plain", "application/octet-stream")

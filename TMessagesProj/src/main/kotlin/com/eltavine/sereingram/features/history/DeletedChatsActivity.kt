@@ -5,7 +5,7 @@ import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.ports.KeptChat
 import com.eltavine.sereingram.ports.RecordKind
-import com.eltavine.sereingram.support.Chats
+import com.eltavine.sereingram.ui.ChatCell
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.LocaleController.getString
@@ -46,10 +46,9 @@ internal class DeletedChatsActivity(
             return
         }
         shown.forEachIndexed { index, chat ->
-            val count = LocaleController.formatPluralString("Messages", chat.count)
-            items.add(UItem.asButton(index + 1, Chats.name(currentAccount, chat.dialogId), count))
+            items.add(ChatCell.of(index + 1, currentAccount, chat.dialogId, status = LocaleController.formatPluralString("Messages", chat.count)))
         }
-        items.add(UItem.asShadow(null))
+        items.add(UItem.asShadow(getString(R.string.serein_history_deleted_all_note)))
     }
 
     override fun onClick(item: UItem, view: View, position: Int, x: Float, y: Float) {

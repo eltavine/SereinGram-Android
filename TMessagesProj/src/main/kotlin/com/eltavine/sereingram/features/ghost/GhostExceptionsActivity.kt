@@ -2,6 +2,9 @@ package com.eltavine.sereingram.features.ghost
 
 import android.view.View
 import com.eltavine.sereingram.support.Chats
+import com.eltavine.sereingram.ui.ChatCell
+import com.eltavine.sereingram.ui.RowAction
+import com.eltavine.sereingram.ui.showRowMenu
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
 import org.telegram.ui.Components.UItem
@@ -18,9 +21,9 @@ internal class GhostExceptionsActivity(private val gate: GhostGate) : UniversalF
         shown.clear()
         shown += gate.exceptedChats(currentAccount)
         shown.forEachIndexed { index, dialogId ->
-            items.add(UItem.asButton(index + 1, Chats.name(currentAccount, dialogId), exceptions(dialogId)))
+            items.add(ChatCell.of(index + 1, currentAccount, dialogId, status = exceptions(dialogId)))
         }
-        val note = if (shown.isEmpty()) R.string.serein_ghost_exceptions_empty else R.string.serein_ghost_exceptions_note
+        val note = if (shown.isEmpty()) R.string.serein_ghost_exceptions_empty else R.string.serein_ghost_exceptions_list_note
         items.add(UItem.asShadow(getString(note)))
     }
 
@@ -31,9 +34,13 @@ internal class GhostExceptionsActivity(private val gate: GhostGate) : UniversalF
 
     override fun onLongClick(item: UItem, view: View, position: Int, x: Float, y: Float): Boolean {
         val dialogId = shown.getOrNull(item.id - 1) ?: return false
-        GhostAction.entries.forEach { gate.setExcepted(currentAccount, dialogId, it, excepted = false) }
-        listView.adapter.update(true)
+        showRowMenu(view, RowAction(R.drawable.msg_delete, getString(R.string.serein_ghost_exceptions_remove), destructive = true) { remove(dialogId) })
         return true
+    }
+
+    private fun remove(dialogId: Long) {
+        GhostAction.entries.forEach { gate.setExcepted(currentAccount, dialogId, it, excepted = false) }
+        listView?.adapter?.update(true)
     }
 
     override fun onResume() {

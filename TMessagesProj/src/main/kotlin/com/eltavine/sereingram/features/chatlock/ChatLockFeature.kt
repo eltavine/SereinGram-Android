@@ -18,10 +18,12 @@ import com.eltavine.sereingram.hooks.ChatMenuHooks
 import com.eltavine.sereingram.hooks.DialogsHooks
 import com.eltavine.sereingram.hooks.NavigationHooks
 import com.eltavine.sereingram.hooks.NotificationHooks
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.DialogObject
 import org.telegram.messenger.LocaleController.getString
@@ -187,14 +189,28 @@ object ChatLockFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg_secret
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.PRIVACY
+
+    override val settingsTint: SettingsTint = SettingsTint.GREEN
+
+    override val settingsOrder: Int = 1
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_lock_title,
-        listOf(
+        summary = R.string.serein_lock_summary,
+        status = { state -> getString(R.string.serein_settings_on).takeIf { settings(state.options, state.account).locksAnything } },
+        sections = listOf(
             SettingsSection(
                 rows = listOf(
-                    SettingsRow.Toggle(ChatLockOptions.lockArchive, R.string.serein_lock_archive, ::guardLock),
-                    SettingsRow.Toggle(ChatLockOptions.lockSecretChats, R.string.serein_lock_secret, ::guardLock),
-                    SettingsRow.Screen(R.string.serein_lock_chats, { options -> LockedChatsActivity(options) }),
+                    SettingsRow.Toggle(ChatLockOptions.lockArchive, R.string.serein_lock_archive, summary = R.string.serein_lock_archive_info, guard = ::guardLock),
+                    SettingsRow.Toggle(ChatLockOptions.lockSecretChats, R.string.serein_lock_secret, summary = R.string.serein_lock_secret_info, guard = ::guardLock),
+                    SettingsRow.Screen(
+                        R.string.serein_lock_chats,
+                        open = { state -> LockedChatsActivity(state.options) },
+                        summary = R.string.serein_lock_chats_info,
+                        icon = R.drawable.msg_permissions,
+                        value = { state -> DialogIds.parse(state[ChatLockOptions.lockedChats]).size.takeIf { it > 0 }?.toString() },
+                    ),
                 ),
                 note = R.string.serein_lock_note,
             ),

@@ -4,10 +4,12 @@ import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.PlaybackHooks
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 
@@ -25,19 +27,32 @@ object PlaybackFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg_voice_headphones
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.MEDIA
+
+    override val settingsTint: SettingsTint = SettingsTint.ORANGE
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_playback_title,
-        listOf(
+        summary = R.string.serein_playback_summary,
+        sections = listOf(
             SettingsSection(
-                rows = listOf(SettingsRow.Toggle(PlaybackOptions.stopAfterVoice, R.string.serein_playback_stop_after_voice)),
-                note = R.string.serein_playback_stop_after_voice_note,
+                rows = listOf(
+                    SettingsRow.Toggle(
+                        PlaybackOptions.stopAfterVoice,
+                        R.string.serein_playback_stop_after_voice,
+                        summary = R.string.serein_playback_stop_after_voice_info,
+                    ),
+                ),
             ),
             SettingsSection(
-                header = R.string.serein_playback_videos,
                 rows = listOf(
-                    SettingsRow.Choice(PlaybackOptions.doubleTapSeekSeconds, R.string.serein_playback_double_tap_seek, SEEK_CHOICES) { seconds ->
-                        LocaleController.formatPluralString("Seconds", seconds)
-                    },
+                    SettingsRow.Choice(
+                        PlaybackOptions.doubleTapSeekSeconds,
+                        R.string.serein_playback_double_tap_seek,
+                        choices = SEEK_CHOICES,
+                        label = { seconds -> LocaleController.formatString(R.string.serein_playback_seconds_short, seconds) },
+                        style = SettingsRow.ChoiceStyle.SLIDER,
+                    ),
                 ),
                 note = R.string.serein_playback_double_tap_seek_note,
             ),

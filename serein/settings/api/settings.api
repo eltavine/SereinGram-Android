@@ -1,0 +1,274 @@
+public final class com/eltavine/sereingram/settings/PageLayout {
+	public static final field Companion Lcom/eltavine/sereingram/settings/PageLayout$Companion;
+	public static final field ITEM_SPAN I
+	public synthetic fun <init> (Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getSections ()Ljava/util/List;
+	public final fun rowOf (I)Lcom/eltavine/sereingram/settings/PageLayout$Row;
+}
+
+public final class com/eltavine/sereingram/settings/PageLayout$Companion {
+	public final fun of (Lcom/eltavine/sereingram/settings/SettingsPage;Lcom/eltavine/sereingram/settings/SettingsState;)Lcom/eltavine/sereingram/settings/PageLayout;
+}
+
+public final class com/eltavine/sereingram/settings/PageLayout$Row {
+	public final fun getEnabled ()Z
+	public final fun getId ()I
+	public final fun getRow ()Lcom/eltavine/sereingram/settings/SettingsRow;
+}
+
+public final class com/eltavine/sereingram/settings/PageLayout$Section {
+	public final fun getRows ()Ljava/util/List;
+	public final fun getSection ()Lcom/eltavine/sereingram/settings/SettingsSection;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsCategory : java/lang/Enum {
+	public static final field CHATS Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public static final field INTERFACE Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public static final field MEDIA Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public static final field MESSAGES Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public static final field MORE Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public static final field PRIVACY Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public static fun values ()[Lcom/eltavine/sereingram/settings/SettingsCategory;
+}
+
+public abstract interface class com/eltavine/sereingram/settings/SettingsCondition {
+	public static final field Companion Lcom/eltavine/sereingram/settings/SettingsCondition$Companion;
+	public abstract fun and (Lcom/eltavine/sereingram/settings/SettingsCondition;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public abstract fun holds (Lcom/eltavine/sereingram/settings/SettingsState;)Z
+	public abstract fun not ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public abstract fun or (Lcom/eltavine/sereingram/settings/SettingsCondition;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsCondition$Companion {
+	public final fun getALWAYS ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun isOn (Lcom/eltavine/sereingram/core/Option;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun isSetTo (Lcom/eltavine/sereingram/core/Option;Ljava/lang/Object;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsCondition$DefaultImpls {
+	public static fun and (Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public static fun not (Lcom/eltavine/sereingram/settings/SettingsCondition;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public static fun or (Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+}
+
+public abstract interface class com/eltavine/sereingram/settings/SettingsContributor {
+	public abstract fun getSettingsCategory ()Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public abstract fun getSettingsIcon ()I
+	public abstract fun getSettingsOrder ()I
+	public abstract fun getSettingsPage ()Lcom/eltavine/sereingram/settings/SettingsPage;
+	public abstract fun getSettingsTint ()Lcom/eltavine/sereingram/settings/SettingsTint;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsContributor$DefaultImpls {
+	public static fun getSettingsCategory (Lcom/eltavine/sereingram/settings/SettingsContributor;)Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public static fun getSettingsOrder (Lcom/eltavine/sereingram/settings/SettingsContributor;)I
+	public static fun getSettingsTint (Lcom/eltavine/sereingram/settings/SettingsContributor;)Lcom/eltavine/sereingram/settings/SettingsTint;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsContributorKt {
+	public static final fun featureSections (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsPage {
+	public fun <init> (ILjava/util/List;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (ILjava/util/List;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getSections ()Ljava/util/List;
+	public final fun getStatus ()Lkotlin/jvm/functions/Function1;
+	public final fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+}
+
+public final class com/eltavine/sereingram/settings/SettingsPageKt {
+	public static final fun editors (Lcom/eltavine/sereingram/settings/SettingsPage;)Ljava/util/List;
+}
+
+public abstract interface class com/eltavine/sereingram/settings/SettingsRow {
+	public abstract fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public abstract fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public abstract fun getSummary ()Ljava/lang/Integer;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$Action : com/eltavine/sereingram/settings/SettingsRow {
+	public fun <init> (ILkotlin/jvm/functions/Function1;Ljava/lang/Integer;ILcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (ILkotlin/jvm/functions/Function1;Ljava/lang/Integer;ILcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getIcon ()I
+	public final fun getRun ()Lkotlin/jvm/functions/Function1;
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$Choice : com/eltavine/sereingram/settings/SettingsRow$Editor {
+	public fun <init> (Lcom/eltavine/sereingram/core/Option;ILjava/util/List;Lkotlin/jvm/functions/Function1;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;Lcom/eltavine/sereingram/settings/SettingsRow$ChoiceStyle;ZLcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (Lcom/eltavine/sereingram/core/Option;ILjava/util/List;Lkotlin/jvm/functions/Function1;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;Lcom/eltavine/sereingram/settings/SettingsRow$ChoiceStyle;ZLcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getChoices ()Ljava/util/List;
+	public final fun getDescribe ()Lkotlin/jvm/functions/Function1;
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getLabel ()Lkotlin/jvm/functions/Function1;
+	public fun getOption ()Lcom/eltavine/sereingram/core/Option;
+	public fun getRestarts ()Z
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getStyle ()Lcom/eltavine/sereingram/settings/SettingsRow$ChoiceStyle;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$ChoiceStyle : java/lang/Enum {
+	public static final field DIALOG Lcom/eltavine/sereingram/settings/SettingsRow$ChoiceStyle;
+	public static final field INLINE Lcom/eltavine/sereingram/settings/SettingsRow$ChoiceStyle;
+	public static final field SLIDER Lcom/eltavine/sereingram/settings/SettingsRow$ChoiceStyle;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/settings/SettingsRow$ChoiceStyle;
+	public static fun values ()[Lcom/eltavine/sereingram/settings/SettingsRow$ChoiceStyle;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$DefaultImpls {
+	public static fun getEnabledWhen (Lcom/eltavine/sereingram/settings/SettingsRow;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public static fun getShownWhen (Lcom/eltavine/sereingram/settings/SettingsRow;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public static fun getSummary (Lcom/eltavine/sereingram/settings/SettingsRow;)Ljava/lang/Integer;
+}
+
+public abstract interface class com/eltavine/sereingram/settings/SettingsRow$Editor : com/eltavine/sereingram/settings/SettingsRow {
+	public abstract fun getOption ()Lcom/eltavine/sereingram/core/Option;
+	public abstract fun getRestarts ()Z
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$Editor$DefaultImpls {
+	public static fun getEnabledWhen (Lcom/eltavine/sereingram/settings/SettingsRow$Editor;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public static fun getShownWhen (Lcom/eltavine/sereingram/settings/SettingsRow$Editor;)Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public static fun getSummary (Lcom/eltavine/sereingram/settings/SettingsRow$Editor;)Ljava/lang/Integer;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$Link : com/eltavine/sereingram/settings/SettingsRow {
+	public fun <init> (ILjava/lang/String;Ljava/lang/Integer;ILkotlin/jvm/functions/Function1;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/Integer;ILkotlin/jvm/functions/Function1;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getIcon ()I
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+	public final fun getUrl ()Ljava/lang/String;
+	public final fun getValue ()Lkotlin/jvm/functions/Function1;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$PickFile : com/eltavine/sereingram/settings/SettingsRow {
+	public fun <init> (ILjava/util/List;Lkotlin/jvm/functions/Function2;Ljava/lang/Integer;ILcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (ILjava/util/List;Lkotlin/jvm/functions/Function2;Ljava/lang/Integer;ILcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getIcon ()I
+	public final fun getMimeTypes ()Ljava/util/List;
+	public final fun getPicked ()Lkotlin/jvm/functions/Function2;
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$Screen : com/eltavine/sereingram/settings/SettingsRow {
+	public fun <init> (ILkotlin/jvm/functions/Function1;Ljava/lang/Integer;ILkotlin/jvm/functions/Function1;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (ILkotlin/jvm/functions/Function1;Ljava/lang/Integer;ILkotlin/jvm/functions/Function1;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getIcon ()I
+	public final fun getOpen ()Lkotlin/jvm/functions/Function1;
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+	public final fun getValue ()Lkotlin/jvm/functions/Function1;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$Subpage : com/eltavine/sereingram/settings/SettingsRow {
+	public fun <init> (Lcom/eltavine/sereingram/settings/SettingsPage;ILcom/eltavine/sereingram/settings/SettingsTint;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (Lcom/eltavine/sereingram/settings/SettingsPage;ILcom/eltavine/sereingram/settings/SettingsTint;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getIcon ()I
+	public final fun getPage ()Lcom/eltavine/sereingram/settings/SettingsPage;
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTint ()Lcom/eltavine/sereingram/settings/SettingsTint;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$Switch : com/eltavine/sereingram/settings/SettingsRow {
+	public fun <init> (ILkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Integer;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (ILkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Integer;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+	public final fun getToggle ()Lkotlin/jvm/functions/Function0;
+	public final fun isOn ()Lkotlin/jvm/functions/Function0;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$Text : com/eltavine/sereingram/settings/SettingsRow$Editor {
+	public fun <init> (Lcom/eltavine/sereingram/core/Option;IILjava/lang/Integer;Ljava/lang/Integer;ZLcom/eltavine/sereingram/settings/SettingsRow$TextKind;Lkotlin/jvm/functions/Function1;Lcom/eltavine/sereingram/settings/SettingsCondition;ZLcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (Lcom/eltavine/sereingram/core/Option;IILjava/lang/Integer;Ljava/lang/Integer;ZLcom/eltavine/sereingram/settings/SettingsRow$TextKind;Lkotlin/jvm/functions/Function1;Lcom/eltavine/sereingram/settings/SettingsCondition;ZLcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getCheck ()Lkotlin/jvm/functions/Function1;
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getHint ()Ljava/lang/Integer;
+	public final fun getKind ()Lcom/eltavine/sereingram/settings/SettingsRow$TextKind;
+	public fun getOption ()Lcom/eltavine/sereingram/core/Option;
+	public final fun getPlaceholder ()I
+	public final fun getRequiredWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getRestarts ()Z
+	public final fun getSecret ()Z
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$TextKind : java/lang/Enum {
+	public static final field PLAIN Lcom/eltavine/sereingram/settings/SettingsRow$TextKind;
+	public static final field URL Lcom/eltavine/sereingram/settings/SettingsRow$TextKind;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/settings/SettingsRow$TextKind;
+	public static fun values ()[Lcom/eltavine/sereingram/settings/SettingsRow$TextKind;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsRow$Toggle : com/eltavine/sereingram/settings/SettingsRow$Editor {
+	public fun <init> (Lcom/eltavine/sereingram/core/Option;ILjava/lang/Integer;Lkotlin/jvm/functions/Function2;ZLcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (Lcom/eltavine/sereingram/core/Option;ILjava/lang/Integer;Lkotlin/jvm/functions/Function2;ZLcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getGuard ()Lkotlin/jvm/functions/Function2;
+	public fun getOption ()Lcom/eltavine/sereingram/core/Option;
+	public fun getRestarts ()Z
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+}
+
+public final class com/eltavine/sereingram/settings/SettingsSection {
+	public fun <init> (Ljava/util/List;Ljava/lang/Integer;Ljava/lang/Integer;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/Integer;Ljava/lang/Integer;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getHeader ()Ljava/lang/Integer;
+	public final fun getNote ()Ljava/lang/Integer;
+	public final fun getRows ()Ljava/util/List;
+	public final fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+}
+
+public final class com/eltavine/sereingram/settings/SettingsState {
+	public fun <init> (Lcom/eltavine/sereingram/core/Options;I)V
+	public final fun accountOf (Lcom/eltavine/sereingram/core/Option;)I
+	public final fun get (Lcom/eltavine/sereingram/core/Option;)Ljava/lang/Object;
+	public final fun getAccount ()I
+	public final fun getOptions ()Lcom/eltavine/sereingram/core/Options;
+	public final fun isModified (Lcom/eltavine/sereingram/core/Option;)Z
+	public final fun reset (Lcom/eltavine/sereingram/core/Option;)V
+	public final fun set (Lcom/eltavine/sereingram/core/Option;Ljava/lang/Object;)V
+}
+
+public final class com/eltavine/sereingram/settings/SettingsTint : java/lang/Enum {
+	public static final field BLUE Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field BLUE_DEEP Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field CYAN Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field GRAY Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field GREEN Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field ORANGE Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field ORANGE_DEEP Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field PURPLE Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field RED Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static fun values ()[Lcom/eltavine/sereingram/settings/SettingsTint;
+}
+

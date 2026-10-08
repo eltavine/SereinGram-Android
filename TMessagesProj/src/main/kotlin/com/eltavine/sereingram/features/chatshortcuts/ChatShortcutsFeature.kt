@@ -7,10 +7,12 @@ import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ChatMenuHooks
 import com.eltavine.sereingram.hooks.MessageMenuHooks
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ChatObject
 import org.telegram.messenger.LocaleController.getString
@@ -42,17 +44,26 @@ object ChatShortcutsFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg_admins
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.CHATS
+
+    override val settingsTint: SettingsTint = SettingsTint.BLUE_DEEP
+
+    override val settingsOrder: Int = 1
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_shortcuts_title,
-        listOf(
+        summary = R.string.serein_shortcuts_summary,
+        sections = listOf(
             SettingsSection(
                 header = R.string.serein_shortcuts_header,
-                rows = AdminShortcut.entries.map { SettingsRow.Toggle(it.option, title(it)) },
+                rows = AdminShortcut.entries.map { SettingsRow.Toggle(it.option, title(it), summary = summary(it)) },
                 note = R.string.serein_shortcuts_note,
             ),
             SettingsSection(
                 header = R.string.serein_shortcuts_message_header,
-                rows = listOf(SettingsRow.Toggle(MessageShortcuts.restrictMember, R.string.serein_shortcuts_restrict)),
+                rows = listOf(
+                    SettingsRow.Toggle(MessageShortcuts.restrictMember, R.string.serein_shortcuts_restrict, summary = R.string.serein_shortcuts_restrict_info),
+                ),
                 note = R.string.serein_shortcuts_restrict_note,
             ),
         ),
@@ -186,4 +197,13 @@ private fun title(shortcut: AdminShortcut): Int = when (shortcut) {
     AdminShortcut.PERMISSIONS -> R.string.ChannelPermissions
     AdminShortcut.STATISTICS -> R.string.Statistics
     AdminShortcut.INVITE_LINKS -> R.string.InviteLinks
+}
+
+// Says who gets each one, which offers() decides; the two change together.
+private fun summary(shortcut: AdminShortcut): Int = when (shortcut) {
+    AdminShortcut.RECENT_ACTIONS -> R.string.serein_shortcuts_recent_actions_info
+    AdminShortcut.ADMINISTRATORS, AdminShortcut.MEMBERS -> R.string.serein_shortcuts_members_info
+    AdminShortcut.PERMISSIONS -> R.string.serein_shortcuts_permissions_info
+    AdminShortcut.STATISTICS -> R.string.serein_shortcuts_statistics_info
+    AdminShortcut.INVITE_LINKS -> R.string.serein_shortcuts_invite_links_info
 }

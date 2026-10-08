@@ -7,10 +7,13 @@ import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.TranscriptionHooks
+import com.eltavine.sereingram.settings.SettingsCategory
+import com.eltavine.sereingram.settings.SettingsCondition
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import com.eltavine.sereingram.support.HttpDns
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -136,23 +139,67 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg_photo_text_framed3
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.MEDIA
+
+    override val settingsTint: SettingsTint = SettingsTint.BLUE
+
+    override val settingsOrder: Int = 1
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_transcription_title,
-        listOf(
+        summary = R.string.serein_transcription_summary,
+        status = { state ->
+            val config = config(state.options)
+            when {
+                config.isUsable -> LocaleController.getString(R.string.serein_settings_on)
+                config.enabled -> LocaleController.getString(R.string.serein_settings_not_set_up)
+                else -> null
+            }
+        },
+        sections = listOf(
             SettingsSection(
-                rows = listOf(SettingsRow.Toggle(TranscriptionOptions.enabled, R.string.serein_transcription_enabled)),
+                rows = listOf(
+                    SettingsRow.Toggle(TranscriptionOptions.enabled, R.string.serein_transcription_enabled, summary = R.string.serein_transcription_enabled_info),
+                ),
                 note = R.string.serein_transcription_note,
             ),
             SettingsSection(
                 header = R.string.serein_transcription_service,
                 rows = listOf(
-                    SettingsRow.Text(TranscriptionOptions.baseUrl, R.string.serein_transcription_base_url, R.string.serein_transcription_base_url_hint),
-                    SettingsRow.Text(TranscriptionOptions.apiKey, R.string.serein_transcription_api_key, R.string.serein_transcription_api_key_hint),
-                    SettingsRow.Text(TranscriptionOptions.model, R.string.serein_transcription_model, R.string.serein_transcription_model_hint),
-                    SettingsRow.Text(TranscriptionOptions.language, R.string.serein_transcription_language, R.string.serein_transcription_language_hint),
+                    SettingsRow.Text(
+                        TranscriptionOptions.baseUrl,
+                        R.string.serein_transcription_base_url,
+                        placeholder = R.string.serein_transcription_base_url_hint,
+                        summary = R.string.serein_transcription_base_url_info,
+                        kind = SettingsRow.TextKind.URL,
+                        check = { text -> R.string.serein_transcription_base_url_invalid.takeIf { endpoint(text) == null } },
+                    ),
+                    SettingsRow.Text(
+                        TranscriptionOptions.apiKey,
+                        R.string.serein_transcription_api_key,
+                        placeholder = R.string.serein_transcription_api_key_hint,
+                        summary = R.string.serein_transcription_api_key_info,
+                        requiredWhen = SettingsCondition.isOn(TranscriptionOptions.enabled),
+                    ),
+                    SettingsRow.Text(
+                        TranscriptionOptions.model,
+                        R.string.serein_transcription_model,
+                        placeholder = R.string.serein_transcription_model_hint,
+                        summary = R.string.serein_transcription_model_info,
+                    ),
+                    SettingsRow.Text(
+                        TranscriptionOptions.language,
+                        R.string.serein_transcription_language,
+                        placeholder = R.string.serein_transcription_language_hint,
+                        summary = R.string.serein_transcription_language_info,
+                        check = { text -> R.string.serein_transcription_language_invalid.takeUnless { isLanguageCode(text) } },
+                    ),
                 ),
                 note = R.string.serein_transcription_service_note,
             ),
         ),
     )
+
+    private fun endpoint(baseUrl: String): String? =
+        TranscriptionConfig(enabled = true, baseUrl = baseUrl, apiKey = "", model = "", language = "").endpoint
 }

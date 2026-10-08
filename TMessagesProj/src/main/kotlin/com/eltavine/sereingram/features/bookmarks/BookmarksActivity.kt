@@ -3,6 +3,8 @@ package com.eltavine.sereingram.features.bookmarks
 import android.view.View
 import com.eltavine.sereingram.ports.Bookmark
 import com.eltavine.sereingram.support.Chats
+import com.eltavine.sereingram.ui.RowAction
+import com.eltavine.sereingram.ui.showRowMenu
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
@@ -22,9 +24,10 @@ internal class BookmarksActivity(
 ) : UniversalFragment() {
     private var bookmarks: List<Bookmark>? = null
 
-    override fun onFragmentCreate(): Boolean {
+    // A bookmark may be added or removed in the chat it leads to.
+    override fun onResume() {
+        super.onResume()
         reload()
-        return super.onFragmentCreate()
     }
 
     private fun reload() {
@@ -67,7 +70,9 @@ internal class BookmarksActivity(
 
     override fun onLongClick(item: UItem, view: View, position: Int, x: Float, y: Float): Boolean {
         val bookmark = bookmarks?.getOrNull(item.id - 1) ?: return false
-        feature.remove(currentAccount, bookmark.dialogId, bookmark.messageId, ::reload)
+        showRowMenu(view, RowAction(R.drawable.msg_delete, getString(R.string.serein_bookmarks_remove), destructive = true) {
+            feature.remove(currentAccount, bookmark.dialogId, bookmark.messageId, ::reload)
+        })
         return true
     }
 }

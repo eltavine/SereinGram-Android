@@ -5,10 +5,13 @@ import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.NetworkHooks
+import com.eltavine.sereingram.settings.SettingsCategory
+import com.eltavine.sereingram.settings.SettingsCondition
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -77,15 +80,46 @@ object DnsFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg2_language
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.PRIVACY
+
+    override val settingsTint: SettingsTint = SettingsTint.CYAN
+
+    override val settingsOrder: Int = 3
+
+    private val customMode = SettingsCondition.isSetTo(DnsOptions.mode, DnsMode.CUSTOM.code)
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_dns_title,
-        listOf(
+        summary = R.string.serein_dns_summary,
+        status = { state ->
+            when (resolution(state[DnsOptions.mode], state[DnsOptions.customServer])) {
+                Resolution.Default -> getString(R.string.serein_settings_not_set_up).takeIf { DnsMode.of(state[DnsOptions.mode]) == DnsMode.CUSTOM }
+                Resolution.System -> getString(R.string.serein_dns_status_system)
+                is Resolution.OverHttps -> getString(R.string.serein_dns_status_custom)
+            }
+        },
+        sections = listOf(
             SettingsSection(
                 rows = listOf(
-                    SettingsRow.Choice(DnsOptions.mode, R.string.serein_dns_mode, DnsMode.entries.map { it.code }) { code ->
-                        getString(label(DnsMode.of(code)))
-                    },
-                    SettingsRow.Text(DnsOptions.customServer, R.string.serein_dns_custom_server, R.string.serein_dns_custom_server_hint),
+                    SettingsRow.Choice(
+                        DnsOptions.mode,
+                        R.string.serein_dns_mode,
+                        choices = DnsMode.entries.map { it.code },
+                        label = { code -> getString(label(DnsMode.of(code))) },
+                        describe = { code -> getString(description(DnsMode.of(code))) },
+                        style = SettingsRow.ChoiceStyle.INLINE,
+                    ),
+                    SettingsRow.Text(
+                        DnsOptions.customServer,
+                        R.string.serein_dns_custom_server,
+                        placeholder = R.string.serein_dns_custom_server_none,
+                        hint = R.string.serein_dns_custom_server_hint,
+                        summary = R.string.serein_dns_custom_server_info,
+                        kind = SettingsRow.TextKind.URL,
+                        check = { text -> R.string.serein_dns_custom_server_invalid.takeIf { dohServer(text) == null } },
+                        requiredWhen = customMode,
+                        shownWhen = customMode,
+                    ),
                 ),
                 note = R.string.serein_dns_note,
             ),
@@ -96,6 +130,12 @@ object DnsFeature : SereinModule, SettingsContributor {
         DnsMode.DEFAULT -> R.string.serein_dns_mode_default
         DnsMode.SYSTEM -> R.string.serein_dns_mode_system
         DnsMode.CUSTOM -> R.string.serein_dns_mode_custom
+    }
+
+    private fun description(mode: DnsMode): Int = when (mode) {
+        DnsMode.DEFAULT -> R.string.serein_dns_mode_default_info
+        DnsMode.SYSTEM -> R.string.serein_dns_mode_system_info
+        DnsMode.CUSTOM -> R.string.serein_dns_mode_custom_info
     }
 
     private const val CACHE_BYTES = 1L shl 20

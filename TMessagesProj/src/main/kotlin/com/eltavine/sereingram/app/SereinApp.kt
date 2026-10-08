@@ -34,11 +34,10 @@ import com.eltavine.sereingram.ports.BookmarkStore
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.ports.LocalNameStore
 import com.eltavine.sereingram.settings.SettingsContributor
-import com.eltavine.sereingram.settings.SettingsRow
-import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.editors
+import com.eltavine.sereingram.settings.featureSections
 import com.eltavine.sereingram.support.Logouts
 import org.telegram.messenger.FileLog
-import org.telegram.messenger.R
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 
@@ -62,7 +61,9 @@ object SereinApp {
         val context = ModuleContext(options, Faults::report)
         modules.start(context)
         Logouts.observe { account -> modules.forgetAccount(account, context) }
-        installSettingsEntry(options, listOf(featuresSection(modules), BackupSettings.section(options, modules.options)))
+        val contributors = modules.modules.filterIsInstance<SettingsContributor>()
+        val restarting = contributors.flatMap { it.settingsPage.editors() }.filter { it.restarts }.map { it.option }
+        installSettingsEntry(options, featureSections(contributors, ::categoryTitle) + BackupSettings.section(options, modules.options, restarting))
     }
 
     /** Every module of the app, in start order; building the registry checks their ids and option keys. */
@@ -97,11 +98,4 @@ object SereinApp {
             ),
         )
     }
-
-    private fun featuresSection(modules: ModuleRegistry) = SettingsSection(
-        header = R.string.serein_settings_features,
-        rows = modules.modules.filterIsInstance<SettingsContributor>().map {
-            SettingsRow.Subpage(it.settingsPage, it.settingsIcon)
-        },
-    )
 }

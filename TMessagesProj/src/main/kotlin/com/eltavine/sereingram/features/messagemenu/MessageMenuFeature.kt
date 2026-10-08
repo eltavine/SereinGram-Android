@@ -8,10 +8,12 @@ import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.MessageMenuHooks
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ChatObject
 import org.telegram.messenger.LocaleController.formatString
@@ -41,14 +43,29 @@ object MessageMenuFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg_list
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.MESSAGES
+
+    override val settingsTint: SettingsTint = SettingsTint.CYAN
+
+    override val settingsOrder: Int = 4
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_message_menu_title,
-        listOf(
+        summary = R.string.serein_message_menu_summary,
+        sections = listOf(
             SettingsSection(
                 header = R.string.serein_message_menu_items,
                 rows = listOf(
-                    SettingsRow.Toggle(MessageMenuOptions.blockSender, R.string.serein_message_menu_block_sender),
-                    SettingsRow.Toggle(MessageMenuOptions.replyPrivately, R.string.serein_message_menu_reply_privately),
+                    SettingsRow.Toggle(
+                        MessageMenuOptions.blockSender,
+                        R.string.serein_message_menu_block_sender,
+                        summary = R.string.serein_message_menu_block_sender_info,
+                    ),
+                    SettingsRow.Toggle(
+                        MessageMenuOptions.replyPrivately,
+                        R.string.serein_message_menu_reply_privately,
+                        summary = R.string.serein_message_menu_reply_privately_info,
+                    ),
                 ),
                 note = R.string.serein_message_menu_items_note,
             ),

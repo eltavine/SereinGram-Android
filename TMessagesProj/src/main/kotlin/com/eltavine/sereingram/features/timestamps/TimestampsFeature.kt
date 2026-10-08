@@ -5,10 +5,12 @@ import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.MessageHooks
+import com.eltavine.sereingram.settings.SettingsCategory
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.SettingsTint
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.R
@@ -55,15 +57,25 @@ object TimestampsFeature : SereinModule, SettingsContributor {
 
     override val settingsIcon: Int = R.drawable.msg_calendar2
 
+    override val settingsCategory: SettingsCategory = SettingsCategory.MESSAGES
+
+    override val settingsTint: SettingsTint = SettingsTint.PURPLE
+
+    override val settingsOrder: Int = 2
+
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_timestamps_title,
-        listOf(
+        summary = R.string.serein_timestamps_summary,
+        sections = listOf(
             SettingsSection(
-                rows = listOf(SettingsRow.Toggle(TimestampOptions.showDate, R.string.serein_timestamps_show_date)),
-                note = R.string.serein_timestamps_show_date_note,
+                rows = listOf(
+                    SettingsRow.Toggle(TimestampOptions.showDate, R.string.serein_timestamps_show_date, summary = R.string.serein_timestamps_show_date_info),
+                ),
             ),
             SettingsSection(
-                rows = listOf(SettingsRow.Toggle(TimestampOptions.hideReadChecks, R.string.serein_timestamps_hide_read)),
+                rows = listOf(
+                    SettingsRow.Toggle(TimestampOptions.hideReadChecks, R.string.serein_timestamps_hide_read, summary = R.string.serein_timestamps_hide_read_info),
+                ),
                 note = R.string.serein_timestamps_hide_read_note,
             ),
         ),
