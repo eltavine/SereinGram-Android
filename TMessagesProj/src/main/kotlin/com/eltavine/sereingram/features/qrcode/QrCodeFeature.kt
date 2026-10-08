@@ -11,12 +11,15 @@ import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.FileLoader
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.R
-import org.telegram.messenger.Utilities
 import org.telegram.messenger.browser.Browser
 import org.telegram.ui.ActionBar.AlertDialog
 import org.telegram.ui.ActionBar.BaseFragment
@@ -47,6 +50,9 @@ object QrCodeFeature : SereinModule, SettingsContributor {
 }
 
 private class ScanEntry(private val options: Options) : MessageMenuHooks.Entry {
+    // Telegram's global queue runs much of the app's work one task at a time; decoding would hold it up.
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     override val option: Int = MessageMenuHooks.FIRST_OPTION + 301
 
     override val icon: Int = R.drawable.msg_qrcode
@@ -61,7 +67,7 @@ private class ScanEntry(private val options: Options) : MessageMenuHooks.Entry {
     override fun onSelected(account: Int, message: Any, host: Any) {
         val fragment = host as BaseFragment
         val image = file(account, message as MessageObject) ?: return
-        Utilities.globalQueue.postRunnable {
+        scope.launch {
             val text = Faults.guard("qr code", fallback = null) { read(image) }
             AndroidUtilities.runOnUIThread {
                 if (text == null) {
