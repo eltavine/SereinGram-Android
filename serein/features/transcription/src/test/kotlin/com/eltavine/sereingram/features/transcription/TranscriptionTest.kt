@@ -81,4 +81,10 @@ class TranscriptionTest {
             TranscriptionOptions.all.filterNot { it.backedUp }.map { it.key },
         )
     }
+
+    @Test
+    fun languagesAreTwoLetterCodes() {
+        listOf("en", "zh", "DE").forEach { assertTrue(isLanguageCode(it), it) }
+        listOf("", "e", "eng", "zh-CN", "z1", "中文").forEach { assertFalse(isLanguageCode(it), it) }
+    }
 }

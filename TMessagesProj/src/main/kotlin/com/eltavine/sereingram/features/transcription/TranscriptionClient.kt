@@ -19,9 +19,8 @@ internal class TranscriptionClient(private val http: HttpClient) {
             formData = formData {
                 append("model", config.model.trim())
                 append("response_format", "text")
-                if (config.language.isNotBlank()) {
-                    append("language", config.language.trim())
-                }
+                // A code the settings flag as unusable, such as one saved before they checked it, is left to be detected.
+                config.language.trim().lowercase().takeIf(::isLanguageCode)?.let { append("language", it) }
                 val headers = Headers.build {
                     append(HttpHeaders.ContentType, audioMimeType(file.name))
                     append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")

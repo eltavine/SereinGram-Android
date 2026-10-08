@@ -72,6 +72,9 @@ internal fun isLocal(host: String): Boolean {
     return address.isLoopbackAddress || address.isSiteLocalAddress || address.isLinkLocalAddress || uniqueLocal || sharedSpace
 }
 
+/** Whether [text] is an ISO 639-1 code, the two letters such as en that services take for the language. */
+public fun isLanguageCode(text: String): Boolean = text.length == 2 && text.all { it in 'a'..'z' || it in 'A'..'Z' }
+
 /** OpenAI takes files of up to 25 MB. */
 public const val MAX_UPLOAD_BYTES: Long = 25L * 1024 * 1024
 
