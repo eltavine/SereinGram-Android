@@ -15,6 +15,11 @@ concurrency:
   group: serein-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NDK_VERSION: 27.2.12479018
+  # The SHA-1 of the release signing certificate, public by nature; empty skips the checks against it.
+  SEREIN_SIGNING_SHA1: ${{ vars.SEREIN_SIGNING_SHA1 }}
+
 jobs:
   guards:
     name: Guards
@@ -109,7 +114,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
         with:
-          packages: ndk;27.2.12479018
+          packages: ndk;${{ env.NDK_VERSION }}
 
       - name: Build FFmpeg, libvpx and dav1d.
         if: steps.cache.outputs.cache-hit != 'true'
@@ -142,7 +147,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
         with:
-          packages: ndk;27.2.12479018
+          packages: ndk;${{ env.NDK_VERSION }}
 
       - name: Build BoringSSL.
         if: steps.cache.outputs.cache-hit != 'true'
@@ -173,13 +178,16 @@ jobs:
           git submodule status TMessagesProj/jni/third_party/dav1d > dav1d_status
           git submodule status TMessagesProj/jni/third_party/libvpx > libvpx_status
           git submodule status TMessagesProj/jni/boringssl > boringssl_status
+          git submodule status > native_status
 
+      # Submodules are pointers that hashFiles does not see, hence their status; the build
+      # scripts, Gradle's CMake arguments, the NDK and the signing SHA-1 shape the library too.
       - name: Native library cache.
         id: cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: TMessagesProj/src/main/libs
-          key: native-${{ hashFiles('TMessagesProj/jni/**', 'ffmpeg_status', 'boringssl_status') }}-${{ matrix.abi }}
+          key: native-${{ hashFiles('TMessagesProj/jni/**', 'native_status', 'run', 'bin/**', 'TMessagesProj/build.gradle', 'build-logic/**/*.kt') }}-${{ env.NDK_VERSION }}-${{ env.SEREIN_SIGNING_SHA1 }}-${{ matrix.abi }}
 
       - name: Check out the native sources.
         if: steps.cache.outputs.cache-hit != 'true'
@@ -212,7 +220,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
         with:
-          packages: ndk;27.2.12479018
+          packages: ndk;${{ env.NDK_VERSION }}
 
       - name: Patch BoringSSL.
         if: steps.cache.outputs.cache-hit != 'true'
@@ -240,22 +248,20 @@ jobs:
         run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath
 
       - name: Fetch submodule status.
-        run: |
-          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status
-          git submodule status TMessagesProj/jni/boringssl > boringssl_status
+        run: git submodule status > native_status
 
       - name: Native library (armeabi-v7a).
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: TMessagesProj/src/main/libs
-          key: native-${{ hashFiles('TMessagesProj/jni/**', 'ffmpeg_status', 'boringssl_status') }}-armeabi-v7a
+          key: native-${{ hashFiles('TMessagesProj/jni/**', 'native_status', 'run', 'bin/**', 'TMessagesProj/build.gradle', 'build-logic/**/*.kt') }}-${{ env.NDK_VERSION }}-${{ env.SEREIN_SIGNING_SHA1 }}-armeabi-v7a
           fail-on-cache-miss: true
 
       - name: Native library (arm64-v8a).
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: TMessagesProj/src/main/libs
-          key: native-${{ hashFiles('TMessagesProj/jni/**', 'ffmpeg_status', 'boringssl_status') }}-arm64-v8a
+          key: native-${{ hashFiles('TMessagesProj/jni/**', 'native_status', 'run', 'bin/**', 'TMessagesProj/build.gradle', 'build-logic/**/*.kt') }}-${{ env.NDK_VERSION }}-${{ env.SEREIN_SIGNING_SHA1 }}-arm64-v8a
           fail-on-cache-miss: true
 
       - name: Set up JDK 21.
@@ -277,6 +283,20 @@ jobs:
         env:
           LOCAL_PROPERTIES: ${{ secrets.LOCAL_PROPERTIES }}
         run: ./gradlew :TMessagesProj:assembleRelease --console=plain
+
+      - name: Check who signed the APKs.
+        run: |
+          apksigner="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 | sort -V | tail -n 1)/apksigner"
+          expected="$(tr -d ':' <<< "$SEREIN_SIGNING_SHA1" | tr '[:upper:]' '[:lower:]')"
+          for apk in TMessagesProj/build/outputs/apk/release/*.apk; do
+            signer="$("$apksigner" verify --print-certs "$apk" | sed -n 's/^Signer #1 certificate SHA-1 digest: //p')"
+            if [[ -z "$expected" ]]; then
+              echo "::warning::$(basename "$apk") is signed with this runner's debug key ($signer); set SEREIN_SIGNING_SHA1 and the signing secrets for builds that update each other."
+            elif [[ "$signer" != "$expected" ]]; then
+              echo "::error::$(basename "$apk") is signed by $signer, not by $expected."
+              exit 1
+            fi
+          done
 
       - name: Upload the APKs.
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
