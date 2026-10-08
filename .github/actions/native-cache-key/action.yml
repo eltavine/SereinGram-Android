@@ -23,7 +23,8 @@ runs:
   steps:
     # Submodules are pointers that hashFiles does not see, hence their commits, read from the
     # commit so that a checked out submodule changes nothing. The build scripts, Gradle's CMake
-    # arguments, the NDK and the signing SHA-1 shape the library too.
+    # arguments, the NDK and the signing SHA-1 shape the library too; the SHA-1 is all that
+    # SereinGram's build logic hands to CMake.
     - name: Read the submodules' commits.
       shell: bash
       run: git ls-tree -r HEAD | awk '$1 == "160000"' > native_status
@@ -32,5 +33,5 @@ runs:
       id: key
       shell: bash
       env:
-        KEY: native-${{ hashFiles('TMessagesProj/jni/**', 'native_status', 'run', 'bin/**', 'TMessagesProj/build.gradle', 'build-logic/**/*.kt') }}-${{ inputs.ndk-version }}-${{ inputs.signing-sha1 }}-${{ inputs.abi }}
+        KEY: native-${{ hashFiles('TMessagesProj/jni/**', 'native_status', 'run', 'bin/**', 'TMessagesProj/build.gradle') }}-${{ inputs.ndk-version }}-${{ inputs.signing-sha1 }}-${{ inputs.abi }}
       run: echo "key=$KEY" >> "$GITHUB_OUTPUT"
