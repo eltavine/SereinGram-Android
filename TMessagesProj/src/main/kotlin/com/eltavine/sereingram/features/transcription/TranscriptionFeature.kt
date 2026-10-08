@@ -65,10 +65,11 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
 
         override fun isTranscribing(message: Any): Boolean = key(message as MessageObject) in transcribing
 
+        // Telegram's own button reaches this too, so messages SereinGram would not offer stay Telegram's.
         override fun tap(account: Int, message: Any, open: Boolean, button: Any): Boolean {
             val shown = message as MessageObject
             val config = config(options)
-            if (!config.isUsable || open || !shown.messageOwner?.voiceTranscription.isNullOrEmpty()) {
+            if (!offers(account, message) || open || !shown.messageOwner?.voiceTranscription.isNullOrEmpty()) {
                 return false
             }
             val key = key(shown)
