@@ -1,0 +1,12 @@
+{
+  "name": "sereingram-tools",
+  "private": true,
+  "description": "Tools that check SereinGram's commits; install with `npm ci --prefix Tools/serein`.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.3",
+    "@commitlint/config-conventional": "21.2.3"
+  }
+}

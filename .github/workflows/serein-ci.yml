@@ -52,7 +52,7 @@ jobs:
           node-version: 22
 
       - name: Install commitlint.
-        run: npm install --no-save --no-package-lock @commitlint/cli@19.8.1 @commitlint/config-conventional@19.8.1
+        run: npm ci --prefix Tools/serein --no-audit --no-fund
 
       - name: Commit range.
         env:

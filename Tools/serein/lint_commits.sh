@@ -3,8 +3,8 @@
 # way CI does; run it before pushing. Upstream commits arrive through merges,
 # so only the first-parent line is checked.
 #
-# Needs commitlint next to the repository, as CI installs it:
-#   npm install --no-save --no-package-lock @commitlint/cli@19.8.1 @commitlint/config-conventional@19.8.1
+# Needs the commitlint locked in Tools/serein, as CI installs it:
+#   npm ci --prefix Tools/serein
 #
 # Usage: Tools/serein/lint_commits.sh [revision range]   (default: @{upstream}..HEAD)
 set -euo pipefail
@@ -18,7 +18,7 @@ failed=0
 for sha in $commits; do
   echo "Checking $(git log -1 --format='%h %s' "$sha")"
   git log -1 --format=%B "$sha" \
-    | npx --no-install commitlint --config Tools/serein/commitlint.config.mjs --verbose \
+    | Tools/serein/node_modules/.bin/commitlint --config Tools/serein/commitlint.config.mjs --verbose \
     || failed=1
 done
 exit "$failed"
