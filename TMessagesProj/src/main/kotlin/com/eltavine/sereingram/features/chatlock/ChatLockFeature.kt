@@ -35,6 +35,7 @@ import org.telegram.ui.ProfileActivity
 import org.telegram.ui.TopicsFragment
 import java.util.Collections
 import java.util.WeakHashMap
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Chats, the archive and secret chats that ask for the device's fingerprint,
@@ -48,10 +49,12 @@ object ChatLockFeature : SereinModule, SettingsContributor {
     override val options: List<Option<*>> = ChatLockOptions.all
 
     private val window = UnlockWindow { SystemClock.elapsedRealtime() }
+    private val settingsByAccount = ConcurrentHashMap<Int, LockSettings>()
     private val passes: MutableSet<Any> = Collections.synchronizedSet(Collections.newSetFromMap(WeakHashMap()))
 
     override fun start(context: ModuleContext) {
         val options = context.options
+        options.addListener { option, account -> if (option in ChatLockOptions.all) settingsByAccount.remove(account) }
         NavigationHooks.guards.install { screen, preview, retry -> allows(options, screen as BaseFragment, preview, retry) }
         NavigationHooks.restoreGuards.install { screen -> allowsRestoring(options, screen as BaseFragment) }
         ChatMenuHooks.entries.install(LockEntry(options))
@@ -66,10 +69,14 @@ object ChatLockFeature : SereinModule, SettingsContributor {
         )
     }
 
-    // The chat list would otherwise show what a locked chat keeps behind its lock.
+    // The chat list would otherwise show what a locked chat keeps behind its lock. Asked for every row it lays out.
     private fun lockedPreview(options: Options, account: Int, dialogId: Long): CharSequence? {
-        val target = chat(account, dialogId, archived = isArchived(account, dialogId))
-        return getString(R.string.serein_lock_preview).takeIf { isLocked(target, settings(options, account)) && !window.isOpen() }
+        val settings = settings(options, account)
+        if (!settings.locksAnything || window.isOpen()) {
+            return null
+        }
+        val target = chat(account, dialogId, archived = settings.lockArchive && isArchived(account, dialogId))
+        return if (isLocked(target, settings)) getString(R.string.serein_lock_preview) else null
     }
 
     private fun chat(account: Int, dialogId: Long, archived: Boolean) =
@@ -166,7 +173,10 @@ object ChatLockFeature : SereinModule, SettingsContributor {
         }
     }
 
-    internal fun settings(options: Options, account: Int) = LockSettings(
+    // Kept until one of the account's lock options changes, since the chat list asks for every row.
+    internal fun settings(options: Options, account: Int): LockSettings = settingsByAccount.computeIfAbsent(account) { read(options, it) }
+
+    private fun read(options: Options, account: Int) = LockSettings(
         lockedChats = DialogIds.parse(options.get(ChatLockOptions.lockedChats, account)),
         lockArchive = options.get(ChatLockOptions.lockArchive, account),
         lockSecretChats = options.get(ChatLockOptions.lockSecretChats, account),

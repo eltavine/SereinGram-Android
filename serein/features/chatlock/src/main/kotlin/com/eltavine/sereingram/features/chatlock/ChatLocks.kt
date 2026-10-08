@@ -29,7 +29,9 @@ public class LockSettings(
     public val lockedChats: Set<Long>,
     public val lockArchive: Boolean,
     public val lockSecretChats: Boolean,
-)
+) {
+    public val locksAnything: Boolean get() = lockedChats.isNotEmpty() || lockArchive || lockSecretChats
+}
 
 /** A locked archive locks the chats in it too, which search and folders open without the archive. */
 public fun isLocked(target: LockTarget, settings: LockSettings): Boolean = when (target) {

@@ -45,4 +45,12 @@ class ChatLocksTest {
         assertEquals(listOf("chat_lock_chats", "chat_lock_archive", "chat_lock_secret_chats"), ChatLockOptions.all.map { it.key })
         assertTrue(ChatLockOptions.all.none { it.backedUp }, "a backup must not be able to lift a lock")
     }
+
+    @Test
+    fun settingsKnowWhetherTheyLockAnything() {
+        assertFalse(LockSettings(emptySet(), lockArchive = false, lockSecretChats = false).locksAnything)
+        assertTrue(LockSettings(setOf(5L), lockArchive = false, lockSecretChats = false).locksAnything)
+        assertTrue(LockSettings(emptySet(), lockArchive = true, lockSecretChats = false).locksAnything)
+        assertTrue(LockSettings(emptySet(), lockArchive = false, lockSecretChats = true).locksAnything)
+    }
 }
