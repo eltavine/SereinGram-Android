@@ -27,6 +27,8 @@ class SereinJvmLibraryPlugin : Plugin<Project> {
             extensions.configure<KotlinJvmProjectExtension> {
                 explicitApi()
                 compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
+                // Against Java 11's API rather than the build JDK's, which Android lacks.
+                compilerOptions.freeCompilerArgs.add("-Xjdk-release=11")
             }
             dependencies.add("testImplementation", dependencies.platform(libs.library("junit-bom")))
             dependencies.add("testImplementation", "org.jetbrains.kotlin:kotlin-test")
