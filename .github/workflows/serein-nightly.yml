@@ -1,7 +1,8 @@
 name: SereinGram Nightly
 
 # Every commit that passes CI on main is built, signed with the release key and sent to the
-# Telegram channel. The signing key and the bot's token are secrets of the telegram environment.
+# Telegram channel, unless main has moved past it by then. The signing key and the bot's token
+# are secrets of the telegram environment.
 on:
   workflow_run:
     workflows:
@@ -14,10 +15,11 @@ on:
 permissions:
   contents: read
 
+# One run at a time, without cancelling: CI of an older commit can finish after that of a newer
+# one, and its run would cancel the newer build. Runs for commits main has moved past send nothing.
 concurrency:
   group: serein-nightly
-  # Only the newest commit is worth sending.
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   NDK_VERSION: 27.2.12479018
@@ -54,7 +56,22 @@ jobs:
       - name: Check out the libraries Gradle configures.
         run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath
 
+      - name: Check that main has not moved past the commit.
+        id: newest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMIT: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          tip=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
+          if [ "$tip" = "$COMMIT" ]; then
+            echo "newest=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::main has moved on to $tip, so this older commit is not sent."
+            echo "newest=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Check the secrets of the telegram environment.
+        if: steps.newest.outputs.newest == 'true'
         id: secrets
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

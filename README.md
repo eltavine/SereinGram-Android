@@ -206,7 +206,8 @@ Build:
 ## Releases
 
 - **Nightly**: every commit that passes CI on `main` is built, signed with the
-  release key and sent to the Telegram channel by `serein-nightly.yml`.
+  release key and sent to the Telegram channel by `serein-nightly.yml`, unless
+  `main` has moved past it by then.
 - **Stable**: pushing a `v*` tag on a commit of `main` runs CI on it, builds and
   signs it, publishes it as the latest GitHub release and sends it to the
   channel, by `serein-stable.yml`.
