@@ -7,6 +7,7 @@ import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.OptionScope
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.hooks.RequestHooks
+import com.eltavine.sereingram.hooks.SecretChatHooks
 import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -16,6 +17,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.telegram.messenger.ApplicationLoader
+import org.telegram.messenger.DialogObject
 import org.telegram.tgnet.TLRPC
 import tw.nekomimi.nekogram.NekoConfig
 
@@ -67,6 +69,17 @@ class GhostFeatureTest {
         assertFalse(RequestHooks.intercept(ACCOUNT, discussion(5)))
         assertFalse(RequestHooks.intercept(ACCOUNT, TLRPC.TL_messages_readEncryptedHistory().apply { peer = TLRPC.TL_inputEncryptedChat() }))
         assertTrue(RequestHooks.intercept(ACCOUNT, TLRPC.TL_messages_sendMessage()))
+    }
+
+    @Test
+    fun secretChatsHearOfReadsOnlyWhenReceiptsAreSentOrTheyAreExcepted() {
+        val secret = DialogObject.makeEncryptedDialogId(9)
+        NekoConfig.sendReadMessagePackets = true
+        assertTrue(SecretChatHooks.sendsReadReceipt(ACCOUNT, secret))
+        NekoConfig.sendReadMessagePackets = false
+        assertFalse(SecretChatHooks.sendsReadReceipt(ACCOUNT, secret))
+        options.set(GhostOptions.readExceptions, secret.toString(), ACCOUNT)
+        assertTrue(SecretChatHooks.sendsReadReceipt(ACCOUNT, secret))
     }
 
     @Test

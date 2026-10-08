@@ -7,6 +7,7 @@ import com.eltavine.sereingram.core.SereinModule
 import com.eltavine.sereingram.hooks.ChatMenuHooks
 import com.eltavine.sereingram.hooks.DialogsHooks
 import com.eltavine.sereingram.hooks.RequestHooks
+import com.eltavine.sereingram.hooks.SecretChatHooks
 import com.eltavine.sereingram.hooks.SendHooks
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
@@ -33,6 +34,7 @@ object GhostFeature : SereinModule, SettingsContributor {
         val gate = GhostGate(context.options, passes)
         RequestHooks.ghostExemptions.install(gate::exempts)
         RequestHooks.interceptors.install(gate::intercept)
+        SecretChatHooks.readPolicies.install(gate::sendsSecretRead)
         ChatMenuHooks.entries.install(GhostChatEntry(gate))
         DialogsHooks.titleStatuses.install(GhostIndicator(context.options))
         SendHooks.rewriters.install(GhostSending(context.options))

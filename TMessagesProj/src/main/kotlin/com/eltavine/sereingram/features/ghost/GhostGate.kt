@@ -29,6 +29,10 @@ internal class GhostGate(private val options: Options, private val passes: ReadP
         }
     }
 
+    /** Whether a secret chat hears that its messages were read, which Nagram's ghost mode does not hold back. */
+    fun sendsSecretRead(account: Int, dialogId: Long): Boolean =
+        hold(UnheldRead.SECRET_CHAT, NagramGhost.readsHidden) == Hold.SEND || isExcepted(account, dialogId, GhostAction.READ)
+
     fun isExcepted(account: Int, dialogId: Long, action: GhostAction): Boolean =
         dialogId in DialogIds.parse(options.get(GhostOptions.exceptions(action), account))
 

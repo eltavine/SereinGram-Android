@@ -168,6 +168,7 @@ public class SecretChatHelper extends BaseController {
         if (!(encryptedChat instanceof TLRPC.TL_encryptedChat)) {
             return;
         }
+        if (resendMessage == null && !com.eltavine.sereingram.hooks.SecretChatHooks.sendsReadReceipt(currentAccount, DialogObject.makeEncryptedDialogId(encryptedChat.id))) return;
         TLRPC.TL_decryptedMessageService reqSend = new TLRPC.TL_decryptedMessageService();
         TLRPC.Message message;
 
