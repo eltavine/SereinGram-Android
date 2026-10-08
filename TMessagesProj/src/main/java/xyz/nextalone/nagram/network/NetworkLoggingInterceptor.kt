@@ -45,6 +45,7 @@ object NetworkLoggingInterceptor {
             engine {
                 config {
                     retryOnConnectionFailure(true)
+                    dns(object : okhttp3.Dns { override fun lookup(hostname: String) = com.eltavine.sereingram.hooks.NetworkHooks.resolve(hostname) ?: okhttp3.Dns.SYSTEM.lookup(hostname) })
                 }
             }
         }

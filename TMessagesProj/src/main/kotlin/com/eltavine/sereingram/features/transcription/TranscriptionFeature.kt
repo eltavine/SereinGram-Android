@@ -11,6 +11,7 @@ import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.support.HttpDns
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -38,7 +39,12 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val client by lazy {
-        TranscriptionClient(HttpClient(OkHttp) { install(HttpTimeout) { requestTimeoutMillis = 120_000 } })
+        TranscriptionClient(
+            HttpClient(OkHttp) {
+                install(HttpTimeout) { requestTimeoutMillis = 120_000 }
+                engine { config { dns(HttpDns) } }
+            },
+        )
     }
 
     override fun start(context: ModuleContext) {

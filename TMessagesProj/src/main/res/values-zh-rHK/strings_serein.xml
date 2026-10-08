@@ -192,4 +192,12 @@
     <string name="serein_reactions_pinned_note">在訊息選單上方的回應中，這些表情符號會依此順序排在最前（如果該聊天允許）。依序輸入即可，例如 👍❤️🔥。</string>
     <string name="serein_proxy_tile_none">未設定</string>
     <string name="serein_update_check_off">SereinGram 不檢查更新。新版本發佈在 GitHub 上。</string>
+    <string name="serein_dns_title">DNS</string>
+    <string name="serein_dns_mode">網域名稱解析方式</string>
+    <string name="serein_dns_mode_default">Telegram 內建的 DNS</string>
+    <string name="serein_dns_mode_system">系統 DNS</string>
+    <string name="serein_dns_mode_custom">自訂 DNS over HTTPS</string>
+    <string name="serein_dns_custom_server">自訂伺服器</string>
+    <string name="serein_dns_custom_server_hint">https://dns.example/dns-query</string>
+    <string name="serein_dns_note">Telegram 內建的 DNS 會先詢問 DNS over HTTPS 伺服器，再詢問系統，與 Telegram 和 Nagram 的做法相同，Nagram 的 DNS 設定也作用於它。系統 DNS 遵循 Android 的私人 DNS 設定。自訂伺服器需支援 DNS over HTTPS（RFC 8484）；無法連線時由系統解析。此設定作用於 Proxy 和 Telegram 的其他網域名稱，以及應用程式呼叫的網路服務，例如翻譯和轉寫。</string>
 </resources>

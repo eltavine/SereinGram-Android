@@ -22,6 +22,7 @@ class SereinApplicationPlugin : Plugin<Project> {
                 .forEach { target.dependencies.add("implementation", it) }
             target.dependencies.add("implementation", target.libs.library("androidx-lifecycle-process"))
             target.dependencies.add("implementation", target.libs.library("okio"))
+            target.dependencies.add("implementation", target.libs.library("okhttp-dnsoverhttps"))
             target.dependencies.add("testImplementation", target.libs.library("archunit"))
             target.dependencies.add("testImplementation", target.libs.library("ktor-client-mock"))
             val properties = SereinProperties(target)

@@ -36,6 +36,7 @@ object DnsFactory {
     @JvmStatic
     @JvmOverloads
     fun lookup(domain: String, fallback: Boolean = false): List<InetAddress> {
+        com.eltavine.sereingram.hooks.NetworkHooks.resolve(domain)?.let { return it }
 
         if (!NekoConfig.useSystemDNS.Bool()) {
 

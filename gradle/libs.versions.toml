@@ -30,6 +30,8 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock", version = "3.3.0" }
 zxing-core = { module = "com.google.zxing:core", version = "3.5.4" }
 # Matches what Nagram's Ktor brings into the app.
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
+# Matches the OkHttp that Nagram's Ktor client brings into the app.
+okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version = "5.1.0" }
 # Matches what Nagram's OkHttp brings into the app.
 okio = { module = "com.squareup.okio:okio", version = "3.16.0" }
 # Matches what Telegram's AndroidX libraries bring into the app.

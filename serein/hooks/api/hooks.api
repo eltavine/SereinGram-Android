@@ -175,6 +175,16 @@ public abstract interface class com/eltavine/sereingram/hooks/NavigationHooks$Re
 	public abstract fun allowsRestoring (Ljava/lang/Object;)Z
 }
 
+public final class com/eltavine/sereingram/hooks/NetworkHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/NetworkHooks;
+	public final fun getResolvers ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun resolve (Ljava/lang/String;)Ljava/util/List;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/NetworkHooks$Resolver {
+	public abstract fun resolve (Ljava/lang/String;)Ljava/util/List;
+}
+
 public final class com/eltavine/sereingram/hooks/NotificationHooks {
 	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/NotificationHooks;
 	public final fun getContentPolicies ()Lcom/eltavine/sereingram/core/Handlers;

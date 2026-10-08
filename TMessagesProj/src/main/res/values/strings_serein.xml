@@ -192,4 +192,12 @@
     <string name="serein_reactions_pinned_note">These emoji come first, in this order, among the reactions above a message\'s menu wherever the chat allows them. Type them one after another, for example 👍❤️🔥.</string>
     <string name="serein_proxy_tile_none">None set</string>
     <string name="serein_update_check_off">SereinGram does not check for updates. New versions are published on GitHub.</string>
+    <string name="serein_dns_title">DNS</string>
+    <string name="serein_dns_mode">Resolve host names with</string>
+    <string name="serein_dns_mode_default">Telegram\'s own DNS</string>
+    <string name="serein_dns_mode_system">System DNS</string>
+    <string name="serein_dns_mode_custom">Custom DNS over HTTPS</string>
+    <string name="serein_dns_custom_server">Custom server</string>
+    <string name="serein_dns_custom_server_hint">https://dns.example/dns-query</string>
+    <string name="serein_dns_note">Telegram\'s own DNS asks DNS-over-HTTPS servers first and then the system, as Telegram and Nagram do, and Nagram\'s DNS settings apply to it. The system\'s DNS follows Android\'s Private DNS setting. A custom server must speak DNS over HTTPS (RFC 8484); while it cannot be reached, the system answers. The choice applies to proxies and Telegram\'s other host names, and to the web services the app calls, such as translation and transcription.</string>
 </resources>
