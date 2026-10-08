@@ -42149,6 +42149,7 @@ public class ChatActivity extends BaseFragment implements
             if (!safe && Browser.isTelegraphUrl(url, false)) {
                 safe = true;
             }
+            if (com.eltavine.sereingram.hooks.LinkHooks.confirmsBeforeOpening(url)) safe = false;
             if (progressDialogCurrent != null) {
                 progressDialogCurrent.cancel(true);
             }
@@ -43207,6 +43208,7 @@ public class ChatActivity extends BaseFragment implements
                                 }
                             }
                         };
+                        if (com.eltavine.sereingram.hooks.LinkHooks.confirmsBeforeOpening(webPage.url)) AlertsCreator.showOpenUrlAlert(ChatActivity.this, webPage.url, true, true, true, true, progressDialogCurrent, webPage, themeDelegate); else
                         Browser.openUrl(getParentActivity(), Uri.parse(webPage.url), true, true, false, progressDialogCurrent, null, false, true, false);
                     }
                 }
