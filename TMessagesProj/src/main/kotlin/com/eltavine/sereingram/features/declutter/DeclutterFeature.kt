@@ -25,9 +25,11 @@ object DeclutterFeature : SereinModule, SettingsContributor {
         ChatHooks.shareButtonPolicies.install { _, _, saved ->
             allowShareButton(options.get(DeclutterOptions.hideShareButton), saved)
         }
+        // Asked whenever a message draws.
+        val hideReactions = options.cached(DeclutterOptions.hideReactions)
         MessageHooks.reactionsPolicies.install { _, message ->
             val tags = (message as MessageObject).messageOwner?.reactions?.reactions_as_tags == true
-            hidesReactions(options.get(DeclutterOptions.hideReactions), tags)
+            hidesReactions(hideReactions.value, tags)
         }
         ChatHooks.channelButtonPolicies.install { button ->
             when (button) {

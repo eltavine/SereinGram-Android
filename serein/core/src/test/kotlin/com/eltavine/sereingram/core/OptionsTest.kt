@@ -80,4 +80,26 @@ class OptionsTest {
         assertFailsWith<IllegalArgumentException> { booleanOption("ghost__mode") }
         assertFailsWith<IllegalArgumentException> { booleanOption("_ghost") }
     }
+
+    @Test
+    fun cachedOptionsFollowWritesWithoutReadingAgain() {
+        val reads = mutableListOf<String>()
+        val counted = Options { scope, account ->
+            object : KeyValueStore by (if (scope == OptionScope.DEVICE) device else accounts.getOrPut(account) { MemoryKeyValueStore() }) {
+                override fun getBoolean(key: String): Boolean? {
+                    reads += key
+                    return device.getBoolean(key)
+                }
+            }
+        }
+        val compactMode = counted.cached(compact)
+        assertFalse(compactMode.value)
+        repeat(3) { compactMode.value }
+        assertEquals(listOf("compact_mode"), reads)
+        counted.set(compact, true)
+        assertTrue(compactMode.value)
+        counted.reset(compact)
+        assertFalse(compactMode.value)
+        assertFailsWith<IllegalArgumentException> { counted.cached(ghost) }
+    }
 }

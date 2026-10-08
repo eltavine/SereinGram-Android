@@ -41,6 +41,30 @@ public class Options(private val stores: StoreProvider) {
     /** [listener] runs on the thread that wrote the value. */
     public fun addListener(listener: Listener): AutoCloseable = listeners.install(listener)
 
+    /**
+     * The value of a device [option], read once and kept in memory as it changes,
+     * for code that runs while Telegram draws, which must not read storage.
+     */
+    public fun <T : Any> cached(option: Option<T>): Cached<T> {
+        require(option.scope == OptionScope.DEVICE) { "$option is stored per account; only device options are cached" }
+        return Cached(this, option)
+    }
+
+    public class Cached<T : Any> internal constructor(options: Options, option: Option<T>) {
+        @Volatile
+        private var current: T = options.get(option)
+
+        init {
+            options.addListener { changed, _ ->
+                if (changed == option) {
+                    current = options.get(option)
+                }
+            }
+        }
+
+        public val value: T get() = current
+    }
+
     private fun store(option: Option<*>, account: Int): KeyValueStore = when (option.scope) {
         OptionScope.DEVICE -> stores.store(OptionScope.DEVICE, NO_ACCOUNT)
         OptionScope.ACCOUNT -> {

@@ -139,6 +139,7 @@ public final class com/eltavine/sereingram/core/Options {
 	public static final field NO_ACCOUNT I
 	public fun <init> (Lcom/eltavine/sereingram/core/Options$StoreProvider;)V
 	public final fun addListener (Lcom/eltavine/sereingram/core/Options$Listener;)Ljava/lang/AutoCloseable;
+	public final fun cached (Lcom/eltavine/sereingram/core/Option;)Lcom/eltavine/sereingram/core/Options$Cached;
 	public final fun get (Lcom/eltavine/sereingram/core/Option;I)Ljava/lang/Object;
 	public static synthetic fun get$default (Lcom/eltavine/sereingram/core/Options;Lcom/eltavine/sereingram/core/Option;IILjava/lang/Object;)Ljava/lang/Object;
 	public final fun isModified (Lcom/eltavine/sereingram/core/Option;I)Z
@@ -147,6 +148,10 @@ public final class com/eltavine/sereingram/core/Options {
 	public static synthetic fun reset$default (Lcom/eltavine/sereingram/core/Options;Lcom/eltavine/sereingram/core/Option;IILjava/lang/Object;)V
 	public final fun set (Lcom/eltavine/sereingram/core/Option;Ljava/lang/Object;I)V
 	public static synthetic fun set$default (Lcom/eltavine/sereingram/core/Options;Lcom/eltavine/sereingram/core/Option;Ljava/lang/Object;IILjava/lang/Object;)V
+}
+
+public final class com/eltavine/sereingram/core/Options$Cached {
+	public final fun getValue ()Ljava/lang/Object;
 }
 
 public final class com/eltavine/sereingram/core/Options$Companion {
