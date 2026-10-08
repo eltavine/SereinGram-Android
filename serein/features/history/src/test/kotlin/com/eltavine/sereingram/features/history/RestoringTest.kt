@@ -15,20 +15,39 @@ class RestoringTest {
     )
 
     @Test
-    fun aBatchNeedsRoomBetweenTwoServerMessages() {
-        assertNull(BatchSpan.of(listOf(10)))
-        assertNull(BatchSpan.of(listOf(10, 11)))
-        assertNull(BatchSpan.of(listOf(-5, 10)))
-        val span = BatchSpan.of(listOf(-3, 10, 20, 15))!!
-        assertEquals(10, span.oldest)
-        assertEquals(20, span.newest)
+    fun aBatchStandsForTheGapUpToTheNextCachedMessage() {
+        val coverage = Coverage.of(listOf(-3, 10, 20, 15), olderCached = true, nextNewerCached = 30)!!
+        assertEquals(10, coverage.after)
+        assertEquals(30, coverage.before)
+        assertTrue(25 in coverage, "a deletion between this batch and the newer one is this batch's")
+        assertFalse(30 in coverage)
+        assertFalse(10 in coverage)
+        assertFalse(5 in coverage, "an older deletion is the older batch's")
     }
 
     @Test
-    fun onlyDeletionsInsideTheBatchAndNotLoadedAreRestored() {
-        val span = BatchSpan.of(listOf(10, 15, 20))!!
+    fun theNewestAndTheOldestBatchesReachTheEndsOfTheChat() {
+        val newest = Coverage.of(listOf(10, 20), olderCached = true, nextNewerCached = null)!!
+        assertTrue(21 in newest, "a message deleted after the last one still shows")
+        val oldest = Coverage.of(listOf(10, 20), olderCached = false, nextNewerCached = 30)!!
+        assertTrue(1 in oldest, "a message deleted before the first one still shows")
+        val only = Coverage.of(listOf(10), olderCached = false, nextNewerCached = null)!!
+        assertTrue(5 in only && 15 in only, "a chat with one message left gets the rest back")
+    }
+
+    @Test
+    fun anEmptyBatchStandsForTheWholeChatOnlyWhenNothingIsCached() {
+        assertNull(Coverage.of(emptyList(), olderCached = true, nextNewerCached = null))
+        assertNull(Coverage.of(listOf(-4), olderCached = false, nextNewerCached = 12))
+        val everything = Coverage.of(emptyList(), olderCached = false, nextNewerCached = null)!!
+        assertTrue(1 in everything && Int.MAX_VALUE - 1 in everything)
+    }
+
+    @Test
+    fun deletionsTheBatchStandsForAndDoesNotHoldAreRestored() {
+        val coverage = Coverage.of(listOf(10, 15, 20), olderCached = true, nextNewerCached = 30)!!
         val candidates = listOf(25, 20, 18, 15, 12, 10, 4).map(::deleted)
-        assertEquals(listOf(18, 12), restorable(span, setOf(10, 15, 20), candidates).map { it.messageId })
+        assertEquals(listOf(25, 18, 12), restorable(coverage, setOf(10, 15, 20), candidates).map { it.messageId })
     }
 
     @Test

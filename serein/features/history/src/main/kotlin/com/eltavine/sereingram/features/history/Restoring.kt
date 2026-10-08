@@ -3,31 +3,38 @@ package com.eltavine.sereingram.features.history
 import com.eltavine.sereingram.ports.HistoryRecord
 
 /**
- * The span of a loaded batch of history, by the ids of messages the server
- * knows; local and ephemeral messages have ids of their own and do not count.
+ * The message ids a batch of history loaded from Telegram's database stands
+ * for, by the ids of messages the server knows; local and ephemeral messages
+ * have ids of their own and do not count. A batch stands for the ids from its
+ * oldest message, or from the chat's start when nothing older is cached, up to
+ * the next cached message above it, or without end when it holds the newest.
+ * Every gap between cached messages thus belongs to exactly one batch.
  */
-public class BatchSpan(public val oldest: Int, public val newest: Int) {
+public class Coverage(public val after: Int, public val before: Int) {
+    public operator fun contains(id: Int): Boolean = id > after && id < before
+
     public companion object {
-        /** Null when the batch spans no gap a deleted message could sit in. */
-        public fun of(messageIds: Collection<Int>): BatchSpan? {
-            val ids = messageIds.filter { it > 0 }
-            if (ids.size < 2) {
+        public const val WITHOUT_END: Int = Int.MAX_VALUE
+
+        /**
+         * What a batch of [loadedIds] stands for, given whether the chat has cached
+         * messages older than the batch and the next cached message newer than it.
+         * Null for an empty batch of a chat that has cached messages elsewhere.
+         */
+        public fun of(loadedIds: Collection<Int>, olderCached: Boolean, nextNewerCached: Int?): Coverage? {
+            val ids = loadedIds.filter { it > 0 }
+            if (ids.isEmpty() && (olderCached || nextNewerCached != null)) {
                 return null
             }
-            val oldest = ids.min()
-            val newest = ids.max()
-            return if (newest - oldest > 1) BatchSpan(oldest, newest) else null
+            val after = if (olderCached) ids.min() else 0
+            return Coverage(after, nextNewerCached ?: WITHOUT_END)
         }
     }
 }
 
-/**
- * Saved deletions that belong inside [span] and are not in the batch already.
- * Only the inside counts: what lies beyond a batch's edges is the neighbouring
- * batch's to restore, so paging through history stays as Telegram computes it.
- */
-public fun restorable(span: BatchSpan, loadedIds: Set<Int>, candidates: List<HistoryRecord>): List<HistoryRecord> =
-    candidates.filter { it.messageId in (span.oldest + 1) until span.newest && it.messageId !in loadedIds }
+/** Saved deletions that a batch stands for and that it does not hold already. */
+public fun restorable(coverage: Coverage, loadedIds: Set<Int>, candidates: List<HistoryRecord>): List<HistoryRecord> =
+    candidates.filter { it.messageId in coverage && it.messageId !in loadedIds }
 
 /**
  * Where a message with [id] goes in a batch Telegram sorts newest first:

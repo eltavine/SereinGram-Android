@@ -56,9 +56,9 @@ internal class HistoryRestorer(
         users: MutableList<Any?>,
         chats: MutableList<Any?>,
     ): List<Int> {
-        val span = BatchSpan.of(loadedIds) ?: return emptyList()
-        val candidates = stores(account).deleted(dialogId, RESTORE_LIMIT, beforeMessageId = span.newest)
-        val records = restorable(span, loadedIds, candidates)
+        val coverage = coverage(account, dialogId, loadedIds) ?: return emptyList()
+        val candidates = stores(account).deleted(dialogId, RESTORE_LIMIT, beforeMessageId = coverage.before)
+        val records = restorable(coverage, loadedIds, candidates)
         if (records.isEmpty()) {
             return emptyList()
         }
@@ -70,6 +70,16 @@ internal class HistoryRestorer(
         addSenders(account, restored, users, chats)
         records.forEach { kept.put(account, dialogId, it.messageId, it.recordedAt) }
         return records.map { it.messageId }
+    }
+
+    private fun coverage(account: Int, dialogId: Long, loadedIds: Set<Int>): Coverage? {
+        val ids = loadedIds.filter { it > 0 }
+        val cached = CachedHistory(MessagesStorage.getInstance(account))
+        return Coverage.of(
+            ids,
+            olderCached = cached.hasOlder(dialogId, than = ids.minOrNull() ?: Int.MAX_VALUE),
+            nextNewerCached = cached.nextNewer(dialogId, than = ids.maxOrNull() ?: 0),
+        )
     }
 
     fun decorateTime(account: Int, message: Any, time: String): String {
