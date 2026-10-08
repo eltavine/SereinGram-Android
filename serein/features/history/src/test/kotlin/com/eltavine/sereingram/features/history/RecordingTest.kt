@@ -28,6 +28,11 @@ class RecordingTest {
     }
 
     @Test
+    fun editsTheServerHidesAreNotKept() {
+        assertFalse(recordsEdit(saveEdits = true, saveInBotChats = true, Change(botChat = false, mediaChanged = true, hidden = true)))
+    }
+
+    @Test
     fun storageKeysNeverChange() {
         assertEquals(
             listOf(

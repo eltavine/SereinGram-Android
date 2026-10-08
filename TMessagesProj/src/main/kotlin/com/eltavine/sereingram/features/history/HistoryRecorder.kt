@@ -55,7 +55,8 @@ internal class HistoryRecorder(
         }
     }
 
-    fun beforeEdited(account: Int, dialogId: Long, previous: Any, next: Any, sameMedia: Boolean) {
+    // Telegram's sameMedia only holds for a photo or file that stayed, so the media are compared here.
+    fun beforeEdited(account: Int, dialogId: Long, previous: Any, next: Any, @Suppress("UNUSED_PARAMETER") sameMedia: Boolean) {
         if (!options.get(HistoryOptions.saveEdits, account)) {
             return
         }
@@ -64,7 +65,8 @@ internal class HistoryRecorder(
         val change = Change(
             botChat = isBotChat(account, dialogId),
             textChanged = old.message.orEmpty() != new.message.orEmpty(),
-            mediaChanged = !sameMedia,
+            mediaChanged = mediaChanged(old.media, new.media),
+            hidden = new.edit_hide,
         )
         if (recordsEdit(saveEdits = true, options.get(HistoryOptions.saveInBotChats, account), change)) {
             write(account, listOf(record(RecordKind.EDITED, dialogId, old, revision = old.edit_date)))
@@ -116,4 +118,28 @@ internal class HistoryRecorder(
             writer.execute { Faults.guard("history write", fallback = Unit) { stores(account).add(records) } }
         }
     }
+}
+
+/**
+ * Whether an edit replaced the message's own media. Link previews are not the
+ * message's own, and what changes by itself within a kind of media, such as a
+ * live location's position or a poll's results, is not an edit of it.
+ */
+internal fun mediaChanged(old: TLRPC.MessageMedia?, new: TLRPC.MessageMedia?): Boolean = identity(old) != identity(new)
+
+private fun identity(media: TLRPC.MessageMedia?): Pair<Class<*>, Long>? = when (media) {
+    null, is TLRPC.TL_messageMediaEmpty, is TLRPC.TL_messageMediaWebPage -> null
+    is TLRPC.TL_messageMediaPhoto -> kindOf(media) to (media.photo?.id ?: 0L)
+    is TLRPC.TL_messageMediaDocument -> kindOf(media) to (media.document?.id ?: 0L)
+    is TLRPC.TL_messageMediaPoll -> kindOf(media) to (media.poll?.id ?: 0L)
+    else -> kindOf(media) to 0L
+}
+
+// Telegram parses older layers into subclasses of the current ones, which are the kinds.
+private fun kindOf(media: TLRPC.MessageMedia): Class<*> {
+    var kind: Class<*> = media.javaClass
+    while (kind.superclass != null && kind.superclass != TLRPC.MessageMedia::class.java) {
+        kind = kind.superclass
+    }
+    return kind
 }
