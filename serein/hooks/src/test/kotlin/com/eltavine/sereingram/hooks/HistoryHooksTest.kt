@@ -62,4 +62,19 @@ class HistoryHooksTest {
             installs.forEach(AutoCloseable::close)
         }
     }
+
+    @Test
+    fun chatsTheUserClearsReachEveryListener() {
+        val seen = mutableListOf<String>()
+        val installs = listOf(
+            HistoryHooks.chatClearListeners.install { _, _ -> throw IllegalStateException() },
+            HistoryHooks.chatClearListeners.install { account, dialogId -> seen += "$account/$dialogId" },
+        )
+        try {
+            HistoryHooks.beforeUserClearsChat(1, -100)
+            assertEquals(listOf("1/-100"), seen)
+        } finally {
+            installs.forEach(AutoCloseable::close)
+        }
+    }
 }

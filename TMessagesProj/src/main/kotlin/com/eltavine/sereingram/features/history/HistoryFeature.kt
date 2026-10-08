@@ -41,6 +41,7 @@ class HistoryFeature(
         mediaBackups = backups
         val recorder = HistoryRecorder(context.options, stores, writer, revised, deletedByUser, backups)
         HistoryHooks.userDeletionListeners.install(recorder::beforeUserDeletes)
+        HistoryHooks.chatClearListeners.install(recorder::beforeUserClears)
         HistoryHooks.deletionListeners.install(recorder::beforeDeleted)
         HistoryHooks.editListeners.install(recorder::beforeEdited)
         val restorer = HistoryRestorer(context.options, stores, kept, revised, backups)

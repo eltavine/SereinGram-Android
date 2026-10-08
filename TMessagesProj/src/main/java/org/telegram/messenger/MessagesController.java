@@ -10233,6 +10233,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void deleteDialog(final long did, int onlyHistory, boolean revoke) {
+        com.eltavine.sereingram.hooks.HistoryHooks.beforeUserClearsChat(currentAccount, did);
         deleteDialog(did, 1, onlyHistory, 0, revoke, null, 0);
     }
 

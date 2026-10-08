@@ -14,7 +14,8 @@ import java.util.concurrent.Executor
 /**
  * Keeps the versions of messages Telegram is about to drop. It reads them on
  * Telegram's storage queue, where the hooks run, and writes on [writer].
- * What the user deletes is not kept, and anything kept of it is dropped.
+ * What the user deletes, messages or whole chats, is not kept, and anything
+ * kept of it is dropped, whether or not history is being saved at the time.
  */
 internal class HistoryRecorder(
     private val options: Options,
@@ -30,12 +31,19 @@ internal class HistoryRecorder(
             return
         }
         deletedByUser.add(account, dialogId, ids)
-        if (options.get(HistoryOptions.saveDeleted, account) || options.get(HistoryOptions.saveEdits, account)) {
-            writer.execute {
-                Faults.guard("history forget", fallback = Unit) {
-                    stores(account).forget(dialogId, ids)
-                    backups.forget(account, dialogId, ids)
-                }
+        writer.execute {
+            Faults.guard("history forget", fallback = Unit) {
+                stores(account).forget(dialogId, ids)
+                backups.forget(account, dialogId, ids)
+            }
+        }
+    }
+
+    fun beforeUserClears(account: Int, dialogId: Long) {
+        writer.execute {
+            Faults.guard("history forget", fallback = Unit) {
+                RecordKind.entries.forEach { stores(account).clear(dialogId, it) }
+                backups.forgetChat(account, dialogId)
             }
         }
     }

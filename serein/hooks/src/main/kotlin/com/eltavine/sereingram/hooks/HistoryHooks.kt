@@ -40,6 +40,11 @@ public object HistoryHooks {
         public fun beforeUserDeletes(account: Int, dialogId: Long, messageIds: List<Int>)
     }
 
+    public fun interface ChatClearListener {
+        /** The user deletes [dialogId] or clears its history. Runs on the UI thread, before Telegram drops it. */
+        public fun beforeUserClears(account: Int, dialogId: Long)
+    }
+
     public fun interface FileKeeper {
         /** Whether the downloaded files of the deleted [messageIds] stay in Telegram's cache. */
         public fun keepsFiles(account: Int, dialogId: Long, messageIds: List<Int>): Boolean
@@ -57,6 +62,7 @@ public object HistoryHooks {
     public val editListeners: Handlers<EditListener> = Handlers()
     public val loadListeners: Handlers<LoadListener> = Handlers()
     public val userDeletionListeners: Handlers<UserDeletionListener> = Handlers()
+    public val chatClearListeners: Handlers<ChatClearListener> = Handlers()
     public val chatKeepers: Handlers<ChatKeeper> = Handlers()
     public val fileKeepers: Handlers<FileKeeper> = Handlers()
 
@@ -73,6 +79,13 @@ public object HistoryHooks {
             Faults.guard("history user deletion listener", fallback = Unit) {
                 listener.beforeUserDeletes(account, dialogId, messageIds)
             }
+        }
+    }
+
+    @JvmStatic
+    public fun beforeUserClearsChat(account: Int, dialogId: Long) {
+        chatClearListeners.all.forEach { listener ->
+            Faults.guard("history chat clear listener", fallback = Unit) { listener.beforeUserClears(account, dialogId) }
         }
     }
 
