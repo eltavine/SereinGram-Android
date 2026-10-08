@@ -1,5 +1,6 @@
 package com.eltavine.sereingram.buildlogic
 
+import com.android.build.api.AndroidPluginVersion
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
@@ -25,6 +26,24 @@ internal fun Project.checkKotlinVersion() {
                 "update the catalog to the version in the root build.gradle.",
         )
     }
+}
+
+/** Fails when the root build applies another Android Gradle Plugin than the one SereinGram's catalog pins. */
+internal fun Project.checkAndroidGradlePluginVersion(applied: AndroidPluginVersion) {
+    val pinned = libs.findVersion("androidGradlePlugin").get().requiredVersion
+    val version = "${applied.major}.${applied.minor}.${applied.micro}"
+    if (version != pinned) {
+        throw GradleException(
+            "The build applies the Android Gradle Plugin $version but gradle/libs.versions.toml pins $pinned; " +
+                "update the catalog to the version in the root build.gradle.",
+        )
+    }
+}
+
+/** The app's SDK levels, set in TMessagesProj/build.gradle, which SereinGram's Android modules share. */
+internal object AppLevels {
+    const val COMPILE_SDK = 36
+    const val MIN_SDK = 21
 }
 
 /** `:serein:adapters:room` becomes `com.eltavine.sereingram.adapters.room`. */

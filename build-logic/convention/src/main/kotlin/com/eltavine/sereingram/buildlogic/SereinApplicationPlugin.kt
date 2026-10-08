@@ -25,7 +25,14 @@ class SereinApplicationPlugin : Plugin<Project> {
             target.dependencies.add("testImplementation", target.libs.library("ktor-client-mock"))
             val properties = SereinProperties(target)
             target.extensions.configure<ApplicationAndroidComponentsExtension> {
+                target.checkAndroidGradlePluginVersion(pluginVersion)
                 finalizeDsl { android ->
+                    if (android.compileSdk != AppLevels.COMPILE_SDK || android.defaultConfig.minSdk != AppLevels.MIN_SDK) {
+                        throw GradleException(
+                            "TMessagesProj builds against SDK ${android.compileSdk} for SDK ${android.defaultConfig.minSdk} and up; " +
+                                "update AppLevels in build-logic to match, which SereinGram's Android modules use.",
+                        )
+                    }
                     android.defaultConfig.applicationId = APPLICATION_ID
                     val sha1 = signingCertificateSha1(properties["SEREIN_SIGNING_SHA1"])
                     android.defaultConfig.externalNativeBuild.cmake.arguments +=

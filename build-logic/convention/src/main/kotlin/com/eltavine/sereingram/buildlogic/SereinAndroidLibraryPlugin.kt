@@ -1,6 +1,7 @@
 package com.eltavine.sereingram.buildlogic
 
 import com.android.build.api.dsl.LibraryExtension
+import com.android.build.api.variant.LibraryAndroidComponentsExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -18,10 +19,11 @@ class SereinAndroidLibraryPlugin : Plugin<Project> {
             pluginManager.apply("com.android.library")
             pluginManager.apply("org.jetbrains.kotlin.android")
             checkKotlinVersion()
+            extensions.configure<LibraryAndroidComponentsExtension> { checkAndroidGradlePluginVersion(pluginVersion) }
             extensions.configure<LibraryExtension> {
                 namespace = sereinNamespace
-                compileSdk = COMPILE_SDK
-                defaultConfig.minSdk = MIN_SDK
+                compileSdk = AppLevels.COMPILE_SDK
+                defaultConfig.minSdk = AppLevels.MIN_SDK
                 compileOptions.sourceCompatibility = JavaVersion.VERSION_11
                 compileOptions.targetCompatibility = JavaVersion.VERSION_11
                 testOptions.unitTests.isIncludeAndroidResources = true
@@ -35,11 +37,5 @@ class SereinAndroidLibraryPlugin : Plugin<Project> {
             dependencies.add("testImplementation", libs.library("androidx-test-core"))
             dependencies.add("testImplementation", "org.jetbrains.kotlin:kotlin-test-junit")
         }
-    }
-
-    private companion object {
-        // The app's levels, set in TMessagesProj/build.gradle.
-        const val COMPILE_SDK = 36
-        const val MIN_SDK = 21
     }
 }
