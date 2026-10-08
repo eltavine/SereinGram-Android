@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.12"
 # ///
@@ -30,7 +30,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 POLICY = HERE / "policy/upstream.json"
 SOURCES = (".java", ".kt")
-HOOK_CALL = re.compile(r"\bcom\.eltavine\.sereingram\.([A-Za-z_.]+)")
+HOOK_CALL = re.compile(r"\bcom\.eltavine\.sereingram\.([A-Za-z0-9_.]+)")
 METRICS = ("all_files", "all_added_lines", "source_files", "source_added_lines")
 
 
@@ -38,6 +38,15 @@ def git(*args):
     return subprocess.run(
         ["git", *args], cwd=ROOT, check=True, capture_output=True, text=True
     ).stdout
+
+
+def exists(revision, path):
+    return (
+        subprocess.run(
+            ["git", "cat-file", "-e", f"{revision}:{path}"], cwd=ROOT, check=False
+        ).returncode
+        == 0
+    )
 
 
 def load_policy(path):
@@ -50,7 +59,10 @@ def load_policy(path):
     if set(policy["budget"]) != set(METRICS):
         sys.exit(f"{path}: budget must have exactly {list(METRICS)}")
     hooks = policy["hooks"]
-    if not all(isinstance(calls, list) and all(isinstance(c, str) for c in calls) for calls in hooks.values()):
+    if not all(
+        isinstance(calls, list) and all(isinstance(c, str) for c in calls)
+        for calls in hooks.values()
+    ):
         sys.exit(f"{path}: hooks must map each upstream file to the calls it makes")
     return policy
 
@@ -61,11 +73,11 @@ def is_owned(path, owned):
 
 def measure(policy, revision):
     """Returns the metrics and, per upstream source file, its calls into SereinGram."""
-    numstat = git("diff", "--numstat", "--no-renames", policy["base"], revision)
+    numstat = git("diff", "--numstat", "--no-renames", "-z", policy["base"], revision)
     metrics = dict.fromkeys(METRICS, 0)
     calls = {}
-    for line in numstat.splitlines():
-        added, _, path = line.split("\t", 2)
+    for entry in filter(None, numstat.split("\0")):
+        added, _, path = entry.split("\t", 2)
         if is_owned(path, policy["owned"]):
             continue
         added = 0 if added == "-" else int(added)
@@ -75,10 +87,10 @@ def measure(policy, revision):
             continue
         metrics["source_files"] += 1
         metrics["source_added_lines"] += added
-        try:
-            text = git("show", f"{revision}:{path}")
-        except subprocess.CalledProcessError:
+        # A file SereinGram deleted makes no calls; any other failure to read one is an error.
+        if not exists(revision, path):
             continue
+        text = git("show", f"{revision}:{path}")
         found = Counter(HOOK_CALL.findall(text))
         if found:
             calls[path] = found
@@ -102,6 +114,13 @@ def main():
     parser.add_argument("--revision", default="HEAD")
     args = parser.parse_args()
     policy = load_policy(args.policy)
+    # A tree, such as the index from `git write-tree`, is checked as part of HEAD.
+    commit = args.revision if git("cat-file", "-t", args.revision).strip() == "commit" else "HEAD"
+    merged = ["git", "merge-base", "--is-ancestor", policy["base"], commit]
+    if subprocess.run(merged, cwd=ROOT, check=False).returncode != 0:
+        sys.exit(
+            f"{args.policy}: base {policy['base']} is not merged into {commit}; record the upstream commit last merged."
+        )
     metrics, calls = measure(policy, args.revision)
     failed = False
     print(f"{'metric':<20} {'current':>8} {'budget':>8}")
