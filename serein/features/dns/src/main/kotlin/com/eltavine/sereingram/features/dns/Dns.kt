@@ -48,10 +48,14 @@ public fun resolution(mode: Int, customServer: String): Resolution = when (DnsMo
     DnsMode.CUSTOM -> dohServer(customServer)?.let(Resolution::OverHttps) ?: Resolution.Default
 }
 
-/** [text] as the address of a DNS-over-HTTPS server: an https URL with a host and no user, else null. */
+/**
+ * [text] as the address of a DNS-over-HTTPS server: an https URL with a host, no user and,
+ * if any, a port that exists, which OkHttp refuses outright otherwise; else null.
+ */
 public fun dohServer(text: String): String? {
     val address = text.trim()
     val uri = runCatching { URI(address) }.getOrNull() ?: return null
-    val usable = uri.scheme.equals("https", ignoreCase = true) && !uri.host.isNullOrBlank() && uri.rawUserInfo == null
+    val usable = uri.scheme.equals("https", ignoreCase = true) && !uri.host.isNullOrBlank() && uri.rawUserInfo == null &&
+        (uri.port == -1 || uri.port in 1..65535)
     return address.takeIf { usable }
 }

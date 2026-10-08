@@ -31,6 +31,9 @@ class DnsTest {
         assertNull(dohServer("1.1.1.1"))
         assertNull(dohServer("https://exa mple/"))
         assertNull(dohServer(""))
+        assertEquals("https://dns.example:8443/dns-query", dohServer("https://dns.example:8443/dns-query"))
+        assertNull(dohServer("https://dns.example:0/dns-query"))
+        assertNull(dohServer("https://dns.example:99999/dns-query"), "OkHttp throws for a port that cannot exist")
     }
 
     @Test
