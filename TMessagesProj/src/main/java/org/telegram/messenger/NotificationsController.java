@@ -5171,6 +5171,7 @@ public class NotificationsController extends BaseController implements Notificat
                 photoPath = null;
                 canReply = false;
             }
+            if (sereinPasscodeLocked) canReply = false;
 
             if (photoPath != null) {
                 avatarFile = getFileLoader().getPathToAttach(photoPath, true);
