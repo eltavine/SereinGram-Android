@@ -6,7 +6,9 @@ import io.sentry.android.gradle.extensions.SentryPluginExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.withType
 
 /**
  * SereinGram's settings for the upstream app module. They are applied in
@@ -25,6 +27,8 @@ class SereinApplicationPlugin : Plugin<Project> {
             target.dependencies.add("implementation", target.libs.library("okhttp-dnsoverhttps"))
             target.dependencies.add("testImplementation", target.libs.library("archunit"))
             target.dependencies.add("testImplementation", target.libs.library("ktor-client-mock"))
+            // Robolectric loads all of the app's resources into each of its sandboxes, which outgrows the 512 MB a test JVM gets.
+            target.tasks.withType<Test>().configureEach { maxHeapSize = "2g" }
             val properties = SereinProperties(target)
             target.pluginManager.withPlugin("io.sentry.android.gradle") {
                 // SereinGram never starts Sentry, so its native crash handling and session replay only weigh.
