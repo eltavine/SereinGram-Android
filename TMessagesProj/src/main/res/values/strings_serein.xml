@@ -62,7 +62,7 @@
     <string name="serein_ghost_active">Use ghost mode</string>
     <string name="serein_ghost_indicator">Show a ghost beside the chat list title</string>
     <string name="serein_ghost_options">Ghost mode options</string>
-    <string name="serein_ghost_note">Ghost mode keeps your read receipts, online status, typing and story views to yourself. While read receipts are held back, SereinGram also keeps back reading channel comments and secret chats, and the channel posts you look at are not counted as views.</string>
+    <string name="serein_ghost_note">Ghost mode keeps your read receipts, online status, typing and story views to yourself. While read receipts are held back, SereinGram also keeps back reading channel comments, secret chats and the direct messages of channels you run, and the channel posts you look at are not counted as views.</string>
     <string name="serein_ghost_chat">Ghost mode in this chat</string>
     <string name="serein_ghost_chat_note">Let this chat see what ghost mode keeps from everyone else.</string>
     <string name="serein_ghost_chat_reads">Read receipts</string>

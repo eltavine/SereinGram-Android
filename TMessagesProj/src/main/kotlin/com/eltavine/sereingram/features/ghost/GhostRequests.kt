@@ -12,6 +12,7 @@ internal fun ghostTarget(request: Any): GhostTarget? = when (request) {
     is TLRPC.TL_channels_readMessageContents -> read(-request.channel.channel_id)
     is TLRPC.TL_messages_readDiscussion -> read(DialogObject.getPeerDialogId(request.peer))
     is TLRPC.TL_messages_readEncryptedHistory -> read(DialogObject.makeEncryptedDialogId(request.peer.chat_id.toLong()))
+    is TLRPC.TL_messages_readSavedHistory -> read(DialogObject.getPeerDialogId(request.parent_peer))
     is TLRPC.TL_messages_getMessagesViews -> read(DialogObject.getPeerDialogId(request.peer))
     is TLRPC.TL_messages_setTyping -> GhostTarget(GhostAction.TYPING, DialogObject.getPeerDialogId(request.peer))
     is TLRPC.TL_messages_setEncryptedTyping ->
@@ -25,6 +26,7 @@ private fun read(dialogId: Long) = GhostTarget(GhostAction.READ, dialogId)
 internal fun unheldRead(request: Any): UnheldRead? = when (request) {
     is TLRPC.TL_messages_readDiscussion -> UnheldRead.DISCUSSION
     is TLRPC.TL_messages_readEncryptedHistory -> UnheldRead.SECRET_CHAT
+    is TLRPC.TL_messages_readSavedHistory -> UnheldRead.DIRECT_MESSAGES
     is TLRPC.TL_messages_getMessagesViews -> UnheldRead.VIEW_COUNT.takeIf { request.increment }
     else -> null
 }

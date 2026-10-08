@@ -8,6 +8,9 @@ public enum class UnheldRead {
     /** Reading a secret chat. */
     SECRET_CHAT,
 
+    /** Reading a channel's direct messages, as one of its admins. */
+    DIRECT_MESSAGES,
+
     /** Counting a view of a channel post. */
     VIEW_COUNT,
 }

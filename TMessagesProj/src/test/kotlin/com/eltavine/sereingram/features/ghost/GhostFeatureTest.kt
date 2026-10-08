@@ -68,6 +68,11 @@ class GhostFeatureTest {
         assertFalse(views.increment)
         assertFalse(RequestHooks.intercept(ACCOUNT, discussion(5)))
         assertFalse(RequestHooks.intercept(ACCOUNT, TLRPC.TL_messages_readEncryptedHistory().apply { peer = TLRPC.TL_inputEncryptedChat() }))
+        val directMessages = TLRPC.TL_messages_readSavedHistory().apply {
+            parent_peer = TLRPC.TL_inputPeerChannel().apply { channel_id = 77 }
+            peer = user(5)
+        }
+        assertFalse(RequestHooks.intercept(ACCOUNT, directMessages))
         assertTrue(RequestHooks.intercept(ACCOUNT, TLRPC.TL_messages_sendMessage()))
     }
 
