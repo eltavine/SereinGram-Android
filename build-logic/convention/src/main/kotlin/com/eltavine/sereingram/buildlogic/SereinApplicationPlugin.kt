@@ -45,6 +45,9 @@ class SereinApplicationPlugin : Plugin<Project> {
                         )
                     }
                     android.defaultConfig.applicationId = APPLICATION_ID
+                    // Upstream reads these from a properties file only; CI passes them in the environment.
+                    telegramApiId(properties["TELEGRAM_APP_ID"])?.let { android.defaultConfig.buildConfigField("int", "APP_ID", it) }
+                    telegramApiHash(properties["TELEGRAM_APP_HASH"])?.let { android.defaultConfig.buildConfigField("String", "APP_HASH", "\"$it\"") }
                     val sha1 = signingCertificateSha1(properties["SEREIN_SIGNING_SHA1"])
                     android.defaultConfig.externalNativeBuild.cmake.arguments +=
                         "-DSEREIN_SIGNING_SHA1=$sha1"
@@ -111,4 +114,20 @@ internal fun signingCertificateSha1(value: String?): String {
         )
     }
     return hex
+}
+
+internal fun telegramApiId(value: String?): String? {
+    val id = value?.trim()?.takeIf(String::isNotEmpty) ?: return null
+    if (id.toIntOrNull()?.takeIf { it > 0 } == null) {
+        throw GradleException("TELEGRAM_APP_ID must be the api_id from my.telegram.org, a positive number.")
+    }
+    return id
+}
+
+internal fun telegramApiHash(value: String?): String? {
+    val hash = value?.trim()?.takeIf(String::isNotEmpty) ?: return null
+    if (!Regex("[0-9a-f]{32}").matches(hash)) {
+        throw GradleException("TELEGRAM_APP_HASH must be the api_hash from my.telegram.org, 32 hex digits.")
+    }
+    return hash
 }

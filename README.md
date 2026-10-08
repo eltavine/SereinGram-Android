@@ -186,7 +186,7 @@ Build:
    ./run libs native
    ```
 
-5. Fill out `TELEGRAM_APP_ID` and `TELEGRAM_APP_HASH` in **local.properties** (from [Telegram Developer](https://my.telegram.org/auth))
+5. Fill out `TELEGRAM_APP_ID` and `TELEGRAM_APP_HASH` in **local.properties** or the environment (from [Telegram Developer](https://my.telegram.org/auth)); without them the build keeps Nagram's.
 
 6. Replace **TMessagesProj/google-services.json** if you want FCM to work.
 
