@@ -2,6 +2,7 @@ package com.eltavine.sereingram.buildlogic
 
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.api.variant.ResValue
+import io.sentry.android.gradle.extensions.SentryPluginExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -24,9 +25,18 @@ class SereinApplicationPlugin : Plugin<Project> {
             target.dependencies.add("testImplementation", target.libs.library("archunit"))
             target.dependencies.add("testImplementation", target.libs.library("ktor-client-mock"))
             val properties = SereinProperties(target)
+            target.pluginManager.withPlugin("io.sentry.android.gradle") {
+                // SereinGram never starts Sentry, so its native crash handling and session replay only weigh.
+                target.configurations.configureEach {
+                    if (name.endsWith("RuntimeClasspath")) {
+                        SENTRY_UNUSED.forEach { exclude(mapOf("group" to "io.sentry", "module" to it)) }
+                    }
+                }
+            }
             target.extensions.configure<ApplicationAndroidComponentsExtension> {
                 target.checkAndroidGradlePluginVersion(pluginVersion)
                 finalizeDsl { android ->
+                    target.pluginManager.withPlugin("io.sentry.android.gradle") { quietSentry(target) }
                     if (android.compileSdk != AppLevels.COMPILE_SDK || android.defaultConfig.minSdk != AppLevels.MIN_SDK) {
                         throw GradleException(
                             "TMessagesProj builds against SDK ${android.compileSdk} for SDK ${android.defaultConfig.minSdk} and up; " +
@@ -71,7 +81,17 @@ class SereinApplicationPlugin : Plugin<Project> {
         }
     }
 
+    // After TMessagesProj/build.gradle set them, and before Sentry reads them for each variant.
+    private fun quietSentry(project: Project) {
+        project.extensions.configure<SentryPluginExtension> {
+            telemetry.set(false)
+            includeDependenciesReport.set(false)
+            tracingInstrumentation.enabled.set(false)
+        }
+    }
+
     private companion object {
+        val SENTRY_UNUSED = listOf("sentry-android-ndk", "sentry-native-ndk", "sentry-android-replay")
         const val APPLICATION_ID = "com.eltavine.sereingram"
         const val OVERLAY_RES = "src/serein/res"
         const val OVERLAY_MANIFEST = "src/serein/AndroidManifest.xml"
