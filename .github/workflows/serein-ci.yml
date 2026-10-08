@@ -191,9 +191,9 @@ jobs:
           git submodule status TMessagesProj/jni/third_party/dav1d > dav1d_status
           git submodule status TMessagesProj/jni/third_party/libvpx > libvpx_status
           git submodule status TMessagesProj/jni/boringssl > boringssl_status
-          git submodule status > native_status
+          git ls-tree -r HEAD | awk '$1 == "160000"' > native_status
 
-      # Submodules are pointers that hashFiles does not see, hence their status; the build
+      # Submodules are pointers that hashFiles does not see, hence their commits; the build
       # scripts, Gradle's CMake arguments, the NDK and the signing SHA-1 shape the library too.
       - name: Native library cache.
         id: cache
@@ -264,8 +264,9 @@ jobs:
       - name: Check out the libraries Gradle configures.
         run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath
 
+      # Read from the commit, as in the native jobs: a checked out submodule reports itself differently.
       - name: Fetch submodule status.
-        run: git submodule status > native_status
+        run: git ls-tree -r HEAD | awk '$1 == "160000"' > native_status
 
       - name: Native library (armeabi-v7a).
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
