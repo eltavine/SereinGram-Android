@@ -1,25 +1,33 @@
 package com.eltavine.sereingram.features.history
 
+import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.Options
+import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ChatObject
 import org.telegram.messenger.DialogObject
 import org.telegram.messenger.FileLoader
 import org.telegram.messenger.MessagesController
+import org.telegram.messenger.NotificationCenter
 import org.telegram.tgnet.TLRPC
 import java.io.File
+import java.util.concurrent.Executor
 
 /**
  * Copies of the photos and files of kept deleted messages under [root], one
  * folder per account, so that they outlive the cleaning of Telegram's cache.
- * [cachePath] is where Telegram keeps a message's media, [kindOf] the kind of a chat.
+ * Copies back into the cache happen on [io]; [cachePath] is where Telegram
+ * keeps a message's media, [kindOf] the kind of a chat, and [restored] tells
+ * Telegram that a message's media is there again.
  */
 internal class MediaBackups(
     private val root: File,
     private val options: Options,
+    private val io: Executor,
     private val cachePath: (account: Int, message: TLRPC.Message) -> File? = { account, message ->
         FileLoader.getInstance(account).getPathToMessage(message)
     },
     private val kindOf: (account: Int, dialogId: Long) -> ChatKind? = ::telegramChatKind,
+    private val restored: (account: Int, message: TLRPC.Message, file: File) -> Unit = ::announce,
 ) {
     /** Copies the media of [message], which Telegram leaves in its cache once it is deleted. */
     fun backUp(account: Int, dialogId: Long, message: TLRPC.Message) {
@@ -33,15 +41,24 @@ internal class MediaBackups(
         }
     }
 
-    /** Puts the copy back where Telegram looks for the media, when its own one is gone. */
+    /**
+     * Puts the copy back where Telegram looks for the media, when its own one is
+     * gone. The copy happens later on [io], since files may be large and history
+     * loads on a queue all of Telegram's storage waits for.
+     */
     fun restore(account: Int, dialogId: Long, message: TLRPC.Message) {
         if (!hasMedia(message)) {
             return
         }
-        val target = cachePath(account, message) ?: return
-        val backup = file(account, dialogId, message.id)
-        if (!target.exists() && backup.exists()) {
-            copyWhole(backup, target)
+        io.execute {
+            Faults.guard("history media restore", fallback = Unit) {
+                val target = cachePath(account, message) ?: return@guard
+                val backup = file(account, dialogId, message.id)
+                if (!target.exists() && backup.exists()) {
+                    copyWhole(backup, target)
+                    restored(account, message, target)
+                }
+            }
         }
     }
 
@@ -92,4 +109,12 @@ private fun telegramChatKind(account: Int, dialogId: Long): ChatKind? = when {
     dialogId > 0 -> ChatKind.PRIVATE
     ChatObject.isChannelAndNotMegaGroup(MessagesController.getInstance(account).getChat(-dialogId)) -> ChatKind.CHANNEL
     else -> ChatKind.GROUP
+}
+
+// What Telegram announces when a download ends, so the message shows its media.
+private fun announce(account: Int, message: TLRPC.Message, file: File) {
+    val name = FileLoader.getMessageFileName(message)
+    AndroidUtilities.runOnUIThread {
+        NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.fileLoaded, name, file)
+    }
 }

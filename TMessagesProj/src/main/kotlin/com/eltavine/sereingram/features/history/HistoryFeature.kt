@@ -37,7 +37,7 @@ class HistoryFeature(
     private lateinit var mediaBackups: MediaBackups
 
     override fun start(context: ModuleContext) {
-        val backups = MediaBackups(mediaRoot, context.options)
+        val backups = MediaBackups(mediaRoot, context.options, writer)
         mediaBackups = backups
         val recorder = HistoryRecorder(context.options, stores, writer, revised, deletedByUser, backups)
         HistoryHooks.userDeletionListeners.install(recorder::beforeUserDeletes)

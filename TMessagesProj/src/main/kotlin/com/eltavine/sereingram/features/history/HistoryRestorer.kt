@@ -64,7 +64,7 @@ internal class HistoryRestorer(
         }
         val restored = records.map { decode(account, dialogId, it) }
         restored.forEach { message ->
-            Faults.guard("history media restore", fallback = Unit) { backups.restore(account, dialogId, message) }
+            backups.restore(account, dialogId, message)
             messages.add(insertionIndex(messages.map { (it as? TLRPC.Message)?.id }, message.id), message)
         }
         addSenders(account, restored, users, chats)

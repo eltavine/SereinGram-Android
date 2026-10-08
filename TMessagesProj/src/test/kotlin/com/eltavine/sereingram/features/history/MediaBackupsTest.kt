@@ -14,6 +14,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.telegram.tgnet.TLRPC
 import java.io.File
+import java.util.concurrent.Executor
 
 @RunWith(RobolectricTestRunner::class)
 @Config(application = Application::class)
@@ -22,11 +23,17 @@ class MediaBackupsTest {
     val folder = TemporaryFolder()
 
     private val options = Options { _, _ -> MemoryKeyValueStore() }
+    private val restored = mutableListOf<String>()
     private val cache by lazy { folder.newFolder("cache") }
     private val backups by lazy {
-        MediaBackups(folder.newFolder("backups"), options, cachePath = { _, message -> File(cache, "${message.id}.jpg") }) { _, dialogId ->
-            if (dialogId > 0) ChatKind.PRIVATE else ChatKind.CHANNEL
-        }
+        MediaBackups(
+            folder.newFolder("backups"),
+            options,
+            io = Executor(Runnable::run),
+            cachePath = { _, message -> File(cache, "${message.id}.jpg") },
+            kindOf = { _, dialogId -> if (dialogId > 0) ChatKind.PRIVATE else ChatKind.CHANNEL },
+            restored = { _, message, file -> restored += "${message.id}:${file.name}" },
+        )
     }
 
     private fun photo(id: Int) = TLRPC.TL_message().apply {
@@ -43,6 +50,9 @@ class MediaBackupsTest {
         original.delete()
         backups.restore(0, 42, photo(5))
         assertEquals("photo 5", original.readText())
+        assertEquals("Telegram hears that the media is back", listOf("5:5.jpg"), restored)
+        backups.restore(0, 42, photo(5))
+        assertEquals("media Telegram still has is left alone", listOf("5:5.jpg"), restored)
         assertFalse(File(cache, "5.jpg.part").exists())
     }
 
