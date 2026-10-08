@@ -22,6 +22,12 @@ public class LocalNames(private val stores: (account: Int) -> LocalNameStore) {
         return kept
     }
 
+    /** Removes every local name of [account], from the store and from memory. */
+    public fun forget(account: Int) {
+        stores(account).clearAll()
+        accounts.remove(account)
+    }
+
     private fun names(account: Int): ConcurrentHashMap<Long, String> =
         accounts.getOrPut(account) { ConcurrentHashMap(stores(account).all()) }
 }
@@ -64,5 +70,9 @@ public class OriginalNames {
 
     public fun forget(account: Int, peerId: Long) {
         names.remove(account to peerId)
+    }
+
+    public fun forgetAccount(account: Int) {
+        names.keys.removeIf { it.first == account }
     }
 }

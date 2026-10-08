@@ -64,4 +64,18 @@ class RestoringTest {
         assertEquals(200L, deletedAt[0, 1, 5])
         assertNull(deletedAt[1, 1, 5])
     }
+
+    @Test
+    fun aForgottenAccountLeavesNothingForTheNextOneInItsPlace() {
+        val deletedAt = MessageMap<Long>()
+        deletedAt.put(0, -100, 5, 100L)
+        deletedAt.put(1, -100, 5, 200L)
+        deletedAt.forget(0)
+        assertNull(deletedAt[0, -100, 5])
+        assertEquals(200L, deletedAt[1, -100, 5])
+        val revised = MessageSet()
+        revised.add(0, -100, listOf(5))
+        revised.forget(0)
+        assertFalse(revised.contains(0, -100, 5))
+    }
 }

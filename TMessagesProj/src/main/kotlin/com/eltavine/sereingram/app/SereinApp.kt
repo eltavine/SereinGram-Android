@@ -35,6 +35,7 @@ import com.eltavine.sereingram.ports.LocalNameStore
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.support.Logouts
 import org.telegram.messenger.FileLog
 import org.telegram.messenger.R
 import java.io.File
@@ -57,7 +58,9 @@ object SereinApp {
         Faults.reporters.install { message, error -> FileLog.e("SereinGram: $message", error) }
         options = Options(PreferencesStores(application))
         val modules = modules(application)
-        modules.start(ModuleContext(options, Faults::report))
+        val context = ModuleContext(options, Faults::report)
+        modules.start(context)
+        Logouts.observe { account -> modules.forgetAccount(account, context) }
         installSettingsEntry(options, listOf(featuresSection(modules), BackupSettings.section(options, modules.options)))
     }
 

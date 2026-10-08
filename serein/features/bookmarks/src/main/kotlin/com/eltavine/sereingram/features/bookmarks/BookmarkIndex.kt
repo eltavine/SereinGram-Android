@@ -45,6 +45,13 @@ public class BookmarkIndex {
         }
     }
 
+    /** Drops [account] until it is loaded again. */
+    @Synchronized
+    public fun forget(account: Int) {
+        loaded.remove(account)
+        pending.remove(account)
+    }
+
     private fun HashMap<Long, MutableSet<Int>>.mark(dialogId: Long, messageId: Int, bookmarked: Boolean) {
         if (bookmarked) {
             getOrPut(dialogId, ::HashSet) += messageId

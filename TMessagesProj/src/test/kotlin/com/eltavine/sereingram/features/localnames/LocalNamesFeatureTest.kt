@@ -98,6 +98,8 @@ class LocalNamesFeatureTest {
         override fun all(): Map<Long, String> = names
 
         override fun set(peerId: Long, name: String?) = Unit
+
+        override fun clearAll() = Unit
     }
 
     private companion object {

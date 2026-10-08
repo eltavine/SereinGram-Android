@@ -46,6 +46,11 @@ public class RoomHistoryStore internal constructor(private val database: History
         dao.clear(dialogId)
     }
 
+    // Room vacuums the database after emptying it, so the rows are gone from the file too.
+    override fun clearAll() {
+        database.clearAllTables()
+    }
+
     internal fun close() {
         database.close()
     }

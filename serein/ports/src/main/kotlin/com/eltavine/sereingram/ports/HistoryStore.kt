@@ -61,4 +61,7 @@ public interface HistoryStore {
     public fun chats(kind: RecordKind): List<KeptChat>
 
     public fun clear(dialogId: Long)
+
+    /** Erases everything kept for the account, for good. */
+    public fun clearAll()
 }

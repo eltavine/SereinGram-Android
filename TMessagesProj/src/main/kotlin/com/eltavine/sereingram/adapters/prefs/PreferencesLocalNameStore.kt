@@ -17,4 +17,8 @@ internal class PreferencesLocalNameStore(context: Context, account: Int) : Local
         if (name.isNullOrBlank()) editor.remove(peerId.toString()) else editor.putString(peerId.toString(), name.trim())
         editor.apply()
     }
+
+    override fun clearAll() {
+        preferences.edit().clear().commit()
+    }
 }

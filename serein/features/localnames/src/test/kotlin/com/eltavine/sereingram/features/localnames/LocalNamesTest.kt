@@ -18,6 +18,8 @@ class LocalNamesTest {
         override fun set(peerId: Long, name: String?) {
             if (name == null) names.remove(peerId) else names[peerId] = name
         }
+
+        override fun clearAll() = names.clear()
     }
 
     @Test
@@ -30,6 +32,23 @@ class LocalNamesTest {
         assertEquals("Book club", stores.getValue(0).names[-100L])
         assertEquals(mapOf(7L to "Mum", -100L to "Book club"), names.all(0))
         assertEquals(1, stores.getValue(0).reads)
+    }
+
+    @Test
+    fun forgettingAnAccountErasesItsNamesAndOnlyIts() {
+        val stores = mapOf(0 to MemoryStore(mapOf(7L to "Mum")), 1 to MemoryStore(mapOf(7L to "Dad")))
+        val names = LocalNames { stores.getValue(it) }
+        assertEquals("Mum", names.of(0, 7))
+        names.forget(0)
+        assertNull(names.of(0, 7))
+        assertEquals(emptyMap(), stores.getValue(0).names)
+        assertEquals("Dad", names.of(1, 7))
+        val originals = OriginalNames()
+        originals.replace(0, 7, PeerName("Alice"), "Mum")
+        originals.replace(1, 7, PeerName("Bob"), "Dad")
+        originals.forgetAccount(0)
+        assertNull(originals.of(0, 7))
+        assertEquals(PeerName("Bob"), originals.of(1, 7))
     }
 
     @Test

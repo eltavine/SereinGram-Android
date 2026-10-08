@@ -35,6 +35,11 @@ public class RoomBookmarkStore internal constructor(private val database: Bookma
 
     override fun inChat(dialogId: Long): List<Bookmark> = dao.inChat(dialogId).map(::bookmark)
 
+    // Room vacuums the database after emptying it, so the rows are gone from the file too.
+    override fun clearAll() {
+        database.clearAllTables()
+    }
+
     internal fun close() {
         database.close()
     }

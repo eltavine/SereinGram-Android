@@ -101,4 +101,11 @@ class RoomHistoryStoreTest {
         assertEquals(0, store.count(1L, RecordKind.DELETED))
         assertEquals(1, store.count(2L, RecordKind.DELETED))
     }
+
+    @Test
+    fun clearingErasesEveryChatAndKind() {
+        store.add(listOf(record(RecordKind.DELETED, 1, dialogId = 1L), record(RecordKind.EDITED, 2, dialogId = 2L)))
+        store.clearAll()
+        assertEquals(emptyList(), store.chats(RecordKind.DELETED) + store.chats(RecordKind.EDITED))
+    }
 }

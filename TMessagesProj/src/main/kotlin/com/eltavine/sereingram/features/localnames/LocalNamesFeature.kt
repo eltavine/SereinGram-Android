@@ -72,6 +72,11 @@ class LocalNamesFeature(stores: (account: Int) -> LocalNameStore) : SereinModule
         }
     }
 
+    override fun forgetAccount(account: Int) {
+        names.forget(account)
+        originals.forgetAccount(account)
+    }
+
     private fun rename(account: Int, user: TLRPC.User) {
         val local = names.of(account, user.id) ?: return
         val shown = originals.replace(account, user.id, nameOf(user), local) ?: return

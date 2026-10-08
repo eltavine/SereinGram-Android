@@ -6,4 +6,7 @@ public interface LocalNameStore {
 
     /** A null or blank [name] removes the local name. */
     public fun set(peerId: Long, name: String?)
+
+    /** Removes every local name of the account. */
+    public fun clearAll()
 }

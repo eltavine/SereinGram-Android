@@ -43,4 +43,12 @@ class RoomBookmarkStoreTest {
         store.remove(-100, 5)
         assertEquals(emptyList(), store.all())
     }
+
+    @Test
+    fun clearingErasesEveryBookmark() {
+        store.add(bookmark(-100, 5, createdAt = 1))
+        store.add(bookmark(42, 3, createdAt = 2))
+        store.clearAll()
+        assertEquals(emptyList(), store.all())
+    }
 }

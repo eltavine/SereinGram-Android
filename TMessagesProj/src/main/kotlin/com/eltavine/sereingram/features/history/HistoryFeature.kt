@@ -1,5 +1,6 @@
 package com.eltavine.sereingram.features.history
 
+import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.ModuleContext
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.SereinModule
@@ -29,13 +30,13 @@ class HistoryFeature(
 
     override val options: List<Option<*>> = HistoryOptions.all
 
+    private val writer = Executors.newSingleThreadExecutor { Thread(it, "serein-history") }
+    private val kept = MessageMap<Long>()
+    private val revised = MessageSet()
+    private val deletedByUser = MessageSet()
     private lateinit var mediaBackups: MediaBackups
 
     override fun start(context: ModuleContext) {
-        val writer = Executors.newSingleThreadExecutor { Thread(it, "serein-history") }
-        val kept = MessageMap<Long>()
-        val revised = MessageSet()
-        val deletedByUser = MessageSet()
         val backups = MediaBackups(mediaRoot, context.options)
         mediaBackups = backups
         val recorder = HistoryRecorder(context.options, stores, writer, revised, deletedByUser, backups)
@@ -50,6 +51,16 @@ class HistoryFeature(
         MessageMenuHooks.entries.install(EditHistoryEntry(stores, revised))
         MessageMenuHooks.entries.install(DeletedAtEntry(kept))
         ChatMenuHooks.entries.install(DeletedMessagesEntry(context.options, stores, backups))
+    }
+
+    override fun forgetAccount(account: Int) {
+        kept.forget(account)
+        revised.forget(account)
+        deletedByUser.forget(account)
+        writer.execute {
+            Faults.guard("history clear", fallback = Unit) { stores(account).clearAll() }
+            Faults.guard("media backups clear", fallback = Unit) { mediaBackups.forgetAccount(account) }
+        }
     }
 
     override val settingsIcon: Int = R.drawable.msg_recent

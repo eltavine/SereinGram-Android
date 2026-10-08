@@ -46,6 +46,10 @@ public class MessageSet(capacity: Int = 10_000) {
     }
 
     public fun contains(account: Int, dialogId: Long, messageId: Int): Boolean = messages[account, dialogId, messageId] != null
+
+    public fun forget(account: Int) {
+        messages.forget(account)
+    }
 }
 
 /** A value per message by account and chat, bounded so that it cannot grow without end. */
@@ -63,4 +67,9 @@ public class MessageMap<V : Any>(private val capacity: Int = 10_000) {
 
     @Synchronized
     public operator fun get(account: Int, dialogId: Long, messageId: Int): V? = values[Key(account, dialogId, messageId)]
+
+    @Synchronized
+    public fun forget(account: Int) {
+        values.keys.removeIf { it.account == account }
+    }
 }

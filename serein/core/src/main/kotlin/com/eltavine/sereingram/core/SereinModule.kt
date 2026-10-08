@@ -14,6 +14,13 @@ public interface SereinModule {
 
     /** Runs once while the application starts; install hook handlers here. */
     public fun start(context: ModuleContext) {}
+
+    /**
+     * Forgets whatever the module keeps for [account] apart from its options,
+     * once the account has logged out and before another account may take its
+     * place. Runs on the UI thread; slow work may go to the module's own thread.
+     */
+    public fun forgetAccount(account: Int) {}
 }
 
 public class ModuleContext(
@@ -33,15 +40,25 @@ public class ModuleRegistry(public val modules: List<SereinModule>) {
 
     /** Starts every module; one that throws is reported and skipped, and the rest still start. */
     public fun start(context: ModuleContext) {
+        modules.forEach { module -> guarded(context, "module ${module.id} failed to start") { module.start(context) } }
+    }
+
+    /** Resets [account]'s options and has every module forget what else it keeps for the account. */
+    public fun forgetAccount(account: Int, context: ModuleContext) {
+        options.filter { it.scope == OptionScope.ACCOUNT }.forEach { context.options.reset(it, account) }
         modules.forEach { module ->
-            try {
-                module.start(context)
-            } catch (error: Throwable) {
-                if (error is VirtualMachineError) {
-                    throw error
-                }
-                context.report("module ${module.id} failed to start", error)
+            guarded(context, "module ${module.id} failed to forget an account") { module.forgetAccount(account) }
+        }
+    }
+
+    private inline fun guarded(context: ModuleContext, failure: String, run: () -> Unit) {
+        try {
+            run()
+        } catch (error: Throwable) {
+            if (error is VirtualMachineError) {
+                throw error
             }
+            context.report(failure, error)
         }
     }
 

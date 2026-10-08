@@ -21,4 +21,7 @@ public interface BookmarkStore {
 
     /** The bookmarks of one chat, newest message first. */
     public fun inChat(dialogId: Long): List<Bookmark>
+
+    /** Erases every bookmark of the account, for good. */
+    public fun clearAll()
 }

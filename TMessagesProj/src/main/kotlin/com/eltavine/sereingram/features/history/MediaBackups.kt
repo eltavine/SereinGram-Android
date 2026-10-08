@@ -53,6 +53,10 @@ internal class MediaBackups(
         folder(account).listFiles { file -> isBackupOf(file.name, dialogId) }?.forEach(File::delete)
     }
 
+    fun forgetAccount(account: Int) {
+        folder(account).deleteRecursively()
+    }
+
     private fun policy(account: Int) = MediaBackupPolicy(
         enabled = options.get(HistoryOptions.backupMedia, account),
         kinds = buildSet {

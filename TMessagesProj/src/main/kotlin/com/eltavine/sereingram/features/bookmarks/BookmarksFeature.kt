@@ -39,6 +39,11 @@ class BookmarksFeature(private val stores: (account: Int) -> BookmarkStore) : Se
         }
     }
 
+    override fun forgetAccount(account: Int) {
+        index.forget(account)
+        io.execute { Faults.guard("bookmark clear", fallback = Unit) { stores(account).clearAll() } }
+    }
+
     internal fun isBookmarked(account: Int, dialogId: Long, messageId: Int): Boolean {
         loadLater(account)
         return index.contains(account, dialogId, messageId)

@@ -47,6 +47,17 @@ class BookmarkIndexTest {
     }
 
     @Test
+    fun aForgottenAccountHasNothingUntilItLoadsAgain() {
+        val index = BookmarkIndex()
+        index.load(0, listOf(bookmark(-100, 5)))
+        index.load(1, listOf(bookmark(-100, 5)))
+        index.forget(0)
+        assertFalse(index.isLoaded(0))
+        assertFalse(index.contains(0, -100, 5))
+        assertTrue(index.contains(1, -100, 5))
+    }
+
+    @Test
     fun snippetsAreOneLineAndCutWithAnEllipsis() {
         assertEquals("two lines", snippet("  two\n   lines "))
         assertEquals("abcd…", snippet("abcdefgh", limit = 5))
