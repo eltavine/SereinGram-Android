@@ -2084,6 +2084,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         if (messages == null || messages.isEmpty()) {
             return 0;
         }
+        int sereinDate = suggestionParams == null ? com.eltavine.sereingram.hooks.SendHooks.forwardScheduleDate(currentAccount, peer, scheduleDate) : scheduleDate; if (sereinDate != scheduleDate) return sendMessage(messages, peer, forwardFromMyName, hideCaption, notify, sereinDate, scheduleRepeatPeriod, replyToTopMsg, video_timestamp, payStars, monoForumPeerId, suggestionParams);
         int sendResult = 0;
         long myId = getUserConfig().getClientUserId();
         boolean isChannel = false;

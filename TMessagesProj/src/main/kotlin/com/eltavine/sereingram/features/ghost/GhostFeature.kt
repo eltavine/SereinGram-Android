@@ -37,7 +37,9 @@ object GhostFeature : SereinModule, SettingsContributor {
         SecretChatHooks.readPolicies.install(gate::sendsSecretRead)
         ChatMenuHooks.entries.install(GhostChatEntry(gate))
         DialogsHooks.titleStatuses.install(GhostIndicator(context.options))
-        SendHooks.rewriters.install(GhostSending(context.options))
+        val sending = GhostSending(context.options)
+        SendHooks.rewriters.install(sending)
+        SendHooks.forwardSchedulers.install(sending)
         context.options.addListener { option, _ ->
             if (option == GhostOptions.statusIndicator) {
                 GhostIndicator.refresh()

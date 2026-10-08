@@ -48,4 +48,20 @@ class SendHooksTest {
             assertFalse(SendHooks.asksBeforeSendingSticker(0, null, {}))
         }
     }
+
+    @Test
+    fun schedulersMoveForwardsAndABrokenOneLeavesThemAlone() {
+        assertEquals(0, SendHooks.forwardScheduleDate(0, 42, 0))
+        val installs = listOf(
+            SendHooks.forwardSchedulers.install { _, _, _ -> throw IllegalStateException() },
+            SendHooks.forwardSchedulers.install { _, peer, date -> if (date == 0 && peer == 42L) 1_012 else date },
+        )
+        try {
+            assertEquals(1_012, SendHooks.forwardScheduleDate(0, 42, 0))
+            assertEquals(5_000, SendHooks.forwardScheduleDate(0, 42, 5_000))
+            assertEquals(0, SendHooks.forwardScheduleDate(0, 7, 0))
+        } finally {
+            installs.forEach(AutoCloseable::close)
+        }
+    }
 }

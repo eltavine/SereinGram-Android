@@ -8,13 +8,13 @@ import org.telegram.messenger.UserConfig
 import org.telegram.tgnet.ConnectionsManager
 
 /**
- * Sends messages a moment later as scheduled ones while ghost mode hides the
- * online status; [now] is Telegram's server time in seconds.
+ * Sends and forwards messages a moment later as scheduled ones while ghost
+ * mode hides the online status; [now] is Telegram's server time in seconds.
  */
 internal class GhostSending(
     private val options: Options,
     private val now: (account: Int) -> Int = { ConnectionsManager.getInstance(it).currentTime },
-) : SendHooks.Rewriter {
+) : SendHooks.Rewriter, SendHooks.ForwardScheduler {
     override fun beforeSend(account: Int, message: Any) {
         if (!options.get(GhostOptions.sendScheduled)) {
             return
@@ -28,6 +28,14 @@ internal class GhostSending(
             schedulable = schedulable(account, params),
         )
     }
+
+    override fun scheduleDate(account: Int, peer: Long, scheduleDate: Int): Int = ghostScheduleDate(
+        scheduleDate,
+        now = now(account),
+        onlineHidden = NagramGhost.onlineHidden,
+        enabled = options.get(GhostOptions.sendScheduled),
+        schedulable = !DialogObject.isEncryptedDialog(peer) && peer != UserConfig.getInstance(account).clientUserId,
+    )
 
     // Quick replies, retries, suggested posts and the like have their own timing.
     private fun schedulable(account: Int, params: SendMessagesHelper.SendMessageParams): Boolean =

@@ -10,6 +10,11 @@ public object SendHooks {
         public fun beforeSend(account: Int, message: Any)
     }
 
+    public fun interface ForwardScheduler {
+        /** The date to schedule a forward to [peer] for, given the one Telegram has; 0 forwards right away. */
+        public fun scheduleDate(account: Int, peer: Long, scheduleDate: Int): Int
+    }
+
     /** What is about to be sent with a single tap in the sticker and GIF panel. */
     public enum class Tapped { STICKER, GIF }
 
@@ -19,6 +24,7 @@ public object SendHooks {
     }
 
     public val rewriters: Handlers<Rewriter> = Handlers()
+    public val forwardSchedulers: Handlers<ForwardScheduler> = Handlers()
     public val confirmers: Handlers<Confirmer> = Handlers()
 
     @JvmStatic
@@ -27,6 +33,13 @@ public object SendHooks {
             Faults.guard("send rewriter", fallback = Unit) { rewriter.beforeSend(account, message) }
         }
     }
+
+    /** When forwarded messages go out: at [scheduleDate], unless a scheduler moves them. */
+    @JvmStatic
+    public fun forwardScheduleDate(account: Int, peer: Long, scheduleDate: Int): Int =
+        forwardSchedulers.all.fold(scheduleDate) { date, scheduler ->
+            Faults.guard("forward scheduler", fallback = date) { scheduler.scheduleDate(account, peer, date) }
+        }
 
     /** Whether sending a sticker waits for the user; Telegram sends right away when this is false. */
     @JvmStatic

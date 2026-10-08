@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 326,
-    "all_added_lines": 315,
+    "all_added_lines": 316,
     "source_files": 38,
-    "source_added_lines": 95
+    "source_added_lines": 96
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -69,7 +69,8 @@
     ],
     "TMessagesProj/src/main/java/org/telegram/messenger/SendMessagesHelper.java": [
       "hooks.PeerHooks.originalUser",
-      "hooks.SendHooks.beforeSend"
+      "hooks.SendHooks.beforeSend",
+      "hooks.SendHooks.forwardScheduleDate"
     ],
     "TMessagesProj/src/main/java/org/telegram/messenger/WearReplyReceiver.java": [
       "hooks.NotificationHooks.sendsPlainAnswers"
