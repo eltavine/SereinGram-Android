@@ -1,0 +1,121 @@
+name: SereinGram Nightly
+
+# Every commit that passes CI on main is built, signed with the release key and sent to the
+# Telegram channel. The signing key and the bot's token are secrets of the telegram environment.
+on:
+  workflow_run:
+    workflows:
+      - SereinGram CI
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: serein-nightly
+  # Only the newest commit is worth sending.
+  cancel-in-progress: true
+
+env:
+  NDK_VERSION: 27.2.12479018
+  SEREIN_SIGNING_SHA1: ${{ vars.SEREIN_SIGNING_SHA1 }}
+  TELEGRAM_CHAT_ID: "-1004356403303"
+
+jobs:
+  publish:
+    name: Build and send
+    # Only commits pushed to main, not proposed ones, and only once CI passed.
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    environment: telegram
+    services:
+      # The Bot API server Telegram publishes, which takes uploads past the cloud server's 50 MB.
+      bot-api:
+        image: aiogram/telegram-bot-api:10.3@sha256:ad102551801fd4afbfbe76c153c0f9d92855a4ba77a0eff15c2ad59b772b23c5
+        env:
+          # Telegram's own published API credentials, until SereinGram has its own.
+          TELEGRAM_API_ID: "4"
+          TELEGRAM_API_HASH: 014b35b6184100b085b0d0572f9b5103
+          # Local mode is what lifts the upload limit to 2000 MB.
+          TELEGRAM_LOCAL: "1"
+        ports:
+          - 8081:8081
+    steps:
+      - name: Clone the commit CI passed.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Check out the libraries Gradle configures.
+        run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath
+
+      - name: Check the secrets of the telegram environment.
+        id: secrets
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+          ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
+          ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
+        run: |
+          missing=()
+          for name in TELEGRAM_BOT_TOKEN KEYSTORE_BASE64 KEYSTORE_PASS ALIAS_NAME ALIAS_PASS; do
+            [ -n "${!name}" ] || missing+=("$name")
+          done
+          if [ "${#missing[@]}" -ne 0 ]; then
+            echo "::warning::Nightly builds start once the telegram environment has these secrets: ${missing[*]}"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up uv.
+        if: steps.secrets.outputs.ready == 'true'
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          enable-cache: false
+
+      - name: Build the APKs.
+        if: steps.secrets.outputs.ready == 'true'
+        id: build
+        uses: ./.github/actions/build-apks
+        with:
+          ndk-version: ${{ env.NDK_VERSION }}
+          signing-sha1: ${{ env.SEREIN_SIGNING_SHA1 }}
+          keystore-base64: ${{ secrets.KEYSTORE_BASE64 }}
+          keystore-password: ${{ secrets.KEYSTORE_PASS }}
+          key-alias: ${{ secrets.ALIAS_NAME }}
+          key-password: ${{ secrets.ALIAS_PASS }}
+
+      - name: Check who signed the APKs.
+        if: steps.secrets.outputs.ready == 'true'
+        id: verify
+        env:
+          APK_DIR: ${{ steps.build.outputs.apk-dir }}
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+          ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
+        run: uv run Tools/serein/ci/release.py verify --apk-dir "$APK_DIR"
+
+      - name: Keep the APKs.
+        if: steps.secrets.outputs.ready == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: SereinGram-nightly-${{ github.event.workflow_run.head_sha }}
+          path: ${{ steps.build.outputs.apk-dir }}/*.apk
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+      - name: Send the APKs to Telegram.
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          APK_DIR: ${{ steps.build.outputs.apk-dir }}
+          SIGNER: ${{ steps.verify.outputs.signer }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: uv run Tools/serein/ci/release.py publish --apk-dir "$APK_DIR" --channel Nightly --chat-id "$TELEGRAM_CHAT_ID" --signer "$SIGNER"
