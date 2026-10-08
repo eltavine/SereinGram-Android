@@ -13,7 +13,7 @@ internal class PreferencesStores(private val context: Context) : Options.StorePr
 
     override fun store(scope: OptionScope, account: Int): KeyValueStore {
         val name = if (scope == OptionScope.DEVICE) "serein" else "serein_account$account"
-        return stores.getOrPut(name) { PreferencesStore(context.getSharedPreferences(name, Context.MODE_PRIVATE)) }
+        return stores.computeIfAbsent(name) { PreferencesStore(context.getSharedPreferences(name, Context.MODE_PRIVATE)) }
     }
 }
 

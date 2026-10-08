@@ -76,13 +76,13 @@ object SereinApp {
                 ChatShortcutsFeature,
                 DeclutterFeature,
                 HistoryFeature(File(application.filesDir, "serein_media")) { account ->
-                    historyStores.getOrPut(account) { RoomHistoryStore(application, account) }
+                    historyStores.computeIfAbsent(account) { RoomHistoryStore(application, account) }
                 },
-                BookmarksFeature { account -> bookmarkStores.getOrPut(account) { RoomBookmarkStore(application, account) } },
+                BookmarksFeature { account -> bookmarkStores.computeIfAbsent(account) { RoomBookmarkStore(application, account) } },
                 GhostFeature,
                 InputFeature,
                 LinksFeature,
-                LocalNamesFeature { account -> localNameStores.getOrPut(account) { PreferencesLocalNameStore(application, account) } },
+                LocalNamesFeature { account -> localNameStores.computeIfAbsent(account) { PreferencesLocalNameStore(application, account) } },
                 MessageMenuFeature,
                 NotificationsFeature,
                 PlaybackFeature,
