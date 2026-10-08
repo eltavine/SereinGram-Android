@@ -4,35 +4,52 @@ import com.eltavine.sereingram.ports.Bookmark
 
 /**
  * Which messages are bookmarked, per account, so that menus can tell on the
- * UI thread. An account counts as loaded once [load] gave it its bookmarks.
+ * UI thread. An account counts as loaded once [load] gave it its bookmarks;
+ * changes made before then are kept apart and win over what is loaded, since
+ * the load may have read the store before they reached it.
  */
 public class BookmarkIndex {
-    private val accounts = HashMap<Int, HashMap<Long, MutableSet<Int>>>()
+    private val loaded = HashMap<Int, HashMap<Long, MutableSet<Int>>>()
+    private val pending = HashMap<Int, LinkedHashMap<Pair<Long, Int>, Boolean>>()
 
     @Synchronized
     public fun load(account: Int, bookmarks: List<Bookmark>) {
         val chats = HashMap<Long, MutableSet<Int>>()
         bookmarks.forEach { chats.getOrPut(it.dialogId, ::HashSet) += it.messageId }
-        accounts[account] = chats
+        pending.remove(account)?.forEach { (message, bookmarked) -> chats.mark(message.first, message.second, bookmarked) }
+        loaded[account] = chats
     }
 
     @Synchronized
-    public fun isLoaded(account: Int): Boolean = account in accounts
+    public fun isLoaded(account: Int): Boolean = account in loaded
 
     @Synchronized
-    public fun contains(account: Int, dialogId: Long, messageId: Int): Boolean =
-        accounts[account]?.get(dialogId)?.contains(messageId) == true
+    public fun contains(account: Int, dialogId: Long, messageId: Int): Boolean {
+        val chats = loaded[account] ?: return pending[account]?.get(dialogId to messageId) == true
+        return chats[dialogId]?.contains(messageId) == true
+    }
 
     @Synchronized
-    public fun hasAny(account: Int, dialogId: Long): Boolean = accounts[account]?.get(dialogId)?.isNotEmpty() == true
+    public fun hasAny(account: Int, dialogId: Long): Boolean {
+        val chats = loaded[account] ?: return pending[account]?.any { (message, bookmarked) -> message.first == dialogId && bookmarked } == true
+        return chats[dialogId]?.isNotEmpty() == true
+    }
 
     @Synchronized
     public fun set(account: Int, dialogId: Long, messageId: Int, bookmarked: Boolean) {
-        val chats = accounts.getOrPut(account, ::HashMap)
-        if (bookmarked) {
-            chats.getOrPut(dialogId, ::HashSet) += messageId
+        val chats = loaded[account]
+        if (chats == null) {
+            pending.getOrPut(account, ::LinkedHashMap)[dialogId to messageId] = bookmarked
         } else {
-            chats[dialogId]?.remove(messageId)
+            chats.mark(dialogId, messageId, bookmarked)
+        }
+    }
+
+    private fun HashMap<Long, MutableSet<Int>>.mark(dialogId: Long, messageId: Int, bookmarked: Boolean) {
+        if (bookmarked) {
+            getOrPut(dialogId, ::HashSet) += messageId
+        } else {
+            get(dialogId)?.remove(messageId)
         }
     }
 }

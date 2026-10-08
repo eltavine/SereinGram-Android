@@ -33,6 +33,20 @@ class BookmarkIndexTest {
     }
 
     @Test
+    fun changesBeforeTheLoadDoNotCountAsLoadedAndWinOverIt() {
+        val index = BookmarkIndex()
+        index.set(0, -100, 5, bookmarked = true)
+        index.set(0, -100, 9, bookmarked = false)
+        assertFalse(index.isLoaded(0), "an early change must not stop the account's bookmarks from loading")
+        assertTrue(index.contains(0, -100, 5))
+        assertTrue(index.hasAny(0, -100))
+        index.load(0, listOf(bookmark(-100, 9), bookmark(42, 3)))
+        assertTrue(index.contains(0, -100, 5), "a bookmark made while the store was read is kept")
+        assertFalse(index.contains(0, -100, 9), "a bookmark removed while the store was read stays removed")
+        assertTrue(index.contains(0, 42, 3))
+    }
+
+    @Test
     fun snippetsAreOneLineAndCutWithAnEllipsis() {
         assertEquals("two lines", snippet("  two\n   lines "))
         assertEquals("abcd…", snippet("abcdefgh", limit = 5))
