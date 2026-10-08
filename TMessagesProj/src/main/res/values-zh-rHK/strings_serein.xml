@@ -133,7 +133,7 @@
     <string name="serein_lock_archive">鎖定封存</string>
     <string name="serein_lock_secret">鎖定私密聊天</string>
     <string name="serein_lock_chats">已鎖定的聊天</string>
-    <string name="serein_lock_note">已鎖定的聊天及其個人資料，以及開啟後的封存（含其中的聊天）和私密聊天，開啟前都需要驗證指紋、臉孔或螢幕鎖，之後一分鐘內或離開應用程式前無須再次驗證。它們的通知只會提示有新訊息。可在聊天選單中鎖定聊天；關閉鎖定時同樣需要驗證。</string>
+    <string name="serein_lock_note">已鎖定的聊天及其個人資料，以及開啟後的封存（含其中的聊天）和私密聊天，開啟前都需要驗證指紋、臉孔或螢幕鎖，之後一分鐘內或離開應用程式前無須再次驗證。它們的通知、聊天列表和訊息搜尋只會提示有訊息；全域搜尋找到的相片、檔案和連結、下載清單以及主畫面小工具仍會顯示其內容。可在聊天選單中鎖定聊天；關閉鎖定時同樣需要驗證。</string>
     <string name="serein_lock_chat">鎖定聊天</string>
     <string name="serein_unlock_chat">解鎖聊天</string>
     <string name="serein_chat_locked">聊天已鎖定</string>

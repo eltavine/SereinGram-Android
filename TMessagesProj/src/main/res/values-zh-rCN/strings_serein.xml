@@ -133,7 +133,7 @@
     <string name="serein_lock_archive">锁定归档</string>
     <string name="serein_lock_secret">锁定私密聊天</string>
     <string name="serein_lock_chats">已锁定的聊天</string>
-    <string name="serein_lock_note">已锁定的聊天及其资料页，以及开启后的归档（含其中的聊天）和私密聊天，打开前都需要验证指纹、面容或屏幕锁，之后一分钟内或离开应用前无需再次验证。它们的通知只会提示有新消息。可在聊天菜单中锁定聊天；关闭锁定时同样需要验证。</string>
+    <string name="serein_lock_note">已锁定的聊天及其资料页，以及开启后的归档（含其中的聊天）和私密聊天，打开前都需要验证指纹、面容或屏幕锁，之后一分钟内或离开应用前无需再次验证。它们的通知、聊天列表和消息搜索只会提示有消息；全局搜索找到的照片、文件和链接、下载列表以及桌面小部件仍会显示其内容。可在聊天菜单中锁定聊天；关闭锁定时同样需要验证。</string>
     <string name="serein_lock_chat">锁定聊天</string>
     <string name="serein_unlock_chat">解锁聊天</string>
     <string name="serein_chat_locked">聊天已锁定</string>

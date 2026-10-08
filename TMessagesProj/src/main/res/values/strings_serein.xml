@@ -133,7 +133,7 @@
     <string name="serein_lock_archive">Lock the archive</string>
     <string name="serein_lock_secret">Lock secret chats</string>
     <string name="serein_lock_chats">Locked chats</string>
-    <string name="serein_lock_note">Locked chats, with their profiles, and the archive with the chats in it and secret chats when chosen, ask for your fingerprint, face or screen lock before they open, and then stay open for a minute or until you leave the app. Their notifications only say that there is a new message. Lock a chat from its menu; turning a lock off asks the same way.</string>
+    <string name="serein_lock_note">Locked chats, with their profiles, and the archive with the chats in it and secret chats when chosen, ask for your fingerprint, face or screen lock before they open, and then stay open for a minute or until you leave the app. Their notifications, the chat list and message search only say that there is a message; photos, files and links that a global search finds, downloads and home screen widgets still show them. Lock a chat from its menu; turning a lock off asks the same way.</string>
     <string name="serein_lock_chat">Lock chat</string>
     <string name="serein_unlock_chat">Unlock chat</string>
     <string name="serein_chat_locked">Chat locked</string>
