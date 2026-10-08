@@ -26,6 +26,8 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-gradlePlugin = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
 # Matches the Ktor client Nagram ships.
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version = "3.3.0" }
+# Matches the Guava that AndroidX Car App brings into the app.
+guava = { module = "com.google.guava:guava", version = "31.1-android" }
 # Matches the ZXing Telegram scans and draws QR codes with.
 zxing-core = { module = "com.google.zxing:core", version = "3.5.4" }
 # Matches what Nagram's Ktor brings into the app.

@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     api(project(":serein:core"))
+    implementation(libs.guava)
 }

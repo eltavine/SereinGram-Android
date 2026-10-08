@@ -3,6 +3,10 @@ package com.eltavine.sereingram.features.transcription
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.booleanOption
 import com.eltavine.sereingram.core.textOption
+import com.google.common.net.InetAddresses
+import java.net.Inet4Address
+import java.net.Inet6Address
+import java.net.URI
 
 /**
  * A speech-to-text service that speaks OpenAI's transcription API, as OpenAI,
@@ -29,13 +33,43 @@ public class TranscriptionConfig(
     public val model: String,
     public val language: String,
 ) {
-    /** Where audio goes, or null when [baseUrl] is not a web address. */
+    /**
+     * Where audio goes, or null when [baseUrl] is no web address. Over http the key and the audio
+     * travel unencrypted, so http is only for servers in the user's own network.
+     */
     public val endpoint: String?
-        get() = baseUrl.trim().trimEnd('/').takeIf { it.startsWith("https://") || it.startsWith("http://") }
-            ?.let { "$it/audio/transcriptions" }
+        get() {
+            val address = baseUrl.trim().trimEnd('/')
+            val uri = runCatching { URI(address) }.getOrNull() ?: return null
+            val usable = when (uri.scheme?.lowercase()) {
+                "https" -> uri.rawAuthority != null
+                "http" -> uri.host?.let(::isLocal) == true
+                else -> false
+            }
+            return "$address/audio/transcriptions".takeIf { usable }
+        }
 
     public val isUsable: Boolean
         get() = enabled && apiKey.isNotBlank() && model.isNotBlank() && endpoint != null
+}
+
+/** Endings of names that only resolve in the user's own network, after RFC 6761, 6762 and 8375. */
+private val LOCAL_NAMES = listOf(".localhost", ".local", ".lan", ".home.arpa", ".internal")
+
+/**
+ * Whether [host], as a URL holds it, is a machine in the user's own network: a local name, or an
+ * address the internet does not route.
+ */
+internal fun isLocal(host: String): Boolean {
+    val name = host.lowercase().removeSuffix(".")
+    if (name == "localhost" || LOCAL_NAMES.any(name::endsWith)) return true
+    if (!InetAddresses.isUriInetAddress(name)) return false
+    val address = InetAddresses.forUriString(name)
+    val bytes = address.address
+    val uniqueLocal = address is Inet6Address && bytes[0].toInt() and 0xfe == 0xfc
+    // Shared by carriers' NAT and by VPNs such as Tailscale.
+    val sharedSpace = address is Inet4Address && bytes[0].toInt() == 100 && bytes[1].toInt() and 0xc0 == 0x40
+    return address.isLoopbackAddress || address.isSiteLocalAddress || address.isLinkLocalAddress || uniqueLocal || sharedSpace
 }
 
 /** OpenAI takes files of up to 25 MB. */

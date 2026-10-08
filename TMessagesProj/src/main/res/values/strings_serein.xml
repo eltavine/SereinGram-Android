@@ -156,7 +156,7 @@
     <string name="serein_transcription_model_hint">whisper-1</string>
     <string name="serein_transcription_language">Language</string>
     <string name="serein_transcription_language_hint">Detected</string>
-    <string name="serein_transcription_service_note">Any service that speaks OpenAI\'s transcription API works, such as OpenAI with whisper-1, or Groq at https://api.groq.com/openai/v1 with whisper-large-v3-turbo. The language is a two-letter code such as en or zh; leave it empty to have it detected.</string>
+    <string name="serein_transcription_service_note">Any service that speaks OpenAI\'s transcription API works, such as OpenAI with whisper-1, or Groq at https://api.groq.com/openai/v1 with whisper-large-v3-turbo. The language is a two-letter code such as en or zh; leave it empty to have it detected. The address needs https, unless the server is in your own network.</string>
     <string name="serein_transcription_downloading">Downloading the message first; tap again once it has loaded.</string>
     <string name="serein_transcription_too_long">This message is too long to transcribe: services take up to 25 MB.</string>
     <string name="serein_transcription_failed">Could not transcribe: %1$s</string>

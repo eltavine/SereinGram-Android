@@ -156,7 +156,7 @@
     <string name="serein_transcription_model_hint">whisper-1</string>
     <string name="serein_transcription_language">语言</string>
     <string name="serein_transcription_language_hint">自动识别</string>
-    <string name="serein_transcription_service_note">任何兼容 OpenAI 转写接口的服务都可以使用，例如 OpenAI 搭配 whisper-1，或 Groq（https://api.groq.com/openai/v1）搭配 whisper-large-v3-turbo。语言填写两个字母的代码，如 en 或 zh；留空则自动识别。</string>
+    <string name="serein_transcription_service_note">任何兼容 OpenAI 转写接口的服务都可以使用，例如 OpenAI 搭配 whisper-1，或 Groq（https://api.groq.com/openai/v1）搭配 whisper-large-v3-turbo。语言填写两个字母的代码，如 en 或 zh；留空则自动识别。地址须使用 https，本地网络中的服务器除外。</string>
     <string name="serein_transcription_downloading">正在先下载这条消息，下载完成后请再点一次。</string>
     <string name="serein_transcription_too_long">这条消息太长，无法转写：服务最多接受 25 MB。</string>
     <string name="serein_transcription_failed">转写失败：%1$s</string>
