@@ -31,7 +31,7 @@ object TimestampsFeature : SereinModule, SettingsContributor {
 
     private fun dated(options: Options, message: MessageObject, time: String): String {
         val sent = message.messageOwner?.date?.takeIf { it > 0 } ?: return time
-        if (!options.get(TimestampOptions.showDate)) {
+        if (!options.get(TimestampOptions.showDate) || hasOwnDate(message)) {
             return time
         }
         val millis = sent * 1000L
@@ -42,6 +42,15 @@ object TimestampsFeature : SereinModule, SettingsContributor {
             DateShown.FULL -> locale.formatterYear.format(millis)
         }
         return withDate(time, locale.formatterDay.format(millis), date)
+    }
+
+    // Telegram already writes a date for these, and not the one they arrived on: deleted messages in the
+    // admin log and previews of reposts get the day they were sent, messages forwarded to Saved Messages
+    // the day they were first sent or saved.
+    private fun hasOwnDate(message: MessageObject): Boolean {
+        val forwarded = message.messageOwner?.fwd_from
+        return message.realDate != 0 || message.isRepostPreview ||
+            message.isSaved && forwarded != null && (forwarded.date != 0 || forwarded.saved_date != 0)
     }
 
     override val settingsIcon: Int = R.drawable.msg_calendar2
