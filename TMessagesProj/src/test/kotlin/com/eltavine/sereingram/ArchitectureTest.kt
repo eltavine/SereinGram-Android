@@ -7,10 +7,12 @@ import com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage
 import com.tngtech.archunit.core.domain.JavaClasses
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.core.importer.ImportOption
+import com.tngtech.archunit.core.importer.Location
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.telegram.messenger.ApplicationLoader
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.jar.JarFile
@@ -59,13 +61,16 @@ class ArchitectureTest {
         val SEREIN_BINARY_NAME = SEREIN.replace('.', '/').toByteArray()
 
         // Only a class file that names a SereinGram class can break the rule, and
-        // importing every upstream class does not fit in a test JVM's heap.
+        // importing every upstream class does not fit in a test JVM's heap. The
+        // Kotlin and the Java compiler may write the app's classes to different places.
         val upstreamCallers: JavaClasses by lazy {
-            val appCode = Paths.get(SereinApp::class.java.protectionDomain.codeSource.location.toURI())
             val importer = ClassFileImporter().withImportOption { location ->
                 location.asURI().toURL().openStream().use { it.readBytes() }.contains(SEREIN_BINARY_NAME)
             }
-            if (Files.isDirectory(appCode)) importer.importPath(appCode) else importer.importJar(JarFile(appCode.toFile()))
+            val appCode = listOf(SereinApp::class.java, ApplicationLoader::class.java)
+                .map { Paths.get(it.protectionDomain.codeSource.location.toURI()) }
+                .distinct()
+            importer.importLocations(appCode.map { if (Files.isDirectory(it)) Location.of(it) else Location.of(JarFile(it.toFile())) })
         }
 
         val sereinClasses: JavaClasses by lazy {
