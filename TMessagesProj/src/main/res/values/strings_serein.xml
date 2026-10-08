@@ -119,7 +119,7 @@
     <string name="serein_search_hide_apps">Hide the Apps tab</string>
     <string name="serein_search_hide_apps_note">The search from the chat list no longer has a tab of mini apps and bots. Applies the next time SereinGram starts.</string>
     <string name="serein_timestamps_hide_read">One check for read messages</string>
-    <string name="serein_timestamps_hide_read_note">Messages you send keep a single check after they were read, in chats and in the chat list, so you do not see when they were read. Telegram still knows.</string>
+    <string name="serein_timestamps_hide_read_note">Messages you send keep a single check after they were read, in chats and in the chat list. The menu of a message still says who read it and when, and Telegram still knows.</string>
     <string name="serein_ghost_send_scheduled">Send without going online</string>
     <string name="serein_ghost_send_scheduled_note">Sending a message shows you online even in ghost mode. With this on, while ghost mode hides your online status, messages you send wait a few seconds as scheduled messages and appear in the chat once they go out. Secret chats are left as they are.</string>
     <string name="serein_shortcuts_title">Chat shortcuts</string>
