@@ -26,6 +26,7 @@ import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.NotificationCenter
 import org.telegram.messenger.R
+import org.telegram.tgnet.TLRPC
 import org.telegram.ui.Components.TranscribeButton
 import java.util.concurrent.ConcurrentHashMap
 
@@ -48,10 +49,12 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
         // Account, chat and message of each transcription under way.
         private val transcribing: MutableSet<Triple<Int, Long, Int>> = ConcurrentHashMap.newKeySet()
 
+        // Runs whenever a message is drawn, so the cheap checks come first.
         override fun offers(account: Int, message: Any): Boolean {
             val shown = message as MessageObject
-            return config(options).isUsable && (shown.isVoice || shown.isRoundVideo) && shown.isSent &&
-                shown.messageOwner?.media?.ttl_seconds == 0 && !DialogObject.isEncryptedDialog(shown.dialogId)
+            return options.get(TranscriptionOptions.enabled) && (shown.isVoice || shown.isRoundVideo) && shown.isSent &&
+                !shown.isQuickReply && !shown.isRepostPreview && MessageObject.getMedia(shown.messageOwner) !is TLRPC.TL_messageMediaWebPage &&
+                shown.messageOwner?.media?.ttl_seconds == 0 && !DialogObject.isEncryptedDialog(shown.dialogId) && config(options).isUsable
         }
 
         override fun isTranscribing(message: Any): Boolean = key(message as MessageObject) in transcribing
