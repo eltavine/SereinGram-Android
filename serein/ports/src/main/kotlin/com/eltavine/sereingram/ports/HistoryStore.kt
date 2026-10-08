@@ -60,7 +60,8 @@ public interface HistoryStore {
     /** Chats with records of [kind], the one recorded in most recently first. */
     public fun chats(kind: RecordKind): List<KeptChat>
 
-    public fun clear(dialogId: Long)
+    /** Drops the records of [kind] kept of [dialogId]. */
+    public fun clear(dialogId: Long, kind: RecordKind)
 
     /** Erases everything kept for the account, for good. */
     public fun clearAll()

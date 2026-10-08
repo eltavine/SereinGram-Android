@@ -10,6 +10,7 @@ import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.hooks.ChatMenuHooks
 import com.eltavine.sereingram.ports.HistoryRecord
 import com.eltavine.sereingram.ports.HistoryStore
+import com.eltavine.sereingram.ports.RecordKind
 import com.eltavine.sereingram.support.Chats
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ApplicationLoader
@@ -145,7 +146,7 @@ internal class DeletedMessagesActivity(
             .setPositiveButton(getString(R.string.serein_history_deleted_clear_confirm)) { _, _ ->
                 Utilities.globalQueue.postRunnable {
                     Faults.guard("deleted messages", fallback = Unit) {
-                        store.clear(dialogId)
+                        store.clear(dialogId, RecordKind.DELETED)
                         forgetMedia()
                     }
                     reload()

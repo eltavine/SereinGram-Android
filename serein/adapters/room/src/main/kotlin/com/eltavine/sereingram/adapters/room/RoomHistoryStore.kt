@@ -42,8 +42,8 @@ public class RoomHistoryStore internal constructor(private val database: History
     override fun chats(kind: RecordKind): List<KeptChat> =
         dao.chats(kind.code).map { KeptChat(it.dialogId, it.count, it.lastRecordedAt) }
 
-    override fun clear(dialogId: Long) {
-        dao.clear(dialogId)
+    override fun clear(dialogId: Long, kind: RecordKind) {
+        dao.clear(kind.code, dialogId)
     }
 
     // Room vacuums the database after emptying it, so the rows are gone from the file too.

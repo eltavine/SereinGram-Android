@@ -95,10 +95,17 @@ class RoomHistoryStoreTest {
     }
 
     @Test
-    fun dialogsAreSeparateAndCanBeCleared() {
-        store.add(listOf(record(RecordKind.DELETED, 1, dialogId = 1L), record(RecordKind.DELETED, 1, dialogId = 2L)))
-        store.clear(1L)
+    fun clearingAChatDropsOneKindOfItsRecordsOnly() {
+        store.add(
+            listOf(
+                record(RecordKind.DELETED, 1, dialogId = 1L),
+                record(RecordKind.EDITED, 2, dialogId = 1L),
+                record(RecordKind.DELETED, 1, dialogId = 2L),
+            ),
+        )
+        store.clear(1L, RecordKind.DELETED)
         assertEquals(0, store.count(1L, RecordKind.DELETED))
+        assertEquals(1, store.count(1L, RecordKind.EDITED), "clearing deleted messages keeps edit histories")
         assertEquals(1, store.count(2L, RecordKind.DELETED))
     }
 

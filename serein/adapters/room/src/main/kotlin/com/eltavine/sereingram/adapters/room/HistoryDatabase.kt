@@ -68,8 +68,8 @@ internal interface RecordDao {
     )
     fun chats(kind: Int): List<ChatRow>
 
-    @Query("DELETE FROM records WHERE dialog_id = :dialogId")
-    fun clear(dialogId: Long)
+    @Query("DELETE FROM records WHERE kind = :kind AND dialog_id = :dialogId")
+    fun clear(kind: Int, dialogId: Long)
 }
 
 @Database(entities = [RecordEntity::class], version = 1, exportSchema = true)
