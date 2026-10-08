@@ -26,7 +26,7 @@
     <string name="serein_history_save_deleted">Deleted messages</string>
     <string name="serein_history_save_edits">Earlier versions of edited messages</string>
     <string name="serein_history_save_in_bots">Also in chats with bots</string>
-    <string name="serein_history_save_note">Copies are kept for this account in a SereinGram database on this device, apart from Telegram\'s cache, so clearing the cache keeps them. Kept deleted messages come back into their chats marked as deleted. Only messages this device has loaded can be kept. Photos and files of deleted messages stay in Telegram\'s cache, so they show for as long as the cache keeps them.</string>
+    <string name="serein_history_save_note">Copies are kept for this account in a SereinGram database on this device, apart from Telegram\'s cache, so clearing the cache keeps them. Kept deleted messages come back into their chats marked as deleted. Only messages this device has loaded can be kept, and messages with a timer or media that can be viewed once never are. Photos and files of deleted messages stay in Telegram\'s cache, so they show for as long as the cache keeps them.</string>
     <string name="serein_history_media">Media of deleted messages</string>
     <string name="serein_history_backup_media">Keep copies of their media</string>
     <string name="serein_history_backup_private">In private chats</string>

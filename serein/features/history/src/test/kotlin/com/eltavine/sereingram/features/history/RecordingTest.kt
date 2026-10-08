@@ -13,6 +13,12 @@ class RecordingTest {
     }
 
     @Test
+    fun messagesThatDestroyThemselvesAreNotKept() {
+        assertFalse(recordsDeletion(saveDeleted = true, saveInBotChats = true, Change(botChat = false, selfDestructing = true)))
+        assertFalse(recordsEdit(saveEdits = true, saveInBotChats = true, Change(botChat = false, textChanged = true, selfDestructing = true)))
+    }
+
+    @Test
     fun botChatsAreLeftOutUnlessAsked() {
         assertFalse(recordsDeletion(saveDeleted = true, saveInBotChats = false, Change(botChat = true)))
         assertTrue(recordsDeletion(saveDeleted = true, saveInBotChats = true, Change(botChat = true)))

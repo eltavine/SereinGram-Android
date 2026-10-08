@@ -27,7 +27,11 @@ internal class KeptInChat(
                 !MessageObject.isEphemeralMessageId(message.id) &&
                 sameIdSpace(account, dialogId, channelId) &&
                 !deletedByUser.contains(account, dialogId, message.id) &&
-                recordsDeletion(saveDeleted = true, saveInBots, Change(botChat = isBotChat(account, dialogId)))
+                recordsDeletion(
+                    saveDeleted = true,
+                    saveInBots,
+                    Change(botChat = isBotChat(account, dialogId), selfDestructing = isSelfDestructing(message.messageOwner)),
+                )
         }
         if (shown.isEmpty()) {
             return emptyList()

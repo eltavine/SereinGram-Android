@@ -47,7 +47,9 @@ internal class HistoryRecorder(
         val saveInBots = options.get(HistoryOptions.saveInBotChats, account)
         val kept = storedMessages(account, dialogId, messageIds)
             .filterNot { (uid, message) -> deletedByUser.contains(account, uid, message.id) }
-            .filter { (uid, _) -> recordsDeletion(saveDeleted = true, saveInBots, Change(botChat = isBotChat(account, uid))) }
+            .filter { (uid, message) ->
+                recordsDeletion(saveDeleted = true, saveInBots, Change(botChat = isBotChat(account, uid), selfDestructing = isSelfDestructing(message)))
+            }
         write(account, kept.map { (uid, message) -> record(RecordKind.DELETED, uid, message, revision = 0) })
         // Telegram leaves the files in its cache while deleted messages are kept, so copying can wait.
         kept.forEach { (uid, message) ->
@@ -67,6 +69,7 @@ internal class HistoryRecorder(
             textChanged = old.message.orEmpty() != new.message.orEmpty(),
             mediaChanged = mediaChanged(old.media, new.media),
             hidden = new.edit_hide,
+            selfDestructing = isSelfDestructing(old),
         )
         if (recordsEdit(saveEdits = true, options.get(HistoryOptions.saveInBotChats, account), change)) {
             write(account, listOf(record(RecordKind.EDITED, dialogId, old, revision = old.edit_date)))
