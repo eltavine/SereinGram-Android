@@ -14,6 +14,9 @@ public object TranscriptionHooks {
          * [open]; [button] is Telegram's button. False leaves the tap to Telegram.
          */
         public fun tap(account: Int, message: Any, open: Boolean, button: Any): Boolean
+
+        /** Whether this provider is transcribing [message] right now. */
+        public fun isTranscribing(message: Any): Boolean
     }
 
     public val providers: Handlers<Provider> = Handlers()
@@ -22,6 +25,13 @@ public object TranscriptionHooks {
     public fun offersTranscription(account: Int, message: Any?): Boolean =
         message != null && providers.all.any { provider ->
             Faults.guard("transcription provider", fallback = false) { provider.offers(account, message) }
+        }
+
+    /** Whether a provider is transcribing [message], so that its button keeps spinning when it is drawn anew. */
+    @JvmStatic
+    public fun isTranscribing(message: Any?): Boolean =
+        message != null && providers.all.any { provider ->
+            Faults.guard("transcription provider", fallback = false) { provider.isTranscribing(message) }
         }
 
     @JvmStatic

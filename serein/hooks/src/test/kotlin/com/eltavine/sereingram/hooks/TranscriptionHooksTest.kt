@@ -16,6 +16,8 @@ class TranscriptionHooksTest {
             taps += "$message"
             return true
         }
+
+        override fun isTranscribing(message: Any): Boolean = message in taps
     }
 
     @Test
@@ -30,6 +32,9 @@ class TranscriptionHooksTest {
             assertFalse(TranscriptionHooks.handlesTap(0, "voice", open = true, button = "button"))
             assertFalse(TranscriptionHooks.handlesTap(0, null, open = false, button = "button"))
             assertEquals(listOf("voice"), provider.taps)
+            assertTrue(TranscriptionHooks.isTranscribing("voice"))
+            assertFalse(TranscriptionHooks.isTranscribing("photo"))
+            assertFalse(TranscriptionHooks.isTranscribing(null))
         } finally {
             install.close()
         }

@@ -24,8 +24,10 @@ import org.telegram.messenger.DialogObject
 import org.telegram.messenger.FileLoader
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.MessageObject
+import org.telegram.messenger.NotificationCenter
 import org.telegram.messenger.R
 import org.telegram.ui.Components.TranscribeButton
+import java.util.concurrent.ConcurrentHashMap
 
 /** Transcribes voice and video messages with a speech-to-text service of the user's choice. */
 object TranscriptionFeature : SereinModule, SettingsContributor {
@@ -43,17 +45,26 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
     }
 
     private class Provider(private val options: Options) : TranscriptionHooks.Provider {
+        // Account, chat and message of each transcription under way.
+        private val transcribing: MutableSet<Triple<Int, Long, Int>> = ConcurrentHashMap.newKeySet()
+
         override fun offers(account: Int, message: Any): Boolean {
             val shown = message as MessageObject
             return config(options).isUsable && (shown.isVoice || shown.isRoundVideo) && shown.isSent &&
                 shown.messageOwner?.media?.ttl_seconds == 0 && !DialogObject.isEncryptedDialog(shown.dialogId)
         }
 
+        override fun isTranscribing(message: Any): Boolean = key(message as MessageObject) in transcribing
+
         override fun tap(account: Int, message: Any, open: Boolean, button: Any): Boolean {
             val shown = message as MessageObject
             val config = config(options)
             if (!config.isUsable || open || !shown.messageOwner?.voiceTranscription.isNullOrEmpty()) {
                 return false
+            }
+            val key = key(shown)
+            if (key in transcribing) {
+                return true
             }
             val loader = FileLoader.getInstance(account)
             val file = loader.getPathToMessage(shown.messageOwner)
@@ -66,20 +77,26 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
                 toast(LocaleController.getString(R.string.serein_transcription_too_long))
                 return true
             }
-            val transcribe = button as TranscribeButton
-            transcribe.setLoading(true, true)
+            if (!transcribing.add(key)) {
+                return true
+            }
+            (button as TranscribeButton).setLoading(true, true)
             scope.launch {
                 val result = runCatching { client.transcribe(config, file) }
                 AndroidUtilities.runOnUIThread {
-                    transcribe.setLoading(false, true)
+                    transcribing.remove(key)
                     result.onSuccess { show(shown, it) }.onFailure { error ->
                         Faults.report("transcription", error)
                         toast(LocaleController.formatString(R.string.serein_transcription_failed, error.message.orEmpty()))
+                        // With an id, Telegram finds the message among those shown now and draws it anew.
+                        NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.voiceTranscriptionUpdate, shown, 0L, null)
                     }
                 }
             }
             return true
         }
+
+        private fun key(message: MessageObject) = Triple(message.currentAccount, message.dialogId, message.id)
     }
 
     // Telegram's own transcriptions end the same way, which redraws the message.

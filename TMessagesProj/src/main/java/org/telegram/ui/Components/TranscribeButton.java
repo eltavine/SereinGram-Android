@@ -666,6 +666,7 @@ public class TranscribeButton {
     }
 
     public static boolean isTranscribing(MessageObject messageObject) {
+        if (com.eltavine.sereingram.hooks.TranscriptionHooks.isTranscribing(messageObject)) return true;
         return (
             (transcribeOperationsByDialogPosition != null && (transcribeOperationsByDialogPosition.containsValue(messageObject) || transcribeOperationsByDialogPosition.containsKey((Integer) reqInfoHash(messageObject)))) ||
             (transcribeOperationsById != null && messageObject != null && messageObject.messageOwner != null && transcribeOperationsById.containsKey(messageObject.messageOwner.voiceTranscriptionId))

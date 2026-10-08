@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 326,
-    "all_added_lines": 313,
+    "all_added_lines": 314,
     "source_files": 38,
-    "source_added_lines": 93
+    "source_added_lines": 94
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -123,6 +123,7 @@
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/Components/TranscribeButton.java": [
       "hooks.TranscriptionHooks.handlesTap",
+      "hooks.TranscriptionHooks.isTranscribing",
       "hooks.TranscriptionHooks.offersTranscription"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/Components/chat/layouts/ChatActivityChannelButtonsLayout.java": [
