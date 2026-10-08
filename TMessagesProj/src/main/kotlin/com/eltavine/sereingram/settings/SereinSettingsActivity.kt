@@ -2,8 +2,10 @@ package com.eltavine.sereingram.settings
 
 import android.app.Activity
 import android.content.Intent
+import android.text.InputType
 import android.util.TypedValue
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import com.eltavine.sereingram.core.Option
 import com.eltavine.sereingram.core.OptionScope
@@ -137,6 +139,11 @@ class SereinSettingsActivity(
             setHintTextColor(Theme.getColor(Theme.key_dialogTextHint, resourceProvider))
             background = Theme.createEditTextDrawable(context, true)
             setSingleLine(true)
+            if (row.secret) {
+                // setSingleLine replaces the masking, so this comes after it.
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                imeOptions = imeOptions or EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
+            }
             setPadding(0, dp(4f), 0, dp(4f))
             hint = getString(row.placeholder)
             setText(options.get(row.option, account))
