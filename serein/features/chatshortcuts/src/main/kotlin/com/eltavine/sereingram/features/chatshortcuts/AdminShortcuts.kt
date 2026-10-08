@@ -25,6 +25,8 @@ public class ChatRights(
     public val canBan: Boolean,
     public val canInvite: Boolean,
     public val canViewStats: Boolean,
+    /** Telegram has the chat's full info at hand, which its member, permission and link screens are drawn from. */
+    public val hasFullInfo: Boolean,
 )
 
 /** Admin items in the menu of a message, after Swiftgram's. */
@@ -42,8 +44,8 @@ public fun offersRestriction(enabled: Boolean, rights: ChatRights, senderId: Lon
 /** Whether [shortcut] leads somewhere the user may go in a chat with [rights]. */
 public fun offers(shortcut: AdminShortcut, rights: ChatRights): Boolean = when (shortcut) {
     AdminShortcut.RECENT_ACTIONS -> rights.isAdmin && (rights.isChannel || rights.isSupergroup)
-    AdminShortcut.ADMINISTRATORS, AdminShortcut.MEMBERS -> rights.isAdmin || !rights.isChannel
-    AdminShortcut.PERMISSIONS -> rights.canBan && !rights.isChannel
+    AdminShortcut.ADMINISTRATORS, AdminShortcut.MEMBERS -> rights.hasFullInfo && (rights.isAdmin || !rights.isChannel)
+    AdminShortcut.PERMISSIONS -> rights.hasFullInfo && rights.canBan && !rights.isChannel
     AdminShortcut.STATISTICS -> rights.canViewStats
-    AdminShortcut.INVITE_LINKS -> rights.canInvite
+    AdminShortcut.INVITE_LINKS -> rights.hasFullInfo && rights.canInvite
 }

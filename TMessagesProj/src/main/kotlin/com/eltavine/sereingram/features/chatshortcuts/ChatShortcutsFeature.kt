@@ -154,19 +154,19 @@ private class ShortcutEntry(private val shortcut: AdminShortcut, private val opt
 
     private fun screen(chat: TLRPC.Chat, full: TLRPC.ChatFull?): BaseFragment? = when (shortcut) {
         AdminShortcut.RECENT_ACTIONS -> ChannelAdminLogActivity(chat)
-        AdminShortcut.ADMINISTRATORS -> users(chat, ChatUsersActivity.TYPE_ADMIN)
-        AdminShortcut.MEMBERS -> users(chat, ChatUsersActivity.TYPE_USERS)
-        AdminShortcut.PERMISSIONS -> users(chat, ChatUsersActivity.TYPE_KICKED)
-        AdminShortcut.STATISTICS -> StatisticActivity.create(chat)
+        AdminShortcut.ADMINISTRATORS -> users(chat, full, ChatUsersActivity.TYPE_ADMIN)
+        AdminShortcut.MEMBERS -> users(chat, full, ChatUsersActivity.TYPE_USERS)
+        AdminShortcut.PERMISSIONS -> users(chat, full, ChatUsersActivity.TYPE_KICKED)
+        AdminShortcut.STATISTICS -> StatisticActivity.create(chat, false)
         AdminShortcut.INVITE_LINKS -> full?.let { info -> ManageLinksActivity(chat.id, 0, 0).apply { setInfo(info, info.exported_invite) } }
     }
 
-    private fun users(chat: TLRPC.Chat, type: Int) = ChatUsersActivity(
+    private fun users(chat: TLRPC.Chat, full: TLRPC.ChatFull?, type: Int) = ChatUsersActivity(
         Bundle().apply {
             putLong("chat_id", chat.id)
             putInt("type", type)
         },
-    )
+    ).apply { setInfo(full) }
 }
 
 private fun rights(chat: TLRPC.Chat, full: TLRPC.ChatFull?) = ChatRights(
@@ -174,9 +174,9 @@ private fun rights(chat: TLRPC.Chat, full: TLRPC.ChatFull?) = ChatRights(
     isSupergroup = ChatObject.isMegagroup(chat),
     isAdmin = chat.creator || ChatObject.hasAdminRights(chat),
     canBan = ChatObject.canBlockUsers(chat),
-    // Telegram's links screen loads the links from the chat's full info.
-    canInvite = full != null && ChatObject.canUserDoAdminAction(chat, ChatObject.ACTION_INVITE),
+    canInvite = ChatObject.canUserDoAdminAction(chat, ChatObject.ACTION_INVITE),
     canViewStats = full?.can_view_stats == true,
+    hasFullInfo = full != null,
 )
 
 private fun title(shortcut: AdminShortcut): Int = when (shortcut) {

@@ -13,7 +13,8 @@ class AdminShortcutsTest {
         canBan: Boolean = false,
         canInvite: Boolean = false,
         canViewStats: Boolean = false,
-    ) = ChatRights(isChannel, isSupergroup, isAdmin, canBan, canInvite, canViewStats)
+        hasFullInfo: Boolean = true,
+    ) = ChatRights(isChannel, isSupergroup, isAdmin, canBan, canInvite, canViewStats, hasFullInfo)
 
     private fun offered(rights: ChatRights) = AdminShortcut.entries.filter { offers(it, rights) }.toSet()
 
@@ -28,6 +29,13 @@ class AdminShortcutsTest {
         assertEquals(AdminShortcut.entries.toSet(), offered(admin))
         val basicGroupAdmin = rights(isSupergroup = false, isAdmin = true)
         assertEquals(setOf(AdminShortcut.ADMINISTRATORS, AdminShortcut.MEMBERS), offered(basicGroupAdmin))
+    }
+
+    @Test
+    fun screensDrawnFromTheFullInfoWaitForIt() {
+        val admin = rights(isAdmin = true, canBan = true, canInvite = true, canViewStats = true, hasFullInfo = false)
+        assertEquals(setOf(AdminShortcut.RECENT_ACTIONS, AdminShortcut.STATISTICS), offered(admin))
+        assertEquals(emptySet(), offered(rights(isSupergroup = false, hasFullInfo = false)))
     }
 
     @Test
