@@ -1,6 +1,7 @@
 package com.eltavine.sereingram.buildlogic
 
 import androidx.room.gradle.RoomExtension
+import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -16,6 +17,8 @@ class SereinAndroidRoomPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply("com.google.devtools.ksp")
             pluginManager.apply("androidx.room")
+            // KSP1, the default of KSP 1.0.x, is deprecated and gone with Kotlin 2.3.
+            extensions.configure<KspExtension> { useKsp2.set(true) }
             extensions.configure<RoomExtension> {
                 schemaDirectory(layout.projectDirectory.dir("schemas").asFile.path)
                 generateKotlin = true
