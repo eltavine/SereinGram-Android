@@ -203,6 +203,25 @@ Build:
    ./gradlew assemble<Release/Debug>
    ```
 
+## Releases
+
+- **Nightly**: every commit that passes CI on `main` is built, signed with the
+  release key and sent to the Telegram channel by `serein-nightly.yml`.
+- **Stable**: pushing a `v*` tag on a commit of `main` runs CI on it, builds and
+  signs it, publishes it as the latest GitHub release and sends it to the
+  channel, by `serein-stable.yml`.
+
+Both read their secrets from the `telegram` environment, which only `main` and
+`v*` tags may use: `TELEGRAM_BOT_TOKEN`, the token of a bot that may post in the
+channel, and `KEYSTORE_BASE64` (the release keystore in base64),
+`KEYSTORE_PASS`, `ALIAS_NAME` and `ALIAS_PASS`. Nightly builds wait for them
+with a warning; a stable release fails without them. Setting the
+`SEREIN_SIGNING_SHA1` repository variable to the key's SHA-1, which the nightly
+job prints, turns on the native library's signature check. APKs go up through a
+Bot API server that runs beside the job, since they are larger than the 50 MB
+that Telegram's own Bot API server takes. For now, both the app and that server
+use Telegram's own published API credentials.
+
 ## Localization
 
 Strings inherited from Telegram and Nagram follow their translations
