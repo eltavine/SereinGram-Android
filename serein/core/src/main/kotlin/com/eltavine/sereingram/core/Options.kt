@@ -51,9 +51,7 @@ public class Options(private val stores: StoreProvider) {
     }
 
     public class Cached<T : Any> internal constructor(options: Options, option: Option<T>) {
-        @Volatile
-        private var current: T = options.get(option)
-
+        // Listening before the first read, so that a write between the two is not missed.
         init {
             options.addListener { changed, _ ->
                 if (changed == option) {
@@ -61,6 +59,9 @@ public class Options(private val stores: StoreProvider) {
                 }
             }
         }
+
+        @Volatile
+        private var current: T = options.get(option)
 
         public val value: T get() = current
     }
