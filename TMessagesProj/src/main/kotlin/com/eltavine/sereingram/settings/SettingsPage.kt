@@ -31,7 +31,10 @@ sealed interface SettingsRow {
         val guard: ((on: Boolean, change: () -> Unit) -> Unit)? = null,
     ) : SettingsRow
 
-    /** Edits [option] in a dialog; [placeholder] stands in for it while it is empty. A [secret] shows only its end. */
+    /**
+     * Edits [option] in a dialog, where emptying it restores its default; [placeholder] stands in
+     * for it while it is empty. A [secret] shows only its end.
+     */
     class Text(
         val option: Option<String>,
         @StringRes val title: Int,

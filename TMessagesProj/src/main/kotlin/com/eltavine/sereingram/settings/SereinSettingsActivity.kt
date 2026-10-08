@@ -148,7 +148,8 @@ class SereinSettingsActivity(
             .setTitle(getString(row.title))
             .setView(frame)
             .setPositiveButton(getString(R.string.OK)) { _, _ ->
-                options.set(row.option, field.text.toString().trim(), account)
+                val text = field.text.toString().trim()
+                if (text.isEmpty()) options.reset(row.option, account) else options.set(row.option, text, account)
                 listView.adapter.update(true)
             }
             .setNegativeButton(getString(R.string.Cancel), null)
