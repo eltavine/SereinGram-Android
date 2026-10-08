@@ -97,11 +97,29 @@ def keystore_certificate(listing: str) -> tuple[str, str, str]:
 
 
 def apk_signer(verification: str) -> str:
-    """The SHA-256 of the first signer, from `apksigner verify --print-certs`."""
-    match = re.search(r"^Signer #1 certificate SHA-256 digest: (\S+)$", verification, re.MULTILINE)
-    if not match:
-        raise SystemExit("apksigner printed no signer")
-    return fingerprint(match.group(1))
+    """The single signing certificate's SHA-256, across apksigner output formats."""
+    # Depending on the tool and signature scheme, certificates are labelled by
+    # signer number, SDK range, or scheme (e.g. "V3.1 Signer:"). Source stamps
+    # and public-key digests are not APK signing certificates.
+    digests = set()
+    for line in verification.splitlines():
+        label, separator, value = line.partition(" certificate SHA-256 digest: ")
+        if not separator or not re.fullmatch(
+            r"Signer (?:#[1-9]\d*|\(.+\))|V\d+(?:\.\d+)? Signer:", label
+        ):
+            continue
+        digest = fingerprint(value.split()[0]) if value.split() else ""
+        if not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise SystemExit("apksigner printed an invalid signer SHA-256 digest")
+        digests.add(digest)
+    if not digests:
+        raise SystemExit(
+            "apksigner printed no recognized APK signing certificate; "
+            f"output was:\n{verification.strip()}"
+        )
+    if len(digests) != 1:
+        raise SystemExit("The APK has multiple signing certificates; expected only the release key")
+    return digests.pop()
 
 
 def caption(build: Build, built: list[Apk]) -> str:

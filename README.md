@@ -34,7 +34,7 @@ Cherrygram, exteraGram, OctoGram or Swiftgram.
 | Build | Where | What |
 | --- | --- | --- |
 | Stable | [GitHub Releases](https://github.com/eltavine/SereinGram-Android/releases) | Tagged versions |
-| Nightly | SereinGram's Telegram channel | Every commit that passes CI on `main` |
+| Nightly | [GitHub prereleases](https://github.com/eltavine/SereinGram-Android/releases) and SereinGram's Telegram channel | Every commit that passes CI on `main` |
 
 The APKs are for `arm64-v8a`, which most phones need, and `armeabi-v7a`, for
 older 32-bit ones, and run on Android 5.0 or later. SereinGram has an
@@ -277,8 +277,11 @@ Telegram's [API](https://core.telegram.org/api) and
 ## Releases
 
 - **Nightly**: every commit that passes CI on `main` is built, signed with the
-  release key and sent to the Telegram channel by `serein-nightly.yml`, unless
-  `main` has moved past it by then.
+  release key, published as a GitHub prerelease and sent to the Telegram channel
+  by `serein-nightly.yml`, unless `main` has moved past it by then. Each commit
+  has its own `nightly-<commit SHA>` tag; rerunning updates that commit's release.
+  Nightlies do not replace the latest stable release. Telegram captions link
+  to the GitHub release, and no additional secret is needed for GitHub publishing.
 - **Stable**: pushing a `v*` tag on a commit of `main` runs CI on it, builds
   and signs it, publishes it as the latest GitHub release and sends it to the
   channel, by `serein-stable.yml`.

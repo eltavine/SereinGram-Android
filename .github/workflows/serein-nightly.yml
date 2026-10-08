@@ -1,8 +1,8 @@
 name: SereinGram Nightly
 
-# Every commit that passes CI on main is built, signed with the release key and sent to the
-# Telegram channel, unless main has moved past it by then. The signing key and the bot's token
-# are secrets of the telegram environment.
+# Every commit that passes CI on main is built, signed with the release key, published as a
+# GitHub prerelease and sent to Telegram, unless main has moved past it by then.
+# The signing key and the bot's token are secrets of the telegram environment.
 on:
   workflow_run:
     workflows:
@@ -28,12 +28,14 @@ env:
 
 jobs:
   publish:
-    name: Build and send
+    name: Build and publish
     # Only commits pushed to main, not proposed ones, and only once CI passed.
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     environment: telegram
+    permissions:
+      contents: write
     services:
       # The Bot API server Telegram publishes, which takes uploads past the cloud server's 50 MB.
       bot-api:
@@ -129,10 +131,29 @@ jobs:
           compression-level: 0
           retention-days: 14
 
+      - name: Publish the GitHub nightly release.
+        if: steps.secrets.outputs.ready == 'true'
+        id: release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          tag_name: nightly-${{ github.event.workflow_run.head_sha }}
+          target_commitish: ${{ github.event.workflow_run.head_sha }}
+          name: SereinGram Nightly ${{ github.event.workflow_run.head_sha }}
+          prerelease: true
+          make_latest: false
+          generate_release_notes: true
+          files: ${{ steps.build.outputs.apk-dir }}/*.apk
+          fail_on_unmatched_files: true
+          body: |
+            Nightly APKs built from `${{ github.event.workflow_run.head_sha }}` after CI passed.
+            Both APKs have been verified against the release signing certificate.
+            Build: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
       - name: Send the APKs to Telegram.
         if: steps.secrets.outputs.ready == 'true'
         env:
           APK_DIR: ${{ steps.build.outputs.apk-dir }}
+          RELEASE_URL: ${{ steps.release.outputs.url }}
           SIGNER: ${{ steps.verify.outputs.signer }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: uv run Tools/serein/ci/release.py publish --apk-dir "$APK_DIR" --channel Nightly --chat-id "$TELEGRAM_CHAT_ID" --signer "$SIGNER"
+        run: uv run Tools/serein/ci/release.py publish --apk-dir "$APK_DIR" --channel Nightly --chat-id "$TELEGRAM_CHAT_ID" --signer "$SIGNER" --release-url "$RELEASE_URL"
