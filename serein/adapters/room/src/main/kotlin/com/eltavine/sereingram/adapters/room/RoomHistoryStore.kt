@@ -34,7 +34,8 @@ public class RoomHistoryStore internal constructor(private val database: History
         messageIds.distinct().chunked(MAX_IDS).flatMapTo(HashSet()) { dao.present(RecordKind.EDITED.code, dialogId, it) }
 
     override fun forget(dialogId: Long, messageIds: Collection<Int>) {
-        messageIds.distinct().chunked(MAX_IDS).forEach { dao.forget(dialogId, it) }
+        val kinds = RecordKind.entries.map { it.code }
+        messageIds.distinct().chunked(MAX_IDS).forEach { dao.forget(kinds, dialogId, it) }
     }
 
     override fun count(dialogId: Long, kind: RecordKind): Int = dao.count(kind.code, dialogId)
