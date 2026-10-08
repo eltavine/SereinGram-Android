@@ -13,6 +13,7 @@
     "TMessagesProj/src/main/res/values*/strings_serein.xml",
     "TMessagesProj/src/main/res/drawable*/serein_*",
     ".github/workflows/serein-*",
+    ".github/dependabot.yml",
     "BRANDING.md",
     "README.md"
   ],
