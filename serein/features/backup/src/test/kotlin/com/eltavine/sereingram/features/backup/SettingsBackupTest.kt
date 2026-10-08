@@ -91,6 +91,23 @@ class SettingsBackupTest {
     }
 
     @Test
+    fun optionsAddedSinceABackupWasWrittenAreLeftAsTheyAre() {
+        val olderRelease = listOf(flag, count)
+        val document = SettingsBackup.write(options().apply { set(count, 7) }, olderRelease, account = 0, user = USER)
+        val target = options().apply {
+            set(flag, true)
+            set(mark, "🗑")
+            set(perAccount, true, account = 0)
+        }
+        val result = assertIs<Restore.Done>(SettingsBackup.restore(target, all, account = 0, user = USER, document))
+        assertEquals(2, result.changed)
+        assertFalse(target.get(flag))
+        assertEquals(7, target.get(count))
+        assertEquals("🗑", target.get(mark))
+        assertTrue(target.get(perAccount, account = 0))
+    }
+
+    @Test
     fun secretsStayOutOfBackupsAndAreKeptOnRestore() {
         val source = options().apply { set(key, "sk-source") }
         val document = SettingsBackup.write(source, all, account = 0, user = USER)

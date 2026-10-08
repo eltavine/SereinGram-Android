@@ -5,6 +5,7 @@ import com.eltavine.sereingram.core.OptionScope
 import com.eltavine.sereingram.core.OptionType
 import com.eltavine.sereingram.core.Options
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -33,7 +34,9 @@ public sealed interface Restore {
  * options of the device and of one account that differ from their defaults; options that are
  * not [Option.backedUp], such as secrets, stay out of it, and restoring one leaves them as they are.
  * It names the Telegram user of the account, whose options go back to that user only, in
- * whichever of the app's accounts they are signed in.
+ * whichever of the app's accounts they are signed in. It also lists every option the release
+ * that wrote it could back up, so that restoring it leaves options added since as they are;
+ * releases before the list ignore it, and backups without it reset whatever they do not hold.
  */
 public object SettingsBackup {
     public const val FORMAT: String = "sereingram-settings"
@@ -44,6 +47,7 @@ public object SettingsBackup {
         put("format", JsonPrimitive(FORMAT))
         put("version", JsonPrimitive(VERSION))
         put("user", JsonPrimitive(user))
+        put("known", JsonArray(all.filter { it.backedUp }.map { JsonPrimitive(it.key) }))
         OptionScope.entries.forEach { scope ->
             put(section(scope), buildJsonObject {
                 backedUp(all, scope).forEach { option ->
@@ -69,6 +73,7 @@ public object SettingsBackup {
         // Backups of version 1 do not say whose they are, and go to any account as they always did.
         val savedBy = (root["user"] as? JsonPrimitive)?.longOrNull
         val fromAnotherUser = savedBy != null && savedBy != user
+        val knownToWriter = (root["known"] as? JsonArray)?.mapNotNull { (it as? JsonPrimitive)?.takeIf { key -> key.isString }?.content }?.toSet()
         var changed = 0
         var skipped = 0
         OptionScope.entries.forEach { scope ->
@@ -87,7 +92,10 @@ public object SettingsBackup {
                     return@forEach
                 }
                 val before = options.get(option, owner)
-                if (value == null) options.reset(option, owner) else options.setAny(option, value, owner)
+                when {
+                    value != null -> options.setAny(option, value, owner)
+                    knownToWriter == null || option.key in knownToWriter -> options.reset(option, owner)
+                }
                 if (options.get(option, owner) != before) {
                     changed++
                 }
