@@ -20,6 +20,7 @@ internal class GhostIndicator(private val options: Options) : DialogsHooks.Title
     private var icon: Drawable? = null
 
     override fun draw(account: Int, slot: Any, animated: Boolean): Boolean {
+        watchNagram()
         if (!options.get(GhostOptions.statusIndicator) || !NagramGhost.isActive) {
             return false
         }
@@ -34,6 +35,30 @@ internal class GhostIndicator(private val options: Options) : DialogsHooks.Title
     }
 
     companion object {
+        private var watching = false
+
+        /**
+         * Nagram's own ghost mode screen, which its drawer opens too, only says that the user's info changed
+         * when it turns ghost mode on or off. Starts listening for that from the chat list, on the UI thread.
+         */
+        private fun watchNagram() {
+            if (watching) {
+                return
+            }
+            watching = true
+            var shown = NagramGhost.isActive
+            val observer = NotificationCenter.NotificationCenterDelegate { _, _, _ ->
+                val active = NagramGhost.isActive
+                if (active != shown) {
+                    shown = active
+                    refresh()
+                }
+            }
+            for (account in 0 until UserConfig.MAX_ACCOUNT_COUNT) {
+                NotificationCenter.getInstance(account).addObserver(observer, NotificationCenter.mainUserInfoChanged)
+            }
+        }
+
         /** Has every chat list redraw its title status, the way Telegram does when the emoji status changes. */
         fun refresh() {
             AndroidUtilities.runOnUIThread {
