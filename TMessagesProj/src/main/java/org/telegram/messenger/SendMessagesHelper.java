@@ -4291,7 +4291,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         TLRPC.MessageMedia location = sendMessageParams.location;
         TLRPC.TL_photo photo = sendMessageParams.photo;
         VideoEditedInfo videoEditedInfo = sendMessageParams.videoEditedInfo;
-        TLRPC.User user = sendMessageParams.user;
+        TLRPC.User user = (TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, sendMessageParams.user);
         TLRPC.TL_document document = sendMessageParams.document;
         TLRPC.TL_game game = sendMessageParams.game;
         TLRPC.TL_messageMediaPoll poll = sendMessageParams.poll;

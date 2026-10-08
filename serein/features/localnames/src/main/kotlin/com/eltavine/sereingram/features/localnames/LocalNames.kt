@@ -26,15 +26,41 @@ public class LocalNames(private val stores: (account: Int) -> LocalNameStore) {
         accounts.getOrPut(account) { ConcurrentHashMap(stores(account).all()) }
 }
 
-/** The names Telegram gave people and chats before a local name replaced them, while it is known. */
-public class OriginalNames {
-    private val names = ConcurrentHashMap<Pair<Int, Long>, String>()
+/** A name as Telegram has it: a person's first and last name, or a chat's title as the first. */
+public data class PeerName(val first: String, val last: String = "") {
+    public val full: String get() = listOf(first, last).filter { it.isNotBlank() }.joinToString(" ")
+}
 
-    public fun remember(account: Int, peerId: Long, name: String) {
-        names[account to peerId] = name
+/**
+ * The names Telegram gave people and chats that show a local name instead,
+ * so that whatever leaves the device or goes into Telegram's database can
+ * carry them rather than the local name.
+ */
+public class OriginalNames {
+    private class Renamed(val original: PeerName, val shown: PeerName)
+
+    private val names = ConcurrentHashMap<Pair<Int, Long>, Renamed>()
+
+    /**
+     * The name to show instead of [current], remembering [current] unless it
+     * is the local name shown before; null when [current] already is [local].
+     */
+    public fun replace(account: Int, peerId: Long, current: PeerName, local: String): PeerName? {
+        val shown = PeerName(local)
+        if (current == shown) {
+            return null
+        }
+        names.compute(account to peerId) { _, before ->
+            Renamed(if (before != null && current == before.shown) before.original else current, shown)
+        }
+        return shown
     }
 
-    public fun of(account: Int, peerId: Long): String? = names[account to peerId]
+    /** Telegram's name for a peer that shows [current], when [current] is the local name it was given. */
+    public fun behind(account: Int, peerId: Long, current: PeerName): PeerName? =
+        names[account to peerId]?.takeIf { it.shown == current }?.original
+
+    public fun of(account: Int, peerId: Long): PeerName? = names[account to peerId]?.original
 
     public fun forget(account: Int, peerId: Long) {
         names.remove(account to peerId)

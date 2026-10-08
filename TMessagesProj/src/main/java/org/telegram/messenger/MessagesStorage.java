@@ -10773,6 +10773,7 @@ public class MessagesStorage extends BaseController {
         for (int a = 0; a < users.size(); a++) {
             TLRPC.User user = users.get(a);
             if (user == null) continue;
+            user = (TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, user);
             if (user.min) {
                 SQLiteCursor cursor = database.queryFinalized(String.format(Locale.US, "SELECT data FROM users WHERE uid = %d", user.id));
                 if (cursor.next()) {
@@ -10888,6 +10889,7 @@ public class MessagesStorage extends BaseController {
         SQLitePreparedStatement state = database.executeFast("REPLACE INTO chats VALUES(?, ?, ?)");
         for (int a = 0; a < chats.size(); a++) {
             TLRPC.Chat chat = chats.get(a);
+            chat = (TLRPC.Chat) com.eltavine.sereingram.hooks.PeerHooks.originalChat(currentAccount, chat);
             if (chat.min) {
                 SQLiteCursor cursor = database.queryFinalized(String.format(Locale.US, "SELECT data FROM chats WHERE uid = %d", chat.id));
                 if (cursor.next()) {

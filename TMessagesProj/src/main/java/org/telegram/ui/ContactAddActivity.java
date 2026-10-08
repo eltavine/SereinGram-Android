@@ -576,9 +576,9 @@ public class ContactAddActivity extends BaseFragment implements NotificationCent
                             user.phone = PhoneFormat.stripExceptNumbers(phone);
                         }
                     }
-                    firstNameField.setText(user.first_name);
+                    firstNameField.setText(((TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, user)).first_name);
                     firstNameField.editText.setSelection(firstNameField.editText.length());
-                    lastNameField.setText(user.last_name);
+                    lastNameField.setText(((TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, user)).last_name);
                 }
 
                 final TLRPC.UserFull userInfo = getMessagesController().getUserFull(user_id);

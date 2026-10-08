@@ -2272,6 +2272,7 @@ public class ContactsController extends BaseController {
         if (user == null) {
             return;
         }
+        user = (TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, user);
         int rawContactId = query.size();
         ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI);
         builder.withValue(ContactsContract.RawContacts.ACCOUNT_NAME, systemAccount.name);
@@ -2360,8 +2361,8 @@ public class ContactsController extends BaseController {
 
         final TLRPC.TL_contacts_addContact req = new TLRPC.TL_contacts_addContact();
         req.id = getMessagesController().getInputUser(user);
-        req.first_name = user.first_name;
-        req.last_name = user.last_name;
+        req.first_name = ((TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, user)).first_name;
+        req.last_name = ((TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, user)).last_name;
         req.phone = user.phone;
         req.add_phone_privacy_exception = exception;
         if (req.phone == null) {

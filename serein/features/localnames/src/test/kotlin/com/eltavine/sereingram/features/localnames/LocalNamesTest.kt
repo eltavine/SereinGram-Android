@@ -42,12 +42,44 @@ class LocalNamesTest {
     }
 
     @Test
-    fun originalNamesAreRememberedUntilForgotten() {
+    fun aLocalNameReplacesTelegramsNameWhichIsRemembered() {
         val originals = OriginalNames()
-        originals.remember(0, 7, "Alice Smith")
-        assertEquals("Alice Smith", originals.of(0, 7))
+        assertEquals(PeerName("Boss"), originals.replace(0, 7, PeerName("Alice", "Smith"), "Boss"))
+        assertEquals(PeerName("Alice", "Smith"), originals.of(0, 7))
+        assertNull(originals.replace(0, 7, PeerName("Boss"), "Boss"), "a peer that shows its local name stays as it is")
+        assertEquals(PeerName("Alice", "Smith"), originals.of(0, 7))
         assertNull(originals.of(1, 7))
         originals.forget(0, 7)
         assertNull(originals.of(0, 7))
+    }
+
+    @Test
+    fun onlyAPeerShowingItsLocalNameHasTelegramsNameBehindIt() {
+        val originals = OriginalNames()
+        originals.replace(0, 7, PeerName("Alice", "Smith"), "Boss")
+        assertEquals(PeerName("Alice", "Smith"), originals.behind(0, 7, PeerName("Boss")))
+        assertNull(originals.behind(0, 7, PeerName("Alicia")), "a fresh name from Telegram is its own")
+        assertNull(originals.behind(1, 7, PeerName("Boss")))
+        originals.forget(0, 7)
+        assertNull(originals.behind(0, 7, PeerName("Boss")), "without a local name nothing is behind")
+    }
+
+    @Test
+    fun changingALocalNameKeepsTelegramsName() {
+        val originals = OriginalNames()
+        originals.replace(0, 7, PeerName("Alice", "Smith"), "Boss")
+        assertEquals(PeerName("Chief"), originals.replace(0, 7, PeerName("Boss"), "Chief"))
+        assertEquals(PeerName("Alice", "Smith"), originals.of(0, 7))
+        assertNull(originals.behind(0, 7, PeerName("Boss")), "an earlier local name is not shown any more")
+        assertEquals(PeerName("Alice", "Smith"), originals.behind(0, 7, PeerName("Chief")))
+        originals.replace(0, 7, PeerName("Alicia", "Smith"), "Chief")
+        assertEquals(PeerName("Alicia", "Smith"), originals.of(0, 7), "Telegram renaming the peer is remembered")
+    }
+
+    @Test
+    fun fullNamesLeaveOutWhatIsBlank() {
+        assertEquals("Alice Smith", PeerName("Alice", "Smith").full)
+        assertEquals("Book club", PeerName("Book club").full)
+        assertEquals("Smith", PeerName(" ", "Smith").full)
     }
 }

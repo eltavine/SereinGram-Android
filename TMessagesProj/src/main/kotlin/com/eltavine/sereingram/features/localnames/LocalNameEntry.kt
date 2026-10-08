@@ -38,7 +38,7 @@ internal class LocalNameEntry(private val feature: LocalNamesFeature) : ChatMenu
             background = Theme.createEditTextDrawable(context, true)
             setSingleLine(true)
             setPadding(0, dp(4f), 0, dp(4f))
-            hint = feature.originals.of(account, dialogId) ?: Chats.name(account, dialogId)
+            hint = feature.originals.of(account, dialogId)?.full ?: Chats.name(account, dialogId)
             setText(current.orEmpty())
             setSelection(length())
         }

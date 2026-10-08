@@ -19,7 +19,7 @@ internal class LocalNamesActivity(private val feature: LocalNamesFeature) : Univ
         val names = feature.names.all(currentAccount)
         shown += names.keys.sorted()
         shown.forEachIndexed { index, peerId ->
-            items.add(UItem.asButton(index + 1, names.getValue(peerId), feature.originals.of(currentAccount, peerId).orEmpty()))
+            items.add(UItem.asButton(index + 1, names.getValue(peerId), feature.originals.of(currentAccount, peerId)?.full.orEmpty()))
         }
         val note = if (shown.isEmpty()) R.string.serein_local_names_empty else R.string.serein_local_names_list_note
         items.add(UItem.asShadow(getString(note)))

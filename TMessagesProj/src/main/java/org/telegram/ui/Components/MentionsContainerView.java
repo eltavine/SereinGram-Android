@@ -645,7 +645,7 @@ public class MentionsContainerView extends FrameLayout implements NotificationCe
                 if (UserObject.getPublicUsername(user) != null) {
                     delegate.replaceText(start, len, "@" + UserObject.getPublicUsername(user) + (NaConfig.INSTANCE.getAddCommaAfterMention().Bool() ? ", " : " "), false);
                 } else {
-                    String name = UserObject.getFirstName(user, false);
+                    String name = UserObject.getFirstName((TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(UserConfig.selectedAccount, user), false);
                     Spannable spannable = new SpannableString(name + (NaConfig.INSTANCE.getAddCommaAfterMention().Bool() ? ", " : " "));
                     spannable.setSpan(new URLSpanUserMention("" + user.id, 3), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     delegate.replaceText(start, len, spannable, false);

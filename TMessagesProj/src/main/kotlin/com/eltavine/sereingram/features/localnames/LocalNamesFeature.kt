@@ -18,13 +18,16 @@ import org.telegram.messenger.R
 import org.telegram.messenger.UserConfig
 import org.telegram.messenger.Utilities
 import org.telegram.tgnet.ConnectionsManager
+import org.telegram.tgnet.SerializedData
+import org.telegram.tgnet.TLObject
 import org.telegram.tgnet.TLRPC
 import org.telegram.tgnet.Vector
 
 /**
  * Names for people and chats that only this device shows, after NagramX's
  * local renaming: Telegram's users and chats get them as they are put into
- * memory, so every screen shows them without asking for them.
+ * memory, so every screen shows them without asking for them. Whatever leaves
+ * the device or goes into Telegram's database gets Telegram's names back.
  */
 class LocalNamesFeature(stores: (account: Int) -> LocalNameStore) : SereinModule, SettingsContributor {
     override val id: String = "local_names"
@@ -34,9 +37,32 @@ class LocalNamesFeature(stores: (account: Int) -> LocalNameStore) : SereinModule
     internal val names = LocalNames(stores)
     internal val originals = OriginalNames()
 
+    internal val users = object : PeerHooks.UserRewriter {
+        override fun beforePut(account: Int, user: Any) = rename(account, user as TLRPC.User)
+
+        override fun original(account: Int, user: Any): Any {
+            val shown = user as TLRPC.User
+            val name = originals.behind(account, shown.id, nameOf(shown)) ?: return user
+            return shown.copied { TLRPC.User.TLdeserialize(it, it.readInt32(true), true) }.apply {
+                first_name = name.first
+                last_name = name.last
+            }
+        }
+    }
+
+    internal val chats = object : PeerHooks.ChatRewriter {
+        override fun beforePut(account: Int, chat: Any) = rename(account, chat as TLRPC.Chat)
+
+        override fun original(account: Int, chat: Any): Any {
+            val shown = chat as TLRPC.Chat
+            val name = originals.behind(account, -shown.id, PeerName(shown.title.orEmpty())) ?: return chat
+            return shown.copied { TLRPC.Chat.TLdeserialize(it, it.readInt32(true), true) }.apply { title = name.first }
+        }
+    }
+
     override fun start(context: ModuleContext) {
-        PeerHooks.userRewriters.install { account, user -> rename(account, user as TLRPC.User) }
-        PeerHooks.chatRewriters.install { account, chat -> rename(account, chat as TLRPC.Chat) }
+        PeerHooks.userRewriters.install(users)
+        PeerHooks.chatRewriters.install(chats)
         ChatMenuHooks.entries.install(LocalNameEntry(this))
         // Reads the names before Telegram puts its first users, which can happen on the UI thread.
         Utilities.globalQueue.postRunnable {
@@ -48,50 +74,50 @@ class LocalNamesFeature(stores: (account: Int) -> LocalNameStore) : SereinModule
 
     private fun rename(account: Int, user: TLRPC.User) {
         val local = names.of(account, user.id) ?: return
-        if (user.first_name != local || !user.last_name.isNullOrEmpty()) {
-            originals.remember(account, user.id, listOfNotNull(user.first_name, user.last_name).filter { it.isNotBlank() }.joinToString(" "))
-            user.first_name = local
-            user.last_name = ""
-        }
+        val shown = originals.replace(account, user.id, nameOf(user), local) ?: return
+        user.first_name = shown.first
+        user.last_name = shown.last
     }
 
     private fun rename(account: Int, chat: TLRPC.Chat) {
         val local = names.of(account, -chat.id) ?: return
-        if (chat.title != local) {
-            originals.remember(account, -chat.id, chat.title.orEmpty())
-            chat.title = local
-        }
+        val shown = originals.replace(account, -chat.id, PeerName(chat.title.orEmpty()), local) ?: return
+        chat.title = shown.first
     }
 
-    /** Sets or removes a local name and shows the result at once; Telegram's name comes back from its servers. */
+    /** Sets or removes a local name and shows the result at once, with Telegram's name back when it is removed. */
     internal fun set(account: Int, peerId: Long, name: String?) {
         val controller = MessagesController.getInstance(account)
         val kept = names.set(account, peerId, name)
-        if (peerId > 0) {
-            val user = controller.getUser(peerId) ?: return
-            if (kept != null) {
-                rename(account, user)
-            } else {
-                originals.of(account, peerId)?.let { user.first_name = it; user.last_name = "" }
-                refetchUser(account, peerId)
-            }
-        } else {
-            val chat = controller.getChat(-peerId) ?: return
-            if (kept != null) {
-                rename(account, chat)
-            } else {
-                originals.of(account, peerId)?.let { chat.title = it }
-                controller.loadFullChat(-peerId, 0, true)
-            }
-        }
+        val original = originals.of(account, peerId)
         if (kept == null) {
             originals.forget(account, peerId)
+        }
+        if (peerId > 0) {
+            controller.getUser(peerId)?.let { user ->
+                when {
+                    kept != null -> rename(account, user)
+                    original != null -> {
+                        user.first_name = original.first
+                        user.last_name = original.last
+                    }
+                    else -> refetchUser(account, peerId)
+                }
+            }
+        } else {
+            controller.getChat(-peerId)?.let { chat ->
+                when {
+                    kept != null -> rename(account, chat)
+                    original != null -> chat.title = original.first
+                    else -> controller.loadFullChat(-peerId, 0, true)
+                }
+            }
         }
         refresh(account)
         AndroidUtilities.runOnUIThread({ refresh(account) }, REFETCH_DELAY)
     }
 
-    // Telegram may have saved the renamed user to its database, so the fresh one is saved too.
+    // Telegram's name is unknown when the user only ever showed the local name, so it is fetched again.
     private fun refetchUser(account: Int, userId: Long) {
         val controller = MessagesController.getInstance(account)
         val input = controller.getInputUser(userId) ?: return
@@ -127,5 +153,24 @@ class LocalNamesFeature(stores: (account: Int) -> LocalNameStore) : SereinModule
 
     private companion object {
         const val REFETCH_DELAY = 2_000L
+    }
+}
+
+private fun nameOf(user: TLRPC.User) = PeerName(user.first_name.orEmpty(), user.last_name.orEmpty())
+
+/** A copy of a Telegram object, written and read the way Telegram stores one. */
+private fun <T : TLObject> T.copied(read: (SerializedData) -> T): T {
+    val written = SerializedData()
+    val bytes = try {
+        serializeToStream(written)
+        written.toByteArray()
+    } finally {
+        written.cleanup()
+    }
+    val reader = SerializedData(bytes)
+    return try {
+        read(reader)
+    } finally {
+        reader.cleanup()
     }
 }

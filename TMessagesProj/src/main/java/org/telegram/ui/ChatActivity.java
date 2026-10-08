@@ -7786,7 +7786,7 @@ public class ChatActivity extends BaseFragment implements
                     if (UserObject.getPublicUsername(user) != null) {
                         chatActivityEnterView.replaceWithText(start, len, "@" + UserObject.getPublicUsername(user) + (NaConfig.INSTANCE.getAddCommaAfterMention().Bool() ? ", " : " "), false);
                     } else {
-                        String name = UserObject.getFirstName(user, false);
+                        String name = UserObject.getFirstName((TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, user), false);
                         Spannable spannable = new SpannableString("@" + name + (NaConfig.INSTANCE.getAddCommaAfterMention().Bool() ? ", " : " "));
                         spannable.setSpan(new URLSpanUserMention("" + user.id, 3), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         chatActivityEnterView.replaceWithText(start, len, spannable, false);
@@ -7952,7 +7952,7 @@ public class ChatActivity extends BaseFragment implements
             } else if (object instanceof TLRPC.User) {
                 TLRPC.User user = (TLRPC.User) object;
                 if (!(searchingForUser && searchContainer.getVisibility() == View.VISIBLE) && user != null) {
-                    String name = UserObject.getFirstName(user, false);
+                    String name = UserObject.getFirstName((TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, user), false);
                     Spannable spannable = new SpannableString("@" + name + (NaConfig.INSTANCE.getAddCommaAfterMention().Bool() ? ", " : " "));
                     spannable.setSpan(new URLSpanUserMention("" + user.id, 3), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     chatActivityEnterView.replaceWithText(start, len, spannable, false);
@@ -41077,7 +41077,7 @@ public class ChatActivity extends BaseFragment implements
                 if (username != null) {
                     sb.append("@").append(username).append(NaConfig.INSTANCE.getAddCommaAfterMention().Bool() ? ", " : " ");
                 } else {
-                    String name = UserObject.getFirstName(user, false);
+                    String name = UserObject.getFirstName((TLRPC.User) com.eltavine.sereingram.hooks.PeerHooks.originalUser(currentAccount, user), false);
                     Spannable spannable = new SpannableString(name + (NaConfig.INSTANCE.getAddCommaAfterMention().Bool() ? ", " : " "));
                     spannable.setSpan(new URLSpanUserMention("" + user.id, 3), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     sb.append(spannable);
