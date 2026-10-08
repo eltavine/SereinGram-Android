@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.eltavine.sereingram.ports.HistoryRecord
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.ports.KeptChat
+import com.eltavine.sereingram.ports.KeptText
 import com.eltavine.sereingram.ports.RecordKind
 
 /**
@@ -26,6 +27,12 @@ public class RoomHistoryStore internal constructor(private val database: History
 
     override fun deleted(dialogId: Long, limit: Int, beforeMessageId: Int): List<HistoryRecord> =
         dao.page(RecordKind.DELETED.code, dialogId, beforeMessageId, limit).mapNotNull(::record)
+
+    override fun deletedTexts(dialogId: Long, limit: Int, beforeMessageId: Int): List<KeptText> =
+        dao.textsBefore(RecordKind.DELETED.code, dialogId, beforeMessageId, limit).map(::text)
+
+    override fun deletedTextsAfter(dialogId: Long, afterMessageId: Int, limit: Int): List<KeptText> =
+        dao.textsAfter(RecordKind.DELETED.code, dialogId, afterMessageId, limit).map(::text)
 
     override fun revisions(dialogId: Long, messageId: Int): List<HistoryRecord> =
         dao.versions(RecordKind.EDITED.code, dialogId, messageId).mapNotNull(::record)
@@ -55,6 +62,8 @@ public class RoomHistoryStore internal constructor(private val database: History
     internal fun close() {
         database.close()
     }
+
+    private fun text(row: TextRow) = KeptText(row.messageId, row.date, row.recordedAt, row.fromId, row.text)
 
     private fun entity(record: HistoryRecord) = RecordEntity(
         id = 0,

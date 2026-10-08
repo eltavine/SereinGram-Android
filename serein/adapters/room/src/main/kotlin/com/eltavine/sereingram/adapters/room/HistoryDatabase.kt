@@ -30,6 +30,14 @@ internal class RecordEntity(
     @ColumnInfo(name = "api_layer") val apiLayer: Int,
 )
 
+internal class TextRow(
+    @ColumnInfo(name = "message_id") val messageId: Int,
+    val date: Int,
+    @ColumnInfo(name = "recorded_at") val recordedAt: Long,
+    @ColumnInfo(name = "from_id") val fromId: Long,
+    val text: String,
+)
+
 internal class ChatRow(
     @ColumnInfo(name = "dialog_id") val dialogId: Long,
     val count: Int,
@@ -46,6 +54,18 @@ internal interface RecordDao {
             "ORDER BY message_id DESC LIMIT :limit",
     )
     fun page(kind: Int, dialogId: Long, before: Int, limit: Int): List<RecordEntity>
+
+    @Query(
+        "SELECT message_id, date, recorded_at, from_id, text FROM records " +
+            "WHERE kind = :kind AND dialog_id = :dialogId AND message_id < :before ORDER BY message_id DESC LIMIT :limit",
+    )
+    fun textsBefore(kind: Int, dialogId: Long, before: Int, limit: Int): List<TextRow>
+
+    @Query(
+        "SELECT message_id, date, recorded_at, from_id, text FROM records " +
+            "WHERE kind = :kind AND dialog_id = :dialogId AND message_id > :after ORDER BY message_id LIMIT :limit",
+    )
+    fun textsAfter(kind: Int, dialogId: Long, after: Int, limit: Int): List<TextRow>
 
     @Query(
         "SELECT * FROM records WHERE kind = :kind AND dialog_id = :dialogId AND message_id = :messageId " +

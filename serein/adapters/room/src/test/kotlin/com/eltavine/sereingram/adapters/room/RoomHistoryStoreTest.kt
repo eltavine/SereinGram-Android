@@ -110,6 +110,23 @@ class RoomHistoryStoreTest {
     }
 
     @Test
+    fun deletedTextsPageBothWaysWithoutEditsOrOtherChats() {
+        store.add(
+            listOf(
+                record(RecordKind.DELETED, 3),
+                record(RecordKind.DELETED, 9),
+                record(RecordKind.DELETED, 5),
+                record(RecordKind.EDITED, 4),
+                record(RecordKind.DELETED, 6, dialogId = 1L),
+            ),
+        )
+        assertEquals(listOf(9, 5), store.deletedTexts(-100L, limit = 2).map { it.messageId })
+        assertEquals(listOf(3), store.deletedTexts(-100L, limit = 5, beforeMessageId = 5).map { it.messageId })
+        assertEquals(listOf(5, 9), store.deletedTextsAfter(-100L, afterMessageId = 3, limit = 5).map { it.messageId })
+        assertEquals("text 3", store.deletedTextsAfter(-100L, afterMessageId = 0, limit = 1).single().text)
+    }
+
+    @Test
     fun clearingErasesEveryChatAndKind() {
         store.add(listOf(record(RecordKind.DELETED, 1, dialogId = 1L), record(RecordKind.EDITED, 2, dialogId = 2L)))
         store.clearAll()

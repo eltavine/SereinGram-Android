@@ -31,6 +31,15 @@ public class HistoryRecord(
     public val apiLayer: Int,
 )
 
+/** What a kept message said, who sent it and when it was sent and recorded, without Telegram's copy of it. */
+public class KeptText(
+    public val messageId: Int,
+    public val date: Int,
+    public val recordedAt: Long,
+    public val fromId: Long,
+    public val text: String,
+)
+
 /** A chat that has records of one kind: how many, and when the latest was recorded. */
 public class KeptChat(
     public val dialogId: Long,
@@ -45,6 +54,12 @@ public interface HistoryStore {
 
     /** Deleted messages of [dialogId] with ids below [beforeMessageId], newest first. */
     public fun deleted(dialogId: Long, limit: Int, beforeMessageId: Int = Int.MAX_VALUE): List<HistoryRecord>
+
+    /** The texts of deleted messages of [dialogId] with ids below [beforeMessageId], newest first. */
+    public fun deletedTexts(dialogId: Long, limit: Int, beforeMessageId: Int = Int.MAX_VALUE): List<KeptText>
+
+    /** The texts of deleted messages of [dialogId] with ids above [afterMessageId], oldest first. */
+    public fun deletedTextsAfter(dialogId: Long, afterMessageId: Int, limit: Int): List<KeptText>
 
     /** Earlier versions of a message, oldest first. */
     public fun revisions(dialogId: Long, messageId: Int): List<HistoryRecord>

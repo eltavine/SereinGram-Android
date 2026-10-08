@@ -8,8 +8,8 @@ import androidx.core.content.FileProvider
 import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.hooks.ChatMenuHooks
-import com.eltavine.sereingram.ports.HistoryRecord
 import com.eltavine.sereingram.ports.HistoryStore
+import com.eltavine.sereingram.ports.KeptText
 import com.eltavine.sereingram.ports.RecordKind
 import com.eltavine.sereingram.support.Chats
 import org.telegram.messenger.AndroidUtilities
@@ -55,7 +55,7 @@ internal class DeletedMessagesActivity(
     private val chat: ChatActivity?,
     private val forgetMedia: () -> Unit,
 ) : UniversalFragment() {
-    private var records: List<HistoryRecord>? = null
+    private var records: List<KeptText>? = null
 
     override fun onFragmentCreate(): Boolean {
         reload()
@@ -64,7 +64,7 @@ internal class DeletedMessagesActivity(
 
     private fun reload() {
         Utilities.globalQueue.postRunnable {
-            val loaded = Faults.guard("deleted messages", fallback = emptyList()) { store.deleted(dialogId, LIMIT) }
+            val loaded = Faults.guard("deleted messages", fallback = emptyList()) { store.deletedTexts(dialogId, LIMIT) }
             AndroidUtilities.runOnUIThread {
                 records = loaded
                 listView?.adapter?.update(true)
@@ -121,10 +121,12 @@ internal class DeletedMessagesActivity(
                     deleted = getString(R.string.serein_history_deleted_mark),
                     noText = getString(R.string.serein_history_version_no_text),
                 )
-                val text = transcript(store.deleted(dialogId, EXPORT_LIMIT), words, { Chats.name(account, it) }, ZoneId.systemDefault())
-                File(context.cacheDir, "media/serein_deleted_$dialogId.txt").apply {
-                    parentFile?.mkdirs()
-                    writeText(text)
+                val messages = inPages(EXPORT_PAGE) { after, limit -> store.deletedTextsAfter(dialogId, after, limit) }
+                val folder = File(context.cacheDir, "media").apply { mkdirs() }
+                // A transcript stays readable to the app it was shared with until the next export replaces it.
+                folder.listFiles { file -> file.name.startsWith(EXPORT_PREFIX) }?.forEach(File::delete)
+                File(folder, "$EXPORT_PREFIX$dialogId.txt").apply {
+                    bufferedWriter().use { writeTranscript(messages, words, { Chats.name(account, it) }, ZoneId.systemDefault(), it) }
                 }
             } ?: return@postRunnable
             AndroidUtilities.runOnUIThread {
@@ -160,7 +162,8 @@ internal class DeletedMessagesActivity(
 
     private companion object {
         const val LIMIT = 500
-        const val EXPORT_LIMIT = 100_000
+        const val EXPORT_PAGE = 500
+        const val EXPORT_PREFIX = "serein_deleted_"
         const val EXPORT = 100_000
         const val CLEAR = 100_001
     }
