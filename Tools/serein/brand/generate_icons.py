@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
@@ -307,6 +307,7 @@ def main():
     for density, factor in DENSITIES.items():
         size = round(LEGACY_SIZE * factor)
         folder = RES / f"drawable-{density}"
+        folder.mkdir(parents=True, exist_ok=True)
         render(size, TILES[""], shape="round", margin=0).save(
             folder / "ic_launcher_dr.png", optimize=True
         )
