@@ -53,6 +53,7 @@ object ChatLockFeature : SereinModule, SettingsContributor {
     override fun start(context: ModuleContext) {
         val options = context.options
         NavigationHooks.guards.install { screen, preview, retry -> allows(options, screen as BaseFragment, preview, retry) }
+        NavigationHooks.restoreGuards.install { screen -> allowsRestoring(options, screen as BaseFragment) }
         ChatMenuHooks.entries.install(LockEntry(options))
         DialogsHooks.previewReplacers.install { account, dialogId -> lockedPreview(options, account, dialogId) }
         // Notifications are built off the main thread, where the folder of a chat cannot be read safely,
@@ -94,6 +95,14 @@ object ChatLockFeature : SereinModule, SettingsContributor {
             retry.run()
         }
         return false
+    }
+
+    // Nothing is asked while Telegram recreates its screens, and which chats are archived is not known yet.
+    private fun allowsRestoring(options: Options, screen: BaseFragment): Boolean {
+        val target = targetOf(screen) ?: return true
+        val settings = settings(options, screen.currentAccount)
+        val restored = if (target is LockTarget.Chat && settings.lockArchive) LockTarget.Chat(target.dialogId, target.secret, archived = true) else target
+        return window.isOpen() || !isLocked(restored, settings)
     }
 
     /**

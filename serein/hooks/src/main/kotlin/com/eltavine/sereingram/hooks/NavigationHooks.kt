@@ -14,10 +14,21 @@ public object NavigationHooks {
         public fun allows(screen: Any, preview: Boolean, retry: Runnable): Boolean
     }
 
+    public fun interface RestoreGuard {
+        /** Whether [screen], which Telegram recreates as it was before its process stopped, may come back unasked. */
+        public fun allowsRestoring(screen: Any): Boolean
+    }
+
     public val guards: Handlers<Guard> = Handlers()
+    public val restoreGuards: Handlers<RestoreGuard> = Handlers()
 
     /** Whether [screen] opens now. A guard that throws lets it open. */
     @JvmStatic
     public fun allowsPresenting(screen: Any, preview: Boolean, retry: Runnable): Boolean =
         guards.all.all { guard -> Faults.guard("navigation guard", fallback = true) { guard.allows(screen, preview, retry) } }
+
+    /** Whether Telegram puts [screen] back after its process stopped. A guard that throws keeps it out, as restoring can be done without. */
+    @JvmStatic
+    public fun allowsRestoring(screen: Any): Boolean =
+        restoreGuards.all.all { guard -> Faults.guard("restore guard", fallback = false) { guard.allowsRestoring(screen) } }
 }

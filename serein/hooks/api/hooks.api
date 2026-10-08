@@ -162,11 +162,17 @@ public abstract interface class com/eltavine/sereingram/hooks/MessageMenuHooks$E
 public final class com/eltavine/sereingram/hooks/NavigationHooks {
 	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/NavigationHooks;
 	public static final fun allowsPresenting (Ljava/lang/Object;ZLjava/lang/Runnable;)Z
+	public static final fun allowsRestoring (Ljava/lang/Object;)Z
 	public final fun getGuards ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getRestoreGuards ()Lcom/eltavine/sereingram/core/Handlers;
 }
 
 public abstract interface class com/eltavine/sereingram/hooks/NavigationHooks$Guard {
 	public abstract fun allows (Ljava/lang/Object;ZLjava/lang/Runnable;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/NavigationHooks$RestoreGuard {
+	public abstract fun allowsRestoring (Ljava/lang/Object;)Z
 }
 
 public final class com/eltavine/sereingram/hooks/NotificationHooks {

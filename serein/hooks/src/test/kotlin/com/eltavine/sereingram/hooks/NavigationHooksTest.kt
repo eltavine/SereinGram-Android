@@ -38,4 +38,22 @@ class NavigationHooksTest {
             install.close()
         }
     }
+
+    @Test
+    fun screensComeBackUnlessAGuardKeepsThemOutAndABrokenGuardDoes() {
+        assertTrue(NavigationHooks.allowsRestoring("chat"))
+        val keeper = NavigationHooks.restoreGuards.install { screen -> screen != "locked chat" }
+        try {
+            assertTrue(NavigationHooks.allowsRestoring("chat"))
+            assertFalse(NavigationHooks.allowsRestoring("locked chat"))
+            val broken = NavigationHooks.restoreGuards.install { throw IllegalStateException() }
+            try {
+                assertFalse(NavigationHooks.allowsRestoring("chat"))
+            } finally {
+                broken.close()
+            }
+        } finally {
+            keeper.close()
+        }
+    }
 }

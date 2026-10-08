@@ -644,7 +644,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                             case "chat":
                                 if (args != null) {
                                     ChatActivity chat = new ChatActivity(args);
-                                    if (actionBarLayout.addFragmentToStack(chat)) {
+                                    if (com.eltavine.sereingram.hooks.NavigationHooks.allowsRestoring(chat) && actionBarLayout.addFragmentToStack(chat)) {
                                         chat.restoreSelfArgs(savedInstanceState);
                                     }
                                 }
@@ -679,7 +679,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                             case "chat_profile":
                                 if (args != null) {
                                     ProfileActivity profile = new ProfileActivity(args);
-                                    if (actionBarLayout.addFragmentToStack(profile)) {
+                                    if (com.eltavine.sereingram.hooks.NavigationHooks.allowsRestoring(profile) && actionBarLayout.addFragmentToStack(profile)) {
                                         profile.restoreSelfArgs(savedInstanceState);
                                     }
                                 }
