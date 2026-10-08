@@ -18,9 +18,9 @@
   ],
   "budget": {
     "all_files": 325,
-    "all_added_lines": 310,
+    "all_added_lines": 311,
     "source_files": 37,
-    "source_added_lines": 90
+    "source_added_lines": 91
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -45,6 +45,7 @@
       "hooks.HistoryHooks.beforeUserDeletes",
       "hooks.HistoryHooks.deletesFilesOf",
       "hooks.PeerHooks.beforeChatPut",
+      "hooks.PeerHooks.beforeUserPut",
       "hooks.PeerHooks.beforeUserPut"
     ],
     "TMessagesProj/src/main/java/org/telegram/messenger/MessagesStorage.java": [

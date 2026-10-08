@@ -20312,6 +20312,7 @@ public class MessagesController extends BaseController implements NotificationCe
                             if (!UserObject.isContact(currentUser)) {
                                 currentUser.first_name = update.first_name;
                                 currentUser.last_name = update.last_name;
+                                com.eltavine.sereingram.hooks.PeerHooks.beforeUserPut(currentAccount, currentUser);
                             }
                             if (currentUser.usernames != null) {
                                 for (int i = 0; i < currentUser.usernames.size(); ++i) {
