@@ -43,6 +43,7 @@ class MediaBackupsTest {
         original.delete()
         backups.restore(0, 42, photo(5))
         assertEquals("photo 5", original.readText())
+        assertFalse(File(cache, "5.jpg.part").exists())
     }
 
     @Test

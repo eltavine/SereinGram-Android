@@ -29,7 +29,7 @@ internal class MediaBackups(
         }
         val target = file(account, dialogId, message.id)
         if (!target.exists()) {
-            source.copyTo(target, overwrite = true)
+            copyWhole(source, target)
         }
     }
 
@@ -41,7 +41,7 @@ internal class MediaBackups(
         val target = cachePath(account, message) ?: return
         val backup = file(account, dialogId, message.id)
         if (!target.exists() && backup.exists()) {
-            backup.copyTo(target, overwrite = true)
+            copyWhole(backup, target)
         }
     }
 
@@ -72,6 +72,15 @@ internal class MediaBackups(
     // Link previews and the like are not the message's own media.
     private fun hasMedia(message: TLRPC.Message): Boolean =
         message.media is TLRPC.TL_messageMediaPhoto || message.media is TLRPC.TL_messageMediaDocument
+
+    // A copy cut short leaves nothing behind that looks whole, so it is made again next time.
+    private fun copyWhole(source: File, target: File) {
+        val partial = File(target.path + ".part")
+        source.copyTo(partial, overwrite = true)
+        if (!partial.renameTo(target)) {
+            partial.delete()
+        }
+    }
 
     private fun folder(account: Int) = File(root, account.toString())
 
