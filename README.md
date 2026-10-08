@@ -121,6 +121,10 @@ merged:
   fails when a listed hook call disappears, ArchUnit tests keep the layers
   apart, and commitlint checks every commit; all of them run in CI.
   `./gradlew sereinCheck` runs the tests of every module.
+- The public APIs of `core`, `hooks` and `ports` are kept in their `api/`
+  folders by Kotlin's binary-compatibility-validator, and the build fails when
+  the code no longer matches them. A change to them is made on purpose with
+  `./gradlew apiDump` and shows up in review.
 
 ## API and protocol documentation
 

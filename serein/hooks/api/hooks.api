@@ -1,0 +1,370 @@
+public final class com/eltavine/sereingram/hooks/ChatHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/ChatHooks;
+	public static final fun allowShareButton (IJZ)Z
+	public static final fun allowsChannelButton (I)Z
+	public final fun getChannelButtonPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getShareButtonPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/ChatHooks$ChannelButtonPolicy {
+	public abstract fun allow (I)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/ChatHooks$ShareButtonPolicy {
+	public abstract fun allow (IJZ)Z
+}
+
+public final class com/eltavine/sereingram/hooks/ChatMenuHooks {
+	public static final field FIRST_ID I
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/ChatMenuHooks;
+	public static final fun fill (IJLcom/eltavine/sereingram/hooks/ChatMenuHooks$Menu;)V
+	public final fun getEntries ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun refresh (IJLcom/eltavine/sereingram/hooks/ChatMenuHooks$OpenMenu;)V
+	public static final fun select (IIJLjava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/ChatMenuHooks$Entry {
+	public abstract fun getIcon ()I
+	public abstract fun getId ()I
+	public abstract fun isShown (IJ)Z
+	public abstract fun onSelected (IJLjava/lang/Object;)V
+	public abstract fun title (IJ)Ljava/lang/CharSequence;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/ChatMenuHooks$Menu {
+	public abstract fun add (IILjava/lang/CharSequence;)V
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/ChatMenuHooks$OpenMenu {
+	public abstract fun update (IZLjava/lang/CharSequence;)V
+}
+
+public final class com/eltavine/sereingram/hooks/DialogsHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/DialogsHooks;
+	public static final fun drawTitleStatus (ILjava/lang/Object;Z)Z
+	public final fun getPreviewReplacers ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getTitleStatuses ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun replacePreview (IJ)Ljava/lang/CharSequence;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/DialogsHooks$PreviewReplacer {
+	public abstract fun replace (IJ)Ljava/lang/CharSequence;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/DialogsHooks$TitleStatus {
+	public abstract fun draw (ILjava/lang/Object;Z)Z
+}
+
+public final class com/eltavine/sereingram/hooks/HistoryHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/HistoryHooks;
+	public static final fun afterHistoryLoaded (IJIJLjava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public static final fun beforeMessageEdited (IJLjava/lang/Object;Ljava/lang/Object;Z)V
+	public static final fun beforeMessagesDeleted (IJLjava/util/List;)V
+	public static final fun beforeUserClearsChat (IJ)V
+	public static final fun beforeUserDeletes (IJLjava/util/List;)V
+	public static final fun deletesFilesOf (IJLjava/util/List;)Z
+	public final fun getChatClearListeners ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getChatKeepers ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getDeletionListeners ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getEditListeners ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getFileKeepers ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getLoadListeners ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getUserDeletionListeners ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun removedFromChat (IJLjava/util/ArrayList;Ljava/lang/Object;)Ljava/util/ArrayList;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/HistoryHooks$ChatClearListener {
+	public abstract fun beforeUserClears (IJ)V
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/HistoryHooks$ChatKeeper {
+	public abstract fun keep (IJLjava/util/List;Ljava/lang/Object;)Ljava/util/Collection;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/HistoryHooks$DeletionListener {
+	public abstract fun beforeDeleted (IJLjava/util/List;)V
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/HistoryHooks$EditListener {
+	public abstract fun beforeEdited (IJLjava/lang/Object;Ljava/lang/Object;Z)V
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/HistoryHooks$FileKeeper {
+	public abstract fun keepsFiles (IJLjava/util/List;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/HistoryHooks$LoadListener {
+	public abstract fun afterLoaded (IJIJLjava/util/List;Ljava/util/List;Ljava/util/List;)V
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/HistoryHooks$UserDeletionListener {
+	public abstract fun beforeUserDeletes (IJLjava/util/List;)V
+}
+
+public final class com/eltavine/sereingram/hooks/InputHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/InputHooks;
+	public final fun getPastePolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun pastesPlainText ()Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/InputHooks$PastePolicy {
+	public abstract fun pastesPlainText ()Z
+}
+
+public final class com/eltavine/sereingram/hooks/LinkHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/LinkHooks;
+	public static final fun confirmsBeforeOpening (Ljava/lang/String;)Z
+	public final fun getConfirmPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/LinkHooks$ConfirmPolicy {
+	public abstract fun confirms (Ljava/lang/String;)Z
+}
+
+public final class com/eltavine/sereingram/hooks/MessageHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/MessageHooks;
+	public static final fun decorateTime (ILjava/lang/Object;Ljava/lang/String;)Ljava/lang/String;
+	public final fun getReactionsPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getReadReceiptPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getTimeDecorators ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun hidesReactions (ILjava/lang/Object;)Z
+	public static final fun hidesReadReceipt (ILjava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/MessageHooks$ReactionsPolicy {
+	public abstract fun hidesReactions (ILjava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/MessageHooks$ReadReceiptPolicy {
+	public abstract fun hidesReadReceipt (ILjava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/MessageHooks$TimeDecorator {
+	public abstract fun decorate (ILjava/lang/Object;Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class com/eltavine/sereingram/hooks/MessageMenuHooks {
+	public static final field FIRST_OPTION I
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/MessageMenuHooks;
+	public static final fun fill (ILjava/lang/Object;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public final fun getEntries ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun select (IILjava/lang/Object;Ljava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/MessageMenuHooks$Entry {
+	public abstract fun getIcon ()I
+	public abstract fun getOption ()I
+	public abstract fun isShown (ILjava/lang/Object;)Z
+	public abstract fun onSelected (ILjava/lang/Object;Ljava/lang/Object;)V
+	public abstract fun title (ILjava/lang/Object;)Ljava/lang/CharSequence;
+}
+
+public final class com/eltavine/sereingram/hooks/NavigationHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/NavigationHooks;
+	public static final fun allowsPresenting (Ljava/lang/Object;ZLjava/lang/Runnable;)Z
+	public final fun getGuards ()Lcom/eltavine/sereingram/core/Handlers;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/NavigationHooks$Guard {
+	public abstract fun allows (Ljava/lang/Object;ZLjava/lang/Runnable;)Z
+}
+
+public final class com/eltavine/sereingram/hooks/NotificationHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/NotificationHooks;
+	public final fun getContentPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getLockedContentPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getReplyPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun hidesContent (IJ)Z
+	public static final fun hidesText (IJZ)Z
+	public static final fun sendsPlainAnswers ()Z
+	public static final fun showsContentWhenLocked ()Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/NotificationHooks$ContentPolicy {
+	public abstract fun hidesContent (IJ)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/NotificationHooks$LockedContentPolicy {
+	public abstract fun showsContentWhenLocked ()Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/NotificationHooks$ReplyPolicy {
+	public abstract fun sendsPlainAnswers ()Z
+}
+
+public final class com/eltavine/sereingram/hooks/PeerHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/PeerHooks;
+	public static final fun beforeChatPut (ILjava/lang/Object;)V
+	public static final fun beforeUserPut (ILjava/lang/Object;)V
+	public final fun getChatRewriters ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getUserRewriters ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun originalChat (ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun originalUser (ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/PeerHooks$ChatRewriter {
+	public abstract fun beforePut (ILjava/lang/Object;)V
+	public abstract fun original (ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/PeerHooks$UserRewriter {
+	public abstract fun beforePut (ILjava/lang/Object;)V
+	public abstract fun original (ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class com/eltavine/sereingram/hooks/PlaybackHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/PlaybackHooks;
+	public static final field TELEGRAM_SEEK_MILLIS J
+	public static final fun doubleTapSeekMillis ()J
+	public final fun getSeekPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getVoiceQueuePolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun stopsAfterEachVoice ()Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/PlaybackHooks$SeekPolicy {
+	public abstract fun doubleTapSeekMillis ()Ljava/lang/Long;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/PlaybackHooks$VoiceQueuePolicy {
+	public abstract fun stopsAfterEachVoice ()Z
+}
+
+public final class com/eltavine/sereingram/hooks/ReactionHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/ReactionHooks;
+	public static final fun arrange (ILjava/util/List;)Ljava/util/List;
+	public final fun getArrangers ()Lcom/eltavine/sereingram/core/Handlers;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/ReactionHooks$Arranger {
+	public abstract fun arrange (ILjava/util/List;)Ljava/util/List;
+}
+
+public final class com/eltavine/sereingram/hooks/RequestHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/RequestHooks;
+	public static final fun exemptsFromGhostMode (ILjava/lang/Object;)Z
+	public final fun getGhostExemptions ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getInterceptors ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun intercept (ILjava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/RequestHooks$GhostExemption {
+	public abstract fun exempts (ILjava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/RequestHooks$Interceptor {
+	public abstract fun intercept (ILjava/lang/Object;)Z
+}
+
+public final class com/eltavine/sereingram/hooks/SearchHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/SearchHooks;
+	public static final fun allowsGlobalSearch ()Z
+	public final fun getAppsTabPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getGlobalSearchPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun showsAppsTab ()Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/SearchHooks$AppsTabPolicy {
+	public abstract fun showsAppsTab ()Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/SearchHooks$GlobalSearchPolicy {
+	public abstract fun allowsGlobalSearch ()Z
+}
+
+public final class com/eltavine/sereingram/hooks/SecretChatHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/SecretChatHooks;
+	public final fun getReadPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun sendsReadReceipt (IJ)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/SecretChatHooks$ReadPolicy {
+	public abstract fun sendsReadReceipt (IJ)Z
+}
+
+public final class com/eltavine/sereingram/hooks/SendHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/SendHooks;
+	public static final fun asksBeforeSendingGif (ILjava/lang/Object;Ljava/lang/Runnable;)Z
+	public static final fun asksBeforeSendingSticker (ILjava/lang/Object;Ljava/lang/Runnable;)Z
+	public static final fun beforeSend (ILjava/lang/Object;)V
+	public static final fun forwardScheduleDate (IJI)I
+	public final fun getConfirmers ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getForwardSchedulers ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getRewriters ()Lcom/eltavine/sereingram/core/Handlers;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/SendHooks$Confirmer {
+	public abstract fun asks (ILcom/eltavine/sereingram/hooks/SendHooks$Tapped;Ljava/lang/Object;Ljava/lang/Runnable;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/SendHooks$ForwardScheduler {
+	public abstract fun scheduleDate (IJI)I
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/SendHooks$Rewriter {
+	public abstract fun beforeSend (ILjava/lang/Object;)V
+}
+
+public final class com/eltavine/sereingram/hooks/SendHooks$Tapped : java/lang/Enum {
+	public static final field GIF Lcom/eltavine/sereingram/hooks/SendHooks$Tapped;
+	public static final field STICKER Lcom/eltavine/sereingram/hooks/SendHooks$Tapped;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/hooks/SendHooks$Tapped;
+	public static fun values ()[Lcom/eltavine/sereingram/hooks/SendHooks$Tapped;
+}
+
+public final class com/eltavine/sereingram/hooks/SettingsHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/SettingsHooks;
+	public static final fun filterMainSettings (Ljava/util/List;)V
+	public final fun getMainEntries ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getMainFilters ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun mainSettingsEntries ()Ljava/util/List;
+	public static final fun openMainSettingsEntry (ILjava/lang/Object;)Z
+}
+
+public final class com/eltavine/sereingram/hooks/SettingsHooks$Entry {
+	public final field icon I
+	public final field iconColorBottom I
+	public final field iconColorTop I
+	public final field id I
+	public fun <init> (IIIILkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)V
+	public final fun subtitle ()Ljava/lang/CharSequence;
+	public final fun title ()Ljava/lang/CharSequence;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/SettingsHooks$MainSettingsFilter {
+	public abstract fun filter (Ljava/util/List;)V
+}
+
+public final class com/eltavine/sereingram/hooks/TranscriptionHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/TranscriptionHooks;
+	public final fun getProviders ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun handlesTap (ILjava/lang/Object;ZLjava/lang/Object;)Z
+	public static final fun isTranscribing (Ljava/lang/Object;)Z
+	public static final fun offersTranscription (ILjava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/TranscriptionHooks$Provider {
+	public abstract fun isTranscribing (Ljava/lang/Object;)Z
+	public abstract fun offers (ILjava/lang/Object;)Z
+	public abstract fun tap (ILjava/lang/Object;ZLjava/lang/Object;)Z
+}
+
+public final class com/eltavine/sereingram/hooks/UpstreamService : java/lang/Enum {
+	public static final field CRASH_REPORTS Lcom/eltavine/sereingram/hooks/UpstreamService;
+	public static final field UPDATE_CHECK Lcom/eltavine/sereingram/hooks/UpstreamService;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/hooks/UpstreamService;
+	public static fun values ()[Lcom/eltavine/sereingram/hooks/UpstreamService;
+}
+
+public final class com/eltavine/sereingram/hooks/UpstreamServices {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/UpstreamServices;
+	public static final fun allowCrashReports ()Z
+	public static final fun allowUpdateCheck ()Z
+	public final fun getPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/UpstreamServices$Policy {
+	public abstract fun allow (Lcom/eltavine/sereingram/hooks/UpstreamService;)Z
+}
+

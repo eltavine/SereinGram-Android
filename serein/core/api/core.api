@@ -1,0 +1,175 @@
+public final class com/eltavine/sereingram/core/DialogIds {
+	public static final field INSTANCE Lcom/eltavine/sereingram/core/DialogIds;
+	public final fun format (Ljava/util/Set;)Ljava/lang/String;
+	public final fun parse (Ljava/lang/String;)Ljava/util/Set;
+	public final fun with (Ljava/lang/String;JZ)Ljava/lang/String;
+}
+
+public final class com/eltavine/sereingram/core/Faults {
+	public static final field INSTANCE Lcom/eltavine/sereingram/core/Faults;
+	public final fun getReporters ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun guard (Ljava/lang/String;Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+	public final fun report (Ljava/lang/String;Ljava/lang/Throwable;)V
+}
+
+public abstract interface class com/eltavine/sereingram/core/Faults$Reporter {
+	public abstract fun report (Ljava/lang/String;Ljava/lang/Throwable;)V
+}
+
+public final class com/eltavine/sereingram/core/Handlers {
+	public fun <init> ()V
+	public fun <init> (Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAll ()Ljava/util/List;
+	public final fun install (Ljava/lang/Object;)Ljava/lang/AutoCloseable;
+	public final fun isEmpty ()Z
+}
+
+public abstract interface class com/eltavine/sereingram/core/KeyValueStore {
+	public abstract fun getBoolean (Ljava/lang/String;)Ljava/lang/Boolean;
+	public abstract fun getInt (Ljava/lang/String;)Ljava/lang/Integer;
+	public abstract fun getLong (Ljava/lang/String;)Ljava/lang/Long;
+	public abstract fun getString (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun putBoolean (Ljava/lang/String;Z)V
+	public abstract fun putInt (Ljava/lang/String;I)V
+	public abstract fun putLong (Ljava/lang/String;J)V
+	public abstract fun putString (Ljava/lang/String;Ljava/lang/String;)V
+	public abstract fun remove (Ljava/lang/String;)V
+}
+
+public final class com/eltavine/sereingram/core/MemoryKeyValueStore : com/eltavine/sereingram/core/KeyValueStore {
+	public fun <init> ()V
+	public fun getBoolean (Ljava/lang/String;)Ljava/lang/Boolean;
+	public fun getInt (Ljava/lang/String;)Ljava/lang/Integer;
+	public fun getLong (Ljava/lang/String;)Ljava/lang/Long;
+	public fun getString (Ljava/lang/String;)Ljava/lang/String;
+	public fun putBoolean (Ljava/lang/String;Z)V
+	public fun putInt (Ljava/lang/String;I)V
+	public fun putLong (Ljava/lang/String;J)V
+	public fun putString (Ljava/lang/String;Ljava/lang/String;)V
+	public fun remove (Ljava/lang/String;)V
+}
+
+public final class com/eltavine/sereingram/core/ModuleContext {
+	public fun <init> (Lcom/eltavine/sereingram/core/Options;Lkotlin/jvm/functions/Function2;)V
+	public final fun getOptions ()Lcom/eltavine/sereingram/core/Options;
+	public final fun getReport ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/eltavine/sereingram/core/ModuleRegistry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun forgetAccount (ILcom/eltavine/sereingram/core/ModuleContext;)V
+	public final fun getModules ()Ljava/util/List;
+	public final fun getOptions ()Ljava/util/List;
+	public final fun start (Lcom/eltavine/sereingram/core/ModuleContext;)V
+}
+
+public final class com/eltavine/sereingram/core/Option {
+	public fun <init> (Ljava/lang/String;Lcom/eltavine/sereingram/core/OptionType;Ljava/lang/Object;Lcom/eltavine/sereingram/core/OptionScope;ZZ)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/eltavine/sereingram/core/OptionType;Ljava/lang/Object;Lcom/eltavine/sereingram/core/OptionScope;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getBackedUp ()Z
+	public final fun getDefault ()Ljava/lang/Object;
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getScope ()Lcom/eltavine/sereingram/core/OptionScope;
+	public final fun getSecret ()Z
+	public final fun getType ()Lcom/eltavine/sereingram/core/OptionType;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/eltavine/sereingram/core/OptionKt {
+	public static final fun booleanOption (Ljava/lang/String;ZLcom/eltavine/sereingram/core/OptionScope;ZZ)Lcom/eltavine/sereingram/core/Option;
+	public static synthetic fun booleanOption$default (Ljava/lang/String;ZLcom/eltavine/sereingram/core/OptionScope;ZZILjava/lang/Object;)Lcom/eltavine/sereingram/core/Option;
+	public static final fun intOption (Ljava/lang/String;ILcom/eltavine/sereingram/core/OptionScope;ZZ)Lcom/eltavine/sereingram/core/Option;
+	public static synthetic fun intOption$default (Ljava/lang/String;ILcom/eltavine/sereingram/core/OptionScope;ZZILjava/lang/Object;)Lcom/eltavine/sereingram/core/Option;
+	public static final fun longOption (Ljava/lang/String;JLcom/eltavine/sereingram/core/OptionScope;ZZ)Lcom/eltavine/sereingram/core/Option;
+	public static synthetic fun longOption$default (Ljava/lang/String;JLcom/eltavine/sereingram/core/OptionScope;ZZILjava/lang/Object;)Lcom/eltavine/sereingram/core/Option;
+	public static final fun textOption (Ljava/lang/String;Ljava/lang/String;Lcom/eltavine/sereingram/core/OptionScope;ZZ)Lcom/eltavine/sereingram/core/Option;
+	public static synthetic fun textOption$default (Ljava/lang/String;Ljava/lang/String;Lcom/eltavine/sereingram/core/OptionScope;ZZILjava/lang/Object;)Lcom/eltavine/sereingram/core/Option;
+}
+
+public final class com/eltavine/sereingram/core/OptionScope : java/lang/Enum {
+	public static final field ACCOUNT Lcom/eltavine/sereingram/core/OptionScope;
+	public static final field DEVICE Lcom/eltavine/sereingram/core/OptionScope;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/core/OptionScope;
+	public static fun values ()[Lcom/eltavine/sereingram/core/OptionScope;
+}
+
+public abstract class com/eltavine/sereingram/core/OptionType {
+}
+
+public final class com/eltavine/sereingram/core/OptionType$Bool : com/eltavine/sereingram/core/OptionType {
+	public static final field INSTANCE Lcom/eltavine/sereingram/core/OptionType$Bool;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public synthetic fun read$core (Lcom/eltavine/sereingram/core/KeyValueStore;Ljava/lang/String;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun write$core (Lcom/eltavine/sereingram/core/KeyValueStore;Ljava/lang/String;Ljava/lang/Object;)V
+}
+
+public final class com/eltavine/sereingram/core/OptionType$Int32 : com/eltavine/sereingram/core/OptionType {
+	public static final field INSTANCE Lcom/eltavine/sereingram/core/OptionType$Int32;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public synthetic fun read$core (Lcom/eltavine/sereingram/core/KeyValueStore;Ljava/lang/String;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun write$core (Lcom/eltavine/sereingram/core/KeyValueStore;Ljava/lang/String;Ljava/lang/Object;)V
+}
+
+public final class com/eltavine/sereingram/core/OptionType$Int64 : com/eltavine/sereingram/core/OptionType {
+	public static final field INSTANCE Lcom/eltavine/sereingram/core/OptionType$Int64;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public synthetic fun read$core (Lcom/eltavine/sereingram/core/KeyValueStore;Ljava/lang/String;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun write$core (Lcom/eltavine/sereingram/core/KeyValueStore;Ljava/lang/String;Ljava/lang/Object;)V
+}
+
+public final class com/eltavine/sereingram/core/OptionType$Text : com/eltavine/sereingram/core/OptionType {
+	public static final field INSTANCE Lcom/eltavine/sereingram/core/OptionType$Text;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public synthetic fun read$core (Lcom/eltavine/sereingram/core/KeyValueStore;Ljava/lang/String;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun write$core (Lcom/eltavine/sereingram/core/KeyValueStore;Ljava/lang/String;Ljava/lang/Object;)V
+}
+
+public final class com/eltavine/sereingram/core/Options {
+	public static final field Companion Lcom/eltavine/sereingram/core/Options$Companion;
+	public static final field NO_ACCOUNT I
+	public fun <init> (Lcom/eltavine/sereingram/core/Options$StoreProvider;)V
+	public final fun addListener (Lcom/eltavine/sereingram/core/Options$Listener;)Ljava/lang/AutoCloseable;
+	public final fun get (Lcom/eltavine/sereingram/core/Option;I)Ljava/lang/Object;
+	public static synthetic fun get$default (Lcom/eltavine/sereingram/core/Options;Lcom/eltavine/sereingram/core/Option;IILjava/lang/Object;)Ljava/lang/Object;
+	public final fun isModified (Lcom/eltavine/sereingram/core/Option;I)Z
+	public static synthetic fun isModified$default (Lcom/eltavine/sereingram/core/Options;Lcom/eltavine/sereingram/core/Option;IILjava/lang/Object;)Z
+	public final fun reset (Lcom/eltavine/sereingram/core/Option;I)V
+	public static synthetic fun reset$default (Lcom/eltavine/sereingram/core/Options;Lcom/eltavine/sereingram/core/Option;IILjava/lang/Object;)V
+	public final fun set (Lcom/eltavine/sereingram/core/Option;Ljava/lang/Object;I)V
+	public static synthetic fun set$default (Lcom/eltavine/sereingram/core/Options;Lcom/eltavine/sereingram/core/Option;Ljava/lang/Object;IILjava/lang/Object;)V
+}
+
+public final class com/eltavine/sereingram/core/Options$Companion {
+}
+
+public abstract interface class com/eltavine/sereingram/core/Options$Listener {
+	public abstract fun onChanged (Lcom/eltavine/sereingram/core/Option;I)V
+}
+
+public abstract interface class com/eltavine/sereingram/core/Options$StoreProvider {
+	public abstract fun store (Lcom/eltavine/sereingram/core/OptionScope;I)Lcom/eltavine/sereingram/core/KeyValueStore;
+}
+
+public abstract interface class com/eltavine/sereingram/core/SereinModule {
+	public abstract fun forgetAccount (I)V
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun getOptions ()Ljava/util/List;
+	public abstract fun start (Lcom/eltavine/sereingram/core/ModuleContext;)V
+}
+
+public final class com/eltavine/sereingram/core/SereinModule$DefaultImpls {
+	public static fun forgetAccount (Lcom/eltavine/sereingram/core/SereinModule;I)V
+	public static fun getOptions (Lcom/eltavine/sereingram/core/SereinModule;)Ljava/util/List;
+	public static fun start (Lcom/eltavine/sereingram/core/SereinModule;Lcom/eltavine/sereingram/core/ModuleContext;)V
+}
+

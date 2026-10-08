@@ -10,6 +10,7 @@ dependencies {
     // The root build has no KSP on its classpath, so the conventions bring it.
     implementation(libs.ksp.gradlePlugin)
     implementation(libs.room.gradlePlugin)
+    implementation(libs.binaryCompatibilityValidator.gradlePlugin)
 }
 
 gradlePlugin {
@@ -25,6 +26,10 @@ gradlePlugin {
         register("sereinAndroidRoom") {
             id = "serein.android.room"
             implementationClass = "com.eltavine.sereingram.buildlogic.SereinAndroidRoomPlugin"
+        }
+        register("sereinApi") {
+            id = "serein.api"
+            implementationClass = "com.eltavine.sereingram.buildlogic.SereinApiPlugin"
         }
         register("sereinAndroidApplication") {
             id = "serein.android.application"

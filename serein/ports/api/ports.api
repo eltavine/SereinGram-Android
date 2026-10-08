@@ -1,0 +1,88 @@
+public final class com/eltavine/sereingram/ports/Bookmark {
+	public fun <init> (JIIJLjava/lang/String;J)V
+	public final fun getCreatedAt ()J
+	public final fun getDialogId ()J
+	public final fun getMessageDate ()I
+	public final fun getMessageId ()I
+	public final fun getSenderId ()J
+	public final fun getText ()Ljava/lang/String;
+}
+
+public abstract interface class com/eltavine/sereingram/ports/BookmarkStore {
+	public abstract fun add (Lcom/eltavine/sereingram/ports/Bookmark;)V
+	public abstract fun all ()Ljava/util/List;
+	public abstract fun clearAll ()V
+	public abstract fun inChat (J)Ljava/util/List;
+	public abstract fun remove (JI)V
+}
+
+public final class com/eltavine/sereingram/ports/HistoryRecord {
+	public fun <init> (Lcom/eltavine/sereingram/ports/RecordKind;JIIJIJJLjava/lang/String;[BI)V
+	public final fun getApiLayer ()I
+	public final fun getDate ()I
+	public final fun getDialogId ()J
+	public final fun getFromId ()J
+	public final fun getKind ()Lcom/eltavine/sereingram/ports/RecordKind;
+	public final fun getMessageId ()I
+	public final fun getRecordedAt ()J
+	public final fun getRevision ()I
+	public final fun getText ()Ljava/lang/String;
+	public final fun getTlMessage ()[B
+	public final fun getTopicId ()J
+}
+
+public abstract interface class com/eltavine/sereingram/ports/HistoryStore {
+	public abstract fun add (Ljava/util/List;)V
+	public abstract fun chats (Lcom/eltavine/sereingram/ports/RecordKind;)Ljava/util/List;
+	public abstract fun clear (JLcom/eltavine/sereingram/ports/RecordKind;)V
+	public abstract fun clearAll ()V
+	public abstract fun count (JLcom/eltavine/sereingram/ports/RecordKind;)I
+	public abstract fun deleted (JII)Ljava/util/List;
+	public abstract fun deletedTexts (JII)Ljava/util/List;
+	public abstract fun deletedTextsAfter (JII)Ljava/util/List;
+	public abstract fun forget (JLjava/util/Collection;)V
+	public abstract fun revisions (JI)Ljava/util/List;
+	public abstract fun withRevisions (JLjava/util/Collection;)Ljava/util/Set;
+}
+
+public final class com/eltavine/sereingram/ports/HistoryStore$DefaultImpls {
+	public static synthetic fun deleted$default (Lcom/eltavine/sereingram/ports/HistoryStore;JIIILjava/lang/Object;)Ljava/util/List;
+	public static synthetic fun deletedTexts$default (Lcom/eltavine/sereingram/ports/HistoryStore;JIIILjava/lang/Object;)Ljava/util/List;
+}
+
+public final class com/eltavine/sereingram/ports/KeptChat {
+	public fun <init> (JIJ)V
+	public final fun getCount ()I
+	public final fun getDialogId ()J
+	public final fun getLastRecordedAt ()J
+}
+
+public final class com/eltavine/sereingram/ports/KeptText {
+	public fun <init> (IIJJLjava/lang/String;)V
+	public final fun getDate ()I
+	public final fun getFromId ()J
+	public final fun getMessageId ()I
+	public final fun getRecordedAt ()J
+	public final fun getText ()Ljava/lang/String;
+}
+
+public abstract interface class com/eltavine/sereingram/ports/LocalNameStore {
+	public abstract fun all ()Ljava/util/Map;
+	public abstract fun clearAll ()V
+	public abstract fun set (JLjava/lang/String;)V
+}
+
+public final class com/eltavine/sereingram/ports/RecordKind : java/lang/Enum {
+	public static final field Companion Lcom/eltavine/sereingram/ports/RecordKind$Companion;
+	public static final field DELETED Lcom/eltavine/sereingram/ports/RecordKind;
+	public static final field EDITED Lcom/eltavine/sereingram/ports/RecordKind;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/ports/RecordKind;
+	public static fun values ()[Lcom/eltavine/sereingram/ports/RecordKind;
+}
+
+public final class com/eltavine/sereingram/ports/RecordKind$Companion {
+	public final fun of (I)Lcom/eltavine/sereingram/ports/RecordKind;
+}
+
