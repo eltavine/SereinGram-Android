@@ -13,6 +13,7 @@ import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.LocaleController.formatString
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
+import org.telegram.messenger.UserConfig
 import org.telegram.messenger.Utilities
 import org.telegram.ui.ActionBar.BaseFragment
 import okio.buffer
@@ -34,11 +35,12 @@ object BackupSettings {
     private fun export(page: BaseFragment, options: Options, all: List<Option<*>>) {
         val context = page.parentActivity ?: return
         val account = page.currentAccount
+        val user = UserConfig.getInstance(account).clientUserId
         Utilities.globalQueue.postRunnable {
             val file = Faults.guard("settings backup", fallback = null) {
                 File(context.cacheDir, "media/sereingram-settings.json").apply {
                     parentFile?.mkdirs()
-                    writeText(SettingsBackup.write(options, all, account))
+                    writeText(SettingsBackup.write(options, all, account, user))
                 }
             } ?: return@postRunnable
             AndroidUtilities.runOnUIThread {
@@ -55,18 +57,23 @@ object BackupSettings {
     private fun import(page: BaseFragment, options: Options, all: List<Option<*>>, uri: Uri) {
         val context = page.parentActivity ?: return
         val account = page.currentAccount
+        val user = UserConfig.getInstance(account).clientUserId
         Utilities.globalQueue.postRunnable {
             val result = runCatching {
                 val document = context.contentResolver.openInputStream(uri)?.source()?.buffer()?.use { file ->
                     if (file.request(MAX_BYTES + 1L)) null else file.readUtf8()
                 }
-                if (document == null) Restore.NotABackup else SettingsBackup.restore(options, all, account, document)
+                if (document == null) Restore.NotABackup else SettingsBackup.restore(options, all, account, user, document)
             }
             AndroidUtilities.runOnUIThread {
                 val message = result.fold(
                     onSuccess = { restore ->
                         when (restore) {
-                            is Restore.Done -> formatString(R.string.serein_backup_restored, restore.changed, restore.skipped)
+                            is Restore.Done -> formatString(
+                                if (restore.fromAnotherUser) R.string.serein_backup_restored_device else R.string.serein_backup_restored,
+                                restore.changed,
+                                restore.skipped,
+                            )
                             is Restore.NotABackup -> getString(R.string.serein_backup_not_a_backup)
                             is Restore.TooNew -> getString(R.string.serein_backup_too_new)
                         }

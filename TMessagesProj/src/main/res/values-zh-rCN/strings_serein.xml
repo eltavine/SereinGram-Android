@@ -181,8 +181,9 @@
     <string name="serein_backup_header">备份</string>
     <string name="serein_backup_export">导出设置</string>
     <string name="serein_backup_import">导入设置</string>
-    <string name="serein_backup_note">将本设备及当前账号的 SereinGram 设置保存为文件，或从文件恢复。文件中不含 API 密钥，恢复时也会保留现有密钥。</string>
+    <string name="serein_backup_note">将本设备及当前账号的 SereinGram 设置保存为文件，或从文件恢复；账号的设置只会恢复到同一账号。文件中不含 API 密钥，恢复时也会保留现有密钥。</string>
     <string name="serein_backup_restored">设置已恢复：%1$d 项有变化，跳过 %2$d 项。</string>
+    <string name="serein_backup_restored_device">本设备的设置已恢复：%1$d 项有变化，跳过 %2$d 项。此备份属于另一个账号，因此当前账号的设置保持不变。</string>
     <string name="serein_backup_not_a_backup">此文件不是 SereinGram 的设置备份。</string>
     <string name="serein_backup_too_new">此备份来自更新版本的 SereinGram，请更新后再恢复。</string>
     <string name="serein_backup_failed">无法读取文件：%1$s</string>

@@ -16,8 +16,11 @@ import kotlinx.serialization.json.longOrNull
 
 /** What restoring a backup did. */
 public sealed interface Restore {
-    /** [changed] options took other values; [skipped] entries were unknown or of the wrong kind. */
-    public class Done(public val changed: Int, public val skipped: Int) : Restore
+    /**
+     * [changed] options took other values; [skipped] entries were unknown or of the wrong kind.
+     * A backup of another user's account brings back the options of the device only, [fromAnotherUser].
+     */
+    public class Done(public val changed: Int, public val skipped: Int, public val fromAnotherUser: Boolean = false) : Restore
 
     public data object NotABackup : Restore
 
@@ -29,14 +32,18 @@ public sealed interface Restore {
  * SereinGram's settings as a JSON document, after Cherrygram's backups. A backup holds the
  * options of the device and of one account that differ from their defaults; options that are
  * not [Option.backedUp], such as secrets, stay out of it, and restoring one leaves them as they are.
+ * It names the Telegram user of the account, whose options go back to that user only, in
+ * whichever of the app's accounts they are signed in.
  */
 public object SettingsBackup {
     public const val FORMAT: String = "sereingram-settings"
-    public const val VERSION: Int = 1
+    public const val VERSION: Int = 2
 
-    public fun write(options: Options, all: List<Option<*>>, account: Int): String = buildJsonObject {
+    /** [user] is the Telegram user signed in to [account]. */
+    public fun write(options: Options, all: List<Option<*>>, account: Int, user: Long): String = buildJsonObject {
         put("format", JsonPrimitive(FORMAT))
         put("version", JsonPrimitive(VERSION))
+        put("user", JsonPrimitive(user))
         OptionScope.entries.forEach { scope ->
             put(section(scope), buildJsonObject {
                 backedUp(all, scope).forEach { option ->
@@ -49,7 +56,8 @@ public object SettingsBackup {
         }
     }.toString()
 
-    public fun restore(options: Options, all: List<Option<*>>, account: Int, document: String): Restore {
+    /** [user] is the Telegram user signed in to [account]. */
+    public fun restore(options: Options, all: List<Option<*>>, account: Int, user: Long, document: String): Restore {
         val root = runCatching { Json.parseToJsonElement(document) }.getOrNull() as? JsonObject ?: return Restore.NotABackup
         if ((root["format"] as? JsonPrimitive)?.contentOrNull != FORMAT) {
             return Restore.NotABackup
@@ -58,9 +66,15 @@ public object SettingsBackup {
         if (version > VERSION) {
             return Restore.TooNew(version)
         }
+        // Backups of version 1 do not say whose they are, and go to any account as they always did.
+        val savedBy = (root["user"] as? JsonPrimitive)?.longOrNull
+        val fromAnotherUser = savedBy != null && savedBy != user
         var changed = 0
         var skipped = 0
         OptionScope.entries.forEach { scope ->
+            if (scope == OptionScope.ACCOUNT && fromAnotherUser) {
+                return@forEach
+            }
             val owner = owner(scope, account)
             val values = root[section(scope)] as? JsonObject ?: JsonObject(emptyMap())
             val known = backedUp(all, scope).associateBy { it.key }
@@ -79,7 +93,7 @@ public object SettingsBackup {
                 }
             }
         }
-        return Restore.Done(changed, skipped)
+        return Restore.Done(changed, skipped, fromAnotherUser)
     }
 
     private fun backedUp(all: List<Option<*>>, scope: OptionScope) = all.filter { it.scope == scope && it.backedUp }
