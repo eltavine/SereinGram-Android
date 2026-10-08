@@ -7,7 +7,7 @@ import java.util.Properties
 
 /**
  * Build settings shared with the upstream script: the base64 `LOCAL_PROPERTIES`
- * variable used by CI, then `local.properties`, then the environment.
+ * variable, read in place of `local.properties` when set, then the environment.
  */
 internal class SereinProperties(private val project: Project) {
     private val local: Properties by lazy(::load)
