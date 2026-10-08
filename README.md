@@ -186,7 +186,12 @@ Build:
 
 6. Replace **TMessagesProj/google-services.json** if you want FCM to work.
 
-7. Replace **release.keystore** with yours and fill out `ALIAS_NAME`, `KEYSTORE_PASS` and `ALIAS_PASS` in **local.properties**.
+7. Point `KEYSTORE_FILE` in **local.properties** at your keystore, or put the
+   keystore itself, in base64, in `KEYSTORE_BASE64`, and fill out `ALIAS_NAME`,
+   `KEYSTORE_PASS` and `ALIAS_PASS`. Without all of them the APK is signed with
+   the debug key. In CI, the `LOCAL_PROPERTIES` secret holds this file in
+   base64, and the `SEREIN_SIGNING_SHA1` repository variable the certificate's
+   SHA-1, which the native library and the APK are checked against.
 
 8. Build with Gradle:
 

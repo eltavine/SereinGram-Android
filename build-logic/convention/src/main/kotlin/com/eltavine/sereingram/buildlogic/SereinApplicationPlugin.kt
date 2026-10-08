@@ -36,10 +36,17 @@ class SereinApplicationPlugin : Plugin<Project> {
                         sourceSet.manifest.srcFile(OVERLAY_MANIFEST)
                     }
                     val release = android.signingConfigs.findByName("release")
-                    if (release?.storePassword.isNullOrEmpty() || release?.keyAlias.isNullOrEmpty()) {
+                    properties.keystore()?.let { release?.storeFile = it }
+                    val complete = release != null &&
+                        !release.storePassword.isNullOrEmpty() &&
+                        !release.keyAlias.isNullOrEmpty() &&
+                        !release.keyPassword.isNullOrEmpty() &&
+                        release.storeFile?.isFile == true
+                    if (!complete) {
                         target.logger.warn(
-                            "SereinGram: no release signing key is configured " +
-                                "(KEYSTORE_PASS, ALIAS_NAME, ALIAS_PASS), signing with the debug key.",
+                            "SereinGram: no complete release signing key is configured " +
+                                "(KEYSTORE_FILE or KEYSTORE_BASE64, KEYSTORE_PASS, ALIAS_NAME, ALIAS_PASS), " +
+                                "signing with the debug key.",
                         )
                         val debug = android.signingConfigs.getByName("debug")
                         android.buildTypes.forEach { it.signingConfig = debug }

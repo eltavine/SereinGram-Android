@@ -1,6 +1,7 @@
 package com.eltavine.sereingram.buildlogic
 
 import org.gradle.api.Project
+import java.io.File
 import java.util.Base64
 import java.util.Properties
 
@@ -14,6 +15,20 @@ internal class SereinProperties(private val project: Project) {
     operator fun get(name: String): String? =
         local.getProperty(name)?.takeIf(String::isNotBlank)
             ?: project.providers.environmentVariable(name).orNull?.takeIf(String::isNotBlank)
+
+    /**
+     * The release keystore: `KEYSTORE_FILE`, a path from the repository's root,
+     * or `KEYSTORE_BASE64`, the keystore itself for CI secrets. Null leaves the
+     * upstream script's choice.
+     */
+    fun keystore(): File? {
+        get("KEYSTORE_FILE")?.let { return project.rootProject.file(it) }
+        val encoded = get("KEYSTORE_BASE64") ?: return null
+        return project.layout.buildDirectory.file("serein/release.keystore").get().asFile.apply {
+            parentFile.mkdirs()
+            writeBytes(Base64.getMimeDecoder().decode(encoded.trim()))
+        }
+    }
 
     private fun load(): Properties {
         val properties = Properties()
