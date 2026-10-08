@@ -13,7 +13,8 @@ permissions:
 
 concurrency:
   group: serein-ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Cancelled runs save no caches, so runs on main always finish.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   NDK_VERSION: 27.2.12479018
@@ -33,6 +34,8 @@ jobs:
 
       - name: Set up uv.
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          enable-cache: false
 
       - name: Upstream files stay within the intrusion budget.
         run: uv run Tools/serein/upstream_budget.py
@@ -87,6 +90,9 @@ jobs:
 
       - name: Test the SereinGram modules.
         run: ./gradlew sereinCheck --console=plain
+
+      - name: Test SereinGram's code in the app.
+        run: ./gradlew :TMessagesProj:testReleaseUnitTest --tests 'com.eltavine.sereingram.*' --console=plain
 
   ffmpeg:
     name: Native build (FFmpeg)
@@ -216,6 +222,10 @@ jobs:
           java-version: '21'
           distribution: temurin
 
+      - name: Set up Gradle.
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
       - name: Set up the NDK.
         if: steps.cache.outputs.cache-hit != 'true'
         uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
@@ -273,11 +283,9 @@ jobs:
       - name: Set up Gradle.
         uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
 
+      # The commit's time, so that a rerun builds the same APK and finds Gradle's cache.
       - name: Stamp the build time.
-        run: sed -i "s/2000000000000/$(date +%s%3N)/" gradle.properties
-
-      - name: Check the architecture of the app.
-        run: ./gradlew :TMessagesProj:testReleaseUnitTest --tests 'com.eltavine.sereingram.*' --console=plain
+        run: sed -i "s/2000000000000/$(git log -1 --format=%ct)000/" gradle.properties
 
       - name: Build the APKs.
         env:
