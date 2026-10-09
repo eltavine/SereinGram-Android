@@ -291,8 +291,8 @@ them. Setting the `SEREIN_SIGNING_SHA1` repository variable to the key's
 SHA-1, which the nightly job prints, turns on the native library's signature
 check. The APKs go up through a Bot API server that runs beside the job, since
 they are larger than the 50 MB that Telegram's own Bot API server takes. For
-now, both the app and that server use Telegram's own published API
-credentials.
+now, that server uses Telegram's own published API credentials, and the app
+keeps Nagram's: Telegram refuses to log in with the published ones.
 
 ## Localization
 
