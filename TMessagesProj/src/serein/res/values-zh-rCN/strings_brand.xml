@@ -8,4 +8,5 @@
     <string name="NekoXFaq">SereinGram 常见问题</string>
     <string name="NekoXPushService">SereinGram 通知服务</string>
     <string name="NekoXUpdatesChannel">SereinGram 更新频道</string>
+    <string name="PassQREncryption">使用 SereinGram 扫描以登录。</string>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Upstream's manifest lets ML Kit's subject segmentation, which needs SDK 24, into the app; the unit tests need the same. -->
+<manifest xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-sdk tools:overrideLibrary="com.google.mlkit.vision.segmentation.subject" />
+
+</manifest>

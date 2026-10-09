@@ -61,6 +61,8 @@ class SereinApplicationPlugin : Plugin<Project> {
                         sourceSet.res.srcDir(OVERLAY_RES)
                         sourceSet.manifest.srcFile(OVERLAY_MANIFEST)
                     }
+                    // The unit tests merge the manifests of the app's libraries, some of which need a newer SDK than the app.
+                    android.sourceSets.getByName("test").manifest.srcFile(TEST_MANIFEST)
                     val release = android.signingConfigs.findByName("release")
                     properties.keystore()?.let { release?.storeFile = it }
                     val complete = release != null &&
@@ -103,6 +105,7 @@ class SereinApplicationPlugin : Plugin<Project> {
         const val APPLICATION_ID = "com.eltavine.sereingram"
         const val OVERLAY_RES = "src/serein/res"
         const val OVERLAY_MANIFEST = "src/serein/AndroidManifest.xml"
+        const val TEST_MANIFEST = "src/serein/test/AndroidManifest.xml"
     }
 }
 

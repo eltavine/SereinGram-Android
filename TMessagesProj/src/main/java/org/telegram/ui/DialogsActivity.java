@@ -2872,7 +2872,6 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
 
     private NotificationCenter.ObserversGroup observersGroup;
-    private NotificationCenter.ObserversGroup globalObserversGroup;
 
     @Override
     public boolean onFragmentCreate() {
@@ -2935,15 +2934,14 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
 
         observersGroup = getNotificationCenter().createObserversGroup(this);
-        globalObserversGroup = NotificationCenter.getGlobalInstance().createObserversGroup(this);
 
         if (searchString == null) {
             currentConnectionState = getConnectionsManager().getConnectionState();
 
-            globalObserversGroup.add(NotificationCenter.emojiLoaded);
+            observersGroup.addGlobal(NotificationCenter.emojiLoaded);
             if (!onlySelect) {
-                globalObserversGroup.add(NotificationCenter.closeSearchByActiveAction);
-                globalObserversGroup.add(NotificationCenter.proxySettingsChanged);
+                observersGroup.addGlobal(NotificationCenter.closeSearchByActiveAction);
+                observersGroup.addGlobal(NotificationCenter.proxySettingsChanged);
                 observersGroup.add(NotificationCenter.filterSettingsUpdated);
                 observersGroup.add(NotificationCenter.dialogsUnreadCounterChanged);
             }
@@ -2974,7 +2972,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 .add(NotificationCenter.userEmojiStatusUpdated)
                 .add(NotificationCenter.currentUserPremiumStatusChanged);
 
-            globalObserversGroup.add(NotificationCenter.didSetPasscode);
+            observersGroup.addGlobal(NotificationCenter.didSetPasscode);
         }
         observersGroup
             .add(NotificationCenter.messagesDeleted)
@@ -3123,10 +3121,6 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (observersGroup != null) {
             observersGroup.removeAllObservers();
             observersGroup = null;
-        }
-        if (globalObserversGroup != null) {
-            globalObserversGroup.removeAllObservers();
-            globalObserversGroup = null;
         }
 
         if (commentView != null) {
@@ -13985,6 +13979,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
             }
         }
+        io.addIf(NaConfig.INSTANCE.getCustomDialogsMenuMyProfile().Bool(), R.drawable.msg_openprofile, getString(R.string.MyProfile), () -> {
+            Bundle args = new Bundle();
+            args.putLong("user_id", getUserConfig().getClientUserId());
+            presentFragment(new ProfileActivity(args));
+        });
         boolean noMainTabs = (NaConfig.INSTANCE.getMainTabsStyle().Int() == MainTabsStyle.DISABLE.getValue() || getUserConfig().showCallsTab) && !NaConfig.INSTANCE.getSidebarSettingsActivity().Bool();
         if (NaConfig.INSTANCE.getCustomDialogsMenuSettings().Bool() || noMainTabs) {
             io.add(R.drawable.msg_settings_old, getString(R.string.Settings), () -> {
@@ -14620,16 +14619,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 accountNumbers.add(a);
             }
         }
-        Collections.sort(accountNumbers, (o1, o2) -> {
-            long l1 = UserConfig.getInstance(o1).loginTime;
-            long l2 = UserConfig.getInstance(o2).loginTime;
-            if (l1 > l2) {
-                return 1;
-            } else if (l1 < l2) {
-                return -1;
-            }
-            return 0;
-        });
+        UserConfig.sortAccounts(accountNumbers);
 
         ItemOptions o = ItemOptions.makeOptions(this, view);
         if (accountNumbers.size() > 0) {

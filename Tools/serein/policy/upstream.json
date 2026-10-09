@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "upstream": "https://github.com/NextAlone/Nagram.git#main",
-  "base": "b8db62a65e1e4dee34d92bff412548ef628ddb06",
+  "upstream": "https://github.com/NextAlone/Nagram.git#dev",
+  "base": "df1cc12f5de2caa84cb4e60d0cfaaf05f0ef53f6",
   "owned": [
     "serein/",
     "build-logic/",

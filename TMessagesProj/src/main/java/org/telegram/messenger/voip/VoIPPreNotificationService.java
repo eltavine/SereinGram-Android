@@ -18,6 +18,8 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.VibrationAttributes;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.SpannableString;
@@ -132,7 +134,7 @@ public class VoIPPreNotificationService { // } extends Service implements AudioM
 
 //    public static VoIPPreNotificationService instance;
 
-    private static Notification makeNotification(Context context, int account, long user_id, long call_id, boolean video) {
+    private static Notification makeNotification(Context context, int account, long user_id, long call_id, boolean video, boolean callStyle) {
         if (Build.VERSION.SDK_INT < 33) return null;
 
         final TLRPC.User user = MessagesController.getInstance(account).getUser(user_id);
@@ -263,12 +265,19 @@ public class VoIPPreNotificationService { // } extends Service implements AudioM
             //java.lang.IllegalArgumentException: person must have a non-empty a name
             personName = "___";
         }
-        Person person = new Person.Builder()
-                .setName(personName)
-                .setIcon(Icon.createWithAdaptiveBitmap(avatar)).build();
-        Notification.CallStyle notificationStyle = Notification.CallStyle.forIncomingCall(person, endPendingIntent, answerPendingIntent);
+        if (callStyle) {
+            Person person = new Person.Builder()
+                    .setName(personName)
+                    .setIcon(Icon.createWithAdaptiveBitmap(avatar)).build();
+            Notification.CallStyle notificationStyle = Notification.CallStyle.forIncomingCall(person, endPendingIntent, answerPendingIntent);
 
-        builder.setStyle(notificationStyle);
+            builder.setStyle(notificationStyle);
+        } else {
+            builder.setContentText(personName);
+            builder.setLargeIcon(avatar);
+            builder.addAction(R.drawable.ic_call_end_white_24dp, endTitle, endPendingIntent);
+            builder.addAction(R.drawable.call, answerTitle, answerPendingIntent);
+        }
         return builder.build();
     }
 
@@ -348,11 +357,16 @@ public class VoIPPreNotificationService { // } extends Service implements AudioM
                     } else if (vibrate == 3) {
                         duration *= 2;
                     }
-                    AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                            .build();
-                    vibrator.vibrate(new long[]{0, duration, 500}, 0, audioAttributes);
+                    long[] pattern = new long[]{0, duration, 500};
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        vibrator.vibrate(
+                                VibrationEffect.createWaveform(pattern, 0),
+                                new VibrationAttributes.Builder()
+                                    .setUsage(VibrationAttributes.USAGE_RINGTONE) // required for background apps
+                                    .build());
+                    } else {
+                        vibrator.vibrate(pattern, 0);
+                    }
                 }
             }
         }
@@ -414,7 +428,13 @@ public class VoIPPreNotificationService { // } extends Service implements AudioM
             pendingCall = call;
 
             final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            nm.notify(VoIPService.ID_INCOMING_CALL_PRENOTIFICATION, makeNotification(context, account, user_id, call.id, video));
+            try {
+                nm.notify(VoIPService.ID_INCOMING_CALL_PRENOTIFICATION, makeNotification(context, account, user_id, call.id, video, true));
+            } catch (IllegalArgumentException e) {
+                // the system drops fullScreenIntent when the app is not allowed to use it and then rejects CallStyle
+                FileLog.e(e);
+                nm.notify(VoIPService.ID_INCOMING_CALL_PRENOTIFICATION, makeNotification(context, account, user_id, call.id, video, false));
+            }
             startRinging(context, account, user_id);
         });
     }

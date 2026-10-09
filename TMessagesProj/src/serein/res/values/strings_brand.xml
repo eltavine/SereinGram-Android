@@ -5,4 +5,7 @@
     <string name="CustomTitleHint">Leave blank to use SereinGram</string>
     <string name="NekoX" translatable="false">SereinGram</string>
     <string name="NekoXFaq">SereinGram FAQ</string>
+    <string name="NekoXPushService">SereinGram Push Service</string>
+    <string name="NekoXUpdatesChannel">SereinGram Updates Channel</string>
+    <string name="PassQREncryption">Scan with SereinGram to log in.</string>
 </resources>

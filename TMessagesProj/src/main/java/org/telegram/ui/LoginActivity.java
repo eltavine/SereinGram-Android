@@ -230,6 +230,7 @@ import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.helpers.AppRestartHelper;
 import tw.nekomimi.nekogram.helpers.PasscodeHelper;
+import tw.nekomimi.nekogram.passkey.LoginQrScanner;
 import tw.nekomimi.nekogram.ui.BottomBuilder;
 import tw.nekomimi.nekogram.ui.EditTextAutoFill;
 import tw.nekomimi.nekogram.utils.AlertUtil;
@@ -424,6 +425,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     private static final int menu_custom_dc = 7;
     private static final int menu_qr_login = 8;
     private static final int menu_passkey_login = 9;
+    private static final int menu_passkey_qr = 10;
 
     TLRPC.TL_auth_exportLoginToken exportLoginTokenRequest = null;
     AlertDialog exportLoginTokenProgress = null;
@@ -810,6 +812,8 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             menu.addSubItem(menu_passkey_login, R.drawable.menu_passkey_add, getString(R.string.Passkey))
                     .setContentDescription(LocaleController.getString(R.string.Passkey));
         }
+        menu.addSubItem(menu_passkey_qr, R.drawable.msg_qrcode, LocaleController.getString(R.string.PassQR))
+                .setContentDescription(LocaleController.getString(R.string.PassQR));
         menu.addSubItem(menu_custom_api, R.drawable.baseline_vpn_key_24, LocaleController.getString(R.string.CustomApi))
                 .setContentDescription(LocaleController.getString(R.string.CustomApi));
         menu.addSubItem(menu_custom_dc, R.drawable.msg_retry, LocaleController.getString(R.string.CustomBackend))
@@ -833,6 +837,36 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                 if (phoneView != null) {
                     phoneView.requestPasskey(true, true);
                 }
+            } else if (id == menu_passkey_qr) {
+                LoginQrScanner.showScanner(this, (authorization, err) -> {
+                    if ("CANCELLED".equals(err)) return;
+                    if (authorization instanceof TLRPC.TL_auth_authorization) {
+                        onAuthSuccess((TLRPC.TL_auth_authorization) authorization);
+                        return;
+                    }
+                    if (err != null && err.contains("SESSION_PASSWORD_NEEDED")) {
+                        var req = new TL_account.getPassword();
+                        ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+                            showDoneButton(false, true);
+                            if (error == null) {
+                                var password = (TL_account.Password) response;
+                                if (!TwoStepVerificationActivity.canHandleCurrentPassword(password, true)) {
+                                    AlertsCreator.showUpdateAppAlert(getParentActivity(), getString(R.string.UpdateAppAlert), true);
+                                    return;
+                                }
+                                var bundle = new Bundle();
+                                var data = new SerializedData(password.getObjectSize());
+                                password.serializeToStream(data);
+                                bundle.putString("password", Utilities.bytesToHex(data.toByteArray()));
+                                setPage(VIEW_PASSWORD, true, bundle, false);
+                            } else {
+                                needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), error.text);
+                            }
+                        }), ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
+                    } else {
+                        BulletinFactory.of(slideViewsContainer, null).showForError(err);
+                    }
+                });
             } else if (id == menu_custom_dc) {
                 PhoneView phoneView = (PhoneView)views[VIEW_PHONE_INPUT];
                 if (phoneView.testBackendCheckBox != null) {
@@ -3922,7 +3956,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                 innerLinearLayout.addView(frameLayout, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
 
                 blueImageView = new RLottieImageView(context);
-                hintDrawable = new RLottieDrawable(R.raw.phone_flash_call, String.valueOf(R.raw.phone_flash_call), AndroidUtilities.dp(64), AndroidUtilities.dp(64), true, null);
+                hintDrawable = new RLottieDrawable(R.raw.phone_flash_call, AndroidUtilities.dp(64), AndroidUtilities.dp(64), true, null);
                 blueImageView.setAnimation(hintDrawable);
                 frameLayout.addView(blueImageView, LayoutHelper.createFrame(64, 64));
 
@@ -3937,13 +3971,13 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
 
                 int size = currentType == AUTH_TYPE_MESSAGE ? 128 : 64;
                 if (currentType == AUTH_TYPE_MESSAGE) {
-                    hintDrawable = new RLottieDrawable(R.raw.code_laptop, String.valueOf(R.raw.code_laptop), AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
+                    hintDrawable = new RLottieDrawable(R.raw.code_laptop, AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
                 } else {
-                    hintDrawable = new RLottieDrawable(R.raw.sms_incoming_info, String.valueOf(R.raw.sms_incoming_info), AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
+                    hintDrawable = new RLottieDrawable(R.raw.sms_incoming_info, AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
 
-                    starsToDotsDrawable = new RLottieDrawable(R.raw.phone_stars_to_dots, String.valueOf(R.raw.phone_stars_to_dots), AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
-                    dotsDrawable = new RLottieDrawable(R.raw.phone_dots, String.valueOf(R.raw.phone_dots), AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
-                    dotsToStarsDrawable = new RLottieDrawable(R.raw.phone_dots_to_stars, String.valueOf(R.raw.phone_dots_to_stars), AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
+                    starsToDotsDrawable = new RLottieDrawable(R.raw.phone_stars_to_dots, AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
+                    dotsDrawable = new RLottieDrawable(R.raw.phone_dots, AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
+                    dotsToStarsDrawable = new RLottieDrawable(R.raw.phone_dots_to_stars, AndroidUtilities.dp(size), AndroidUtilities.dp(size), true, null);
                 }
                 blueImageView = new RLottieImageView(context);
                 blueImageView.setAnimation(hintDrawable);
@@ -7924,8 +7958,8 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                 avatarEditor.playAnimation();
             });
 
-            cameraDrawable = new RLottieDrawable(R.raw.camera, String.valueOf(R.raw.camera), AndroidUtilities.dp(70), AndroidUtilities.dp(70), false, null);
-            cameraWaitDrawable = new RLottieDrawable(R.raw.camera_wait, String.valueOf(R.raw.camera_wait), AndroidUtilities.dp(70), AndroidUtilities.dp(70), false, null);
+            cameraDrawable = new RLottieDrawable(R.raw.camera, AndroidUtilities.dp(70), AndroidUtilities.dp(70), false, null);
+            cameraWaitDrawable = new RLottieDrawable(R.raw.camera_wait, AndroidUtilities.dp(70), AndroidUtilities.dp(70), false, null);
 
             avatarEditor = new RLottieImageView(context) {
                 @Override

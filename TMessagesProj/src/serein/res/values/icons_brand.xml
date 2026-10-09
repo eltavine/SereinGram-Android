@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nagram draws its launcher icon, which SereinGram's branding removes, into the QR codes it makes. -->
+    <item name="ic_launcher_nagram" type="mipmap">@mipmap/ic_launcher</item>
+</resources>

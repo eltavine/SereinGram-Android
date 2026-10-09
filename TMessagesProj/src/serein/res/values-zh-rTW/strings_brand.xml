@@ -3,6 +3,7 @@
 <resources>
     <string name="AppUpdateNekoX">更新 SereinGram</string>
     <string name="CustomTitleHint">留空則使用 SereinGram</string>
-    <string name="NekoX" translatable="false">SereinGram</string>
     <string name="NekoXFaq">SereinGram 常見問題</string>
+    <string name="NekoXPushService">SereinGram 通知服務</string>
+    <string name="NekoXUpdatesChannel">SereinGram 更新頻道</string>
 </resources>

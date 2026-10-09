@@ -20,18 +20,21 @@ public class ProxyRotationController implements NotificationCenter.NotificationC
 
     private boolean isCurrentlyChecking;
     private Runnable checkProxyAndSwitchRunnable = () -> {
+        if (!canRotate() || ConnectionsManager.getInstance(UserConfig.selectedAccount).getConnectionState() != ConnectionsManager.ConnectionStateConnectingToProxy) {
+            return;
+        }
         isCurrentlyChecking = true;
 
         int currentAccount = UserConfig.selectedAccount;
         boolean startedCheck = false;
         for (int i = 0; i < SharedConfig.proxyList.size(); i++) {
             SharedConfig.ProxyInfo proxyInfo = SharedConfig.proxyList.get(i);
-            if (proxyInfo.checking || SystemClock.elapsedRealtime() - proxyInfo.availableCheckTime < 2 * 60 * 1000) {
+            if (proxyInfo.checking || proxyInfo.availableCheckTime != 0 && SystemClock.elapsedRealtime() - proxyInfo.availableCheckTime < 2 * 60 * 1000) {
                 continue;
             }
             startedCheck = true;
             proxyInfo.checking = true;
-            proxyInfo.proxyCheckPingId = ConnectionsManager.getInstance(currentAccount).checkProxy(proxyInfo.address, proxyInfo.port, proxyInfo.username, proxyInfo.password, proxyInfo.secret, time -> AndroidUtilities.runOnUIThread(() -> {
+            ConnectionsManager.getInstance(currentAccount).checkProxy(proxyInfo.settings, time -> AndroidUtilities.runOnUIThread(() -> {
                 proxyInfo.availableCheckTime = SystemClock.elapsedRealtime();
                 proxyInfo.checking = false;
                 if (time == -1) {
@@ -57,9 +60,8 @@ public class ProxyRotationController implements NotificationCenter.NotificationC
 
     @SuppressWarnings("ComparatorCombinators")
     private void switchToAvailable() {
-        isCurrentlyChecking = false;
-
-        if (!SharedConfig.proxyRotationEnabled) {
+        if (!canRotate() || ConnectionsManager.getInstance(UserConfig.selectedAccount).getConnectionState() != ConnectionsManager.ConnectionStateConnectingToProxy) {
+            isCurrentlyChecking = false;
             return;
         }
 
@@ -71,23 +73,25 @@ public class ProxyRotationController implements NotificationCenter.NotificationC
             }
 
             SharedPreferences.Editor editor = MessagesController.getGlobalMainSettings().edit();
-            editor.putString("proxy_ip", info.address);
-            editor.putString("proxy_pass", info.password);
-            editor.putString("proxy_user", info.username);
-            editor.putInt("proxy_port", info.port);
-            editor.putString("proxy_secret", info.secret);
             editor.putBoolean("proxy_enabled", true);
-
-            if (!info.secret.isEmpty()) {
-                editor.putBoolean("proxy_enabled_calls", false);
-            }
+            info.settings.toSharedPreferences(editor);
             editor.apply();
 
             SharedConfig.currentProxy = info;
+            isCurrentlyChecking = false;
             NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
             NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxyChangedByRotation);
-            ConnectionsManager.setProxySettings(true, SharedConfig.currentProxy.address, SharedConfig.currentProxy.port, SharedConfig.currentProxy.username, SharedConfig.currentProxy.password, SharedConfig.currentProxy.secret);
-            break;
+            ConnectionsManager.setProxySettings(true, SharedConfig.currentProxy.settings);
+            return;
+        }
+
+        // A failed check must not discard later successful results from this batch.
+        isCurrentlyChecking = false;
+        for (SharedConfig.ProxyInfo info : SharedConfig.proxyList) {
+            if (info.checking) {
+                isCurrentlyChecking = true;
+                break;
+            }
         }
     }
 
@@ -97,6 +101,29 @@ public class ProxyRotationController implements NotificationCenter.NotificationC
         }
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.proxyCheckDone);
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.proxySettingsChanged);
+        // The initial connection state may predate observer registration.
+        AndroidUtilities.runOnUIThread(this::updateConnectionState);
+    }
+
+    private boolean canRotate() {
+        return SharedConfig.isProxyEnabled() && SharedConfig.proxyRotationEnabled && SharedConfig.proxyList.size() > 1;
+    }
+
+    private void updateConnectionState() {
+        AndroidUtilities.cancelRunOnUIThread(checkProxyAndSwitchRunnable);
+        if (!canRotate()) {
+            isCurrentlyChecking = false;
+            return;
+        }
+
+        int state = ConnectionsManager.getInstance(UserConfig.selectedAccount).getConnectionState();
+        if (state == ConnectionsManager.ConnectionStateConnectingToProxy) {
+            if (!isCurrentlyChecking) {
+                AndroidUtilities.runOnUIThread(checkProxyAndSwitchRunnable, ROTATION_TIMEOUTS.get(SharedConfig.proxyRotationTimeout) * 1000L);
+            }
+        } else {
+            isCurrentlyChecking = false;
+        }
     }
 
     @Override
@@ -108,21 +135,9 @@ public class ProxyRotationController implements NotificationCenter.NotificationC
 
             switchToAvailable();
         } else if (id == NotificationCenter.proxySettingsChanged) {
-            AndroidUtilities.cancelRunOnUIThread(checkProxyAndSwitchRunnable);
+            updateConnectionState();
         } else if (id == NotificationCenter.didUpdateConnectionState && account == UserConfig.selectedAccount) {
-            if (!SharedConfig.isProxyEnabled() && !SharedConfig.proxyRotationEnabled || SharedConfig.proxyList.size() <= 1) {
-                return;
-            }
-
-            int state = ConnectionsManager.getInstance(account).getConnectionState();
-
-            if (state == ConnectionsManager.ConnectionStateConnectingToProxy) {
-                if (!isCurrentlyChecking) {
-                    AndroidUtilities.runOnUIThread(checkProxyAndSwitchRunnable, ROTATION_TIMEOUTS.get(SharedConfig.proxyRotationTimeout) * 1000L);
-                }
-            } else {
-                AndroidUtilities.cancelRunOnUIThread(checkProxyAndSwitchRunnable);
-            }
+            updateConnectionState();
         }
     }
 }

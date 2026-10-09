@@ -72,17 +72,18 @@ public class NekoExperimentalSettingsActivity extends BaseNekoXSettingsActivity 
 //    private final AbstractConfigCell useCustomEmojiRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.useCustomEmoji));
     private final AbstractConfigCell localQuoteColorRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getUseLocalQuoteColor()));
     private final AbstractConfigCell channelAliasRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.channelAlias));
-    private final AbstractConfigCell externalGhostModeRow = cellGroup.appendCell(new ConfigCellText("GhostMode", () -> {
-        presentFragment(new NekoGhostModeActivity());
-    }));
+    private final AbstractConfigCell showChannelIconRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getShowChannelIcon()));
     private final AbstractConfigCell customCustomChannelLabelRow = cellGroup.appendCell(new ConfigCellTextInput(null, NaConfig.INSTANCE.getCustomChannelLabel(),
             null, null,
             (input) -> input.isEmpty() ? (String) NaConfig.INSTANCE.getCustomChannelLabel().defaultValue : input));
+    private final AbstractConfigCell externalGhostModeRow = cellGroup.appendCell(new ConfigCellText("GhostMode", () -> {
+        presentFragment(new NekoGhostModeActivity());
+    }));
 
 //    private final AbstractConfigCell smoothKeyboardRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.smoothKeyboard));
     private final AbstractConfigCell enhancedFileLoaderRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.enhancedFileLoader));
 //    private final AbstractConfigCell proxyAutoSwitchRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.proxyAutoSwitch));
-    private final AbstractConfigCell disableFilteringRow = cellGroup.appendCell(new ConfigCellCustom("DisableFiltering", CellGroup.ITEM_TYPE_TEXT_CHECK, true));
+    private final AbstractConfigCell disableFilteringRow = cellGroup.appendCell(new ConfigCellCustom("SensitiveDisableFiltering", CellGroup.ITEM_TYPE_TEXT_CHECK, true));
     //    private final NekomuraTGCell ignoreContentRestrictionsRow = addNekomuraTGCell(nkmrCells.new NekomuraTGTextCheck(NekoConfig.ignoreContentRestrictions, LocaleController.getString("IgnoreContentRestrictionsNotice")));
     private final AbstractConfigCell unlimitedFavedStickersRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.unlimitedFavedStickers, LocaleController.getString("UnlimitedFavoredStickersAbout")));
     private final AbstractConfigCell unlimitedPinnedDialogsRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.unlimitedPinnedDialogs, LocaleController.getString("UnlimitedPinnedDialogsAbout")));
@@ -91,7 +92,7 @@ public class NekoExperimentalSettingsActivity extends BaseNekoXSettingsActivity 
     private final AbstractConfigCell navigationAnimationSpringRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getNavigationAnimationSpring()));
     private final AbstractConfigCell forceEdgeToEdgeRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getForceEdgeToEdge(), LocaleController.getString(R.string.ForceEdgeToEdgeDesc)));
     private final AbstractConfigCell useSystemPhotoPickerRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getUseSystemPhotoPicker(), LocaleController.getString(R.string.UseSystemPhotoPickerDesc)));
-    private final AbstractConfigCell customAudioBitrateRow = cellGroup.appendCell(new ConfigCellCustom("CustomAudioBitrate", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
+    private final AbstractConfigCell customAudioBitrateRow = cellGroup.appendCell(new ConfigCellCustom("customGroupVoipAudioBitrate", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
     private final AbstractConfigCell divider0 = cellGroup.appendCell(new ConfigCellDivider());
     
     private final AbstractConfigCell header2 = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("N_Config")));
@@ -336,6 +337,8 @@ public class NekoExperimentalSettingsActivity extends BaseNekoXSettingsActivity 
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
             } else if (key.equals(NaConfig.INSTANCE.getDisableStories().getKey())) {
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
+            } else if (key.equals(NaConfig.INSTANCE.getShowChannelIcon().getKey())) {
+                updateRows();
             }
         };
 
@@ -518,7 +521,7 @@ public class NekoExperimentalSettingsActivity extends BaseNekoXSettingsActivity 
                         TextCheckCell textCell = (TextCheckCell) holder.itemView;
                         textCell.setEnabled(true, null);
                         if (position == cellGroup.rows.indexOf(disableFilteringRow)) {
-                            textCell.setTextAndValueAndCheck(LocaleController.getString("SensitiveDisableFiltering", R.string.SensitiveDisableFiltering), LocaleController.getString("SensitiveAbout", R.string.SensitiveAbout), sensitiveEnabled, true, divider);
+                            textCell.setTextAndValueAndCheck(LocaleController.getString(R.string.SensitiveDisableFiltering), LocaleController.getString(R.string.SensitiveAbout), sensitiveEnabled, true, divider);
                             textCell.setEnabled(sensitiveCanChange, null);
                         }
                     } else if (holder.itemView instanceof TextSettingsCell) {
@@ -527,8 +530,8 @@ public class NekoExperimentalSettingsActivity extends BaseNekoXSettingsActivity 
                         if (position == cellGroup.rows.indexOf(customAudioBitrateRow)) {
                             String value = String.valueOf(NekoConfig.customAudioBitrate.Int()) + "kbps";
                             if (NekoConfig.customAudioBitrate.Int() == 32)
-                                value += " (" + LocaleController.getString("Default", R.string.Default) + ")";
-                            textCell.setTextAndValue(LocaleController.getString("customGroupVoipAudioBitrate", R.string.customGroupVoipAudioBitrate), value, divider);
+                                value += " (" + LocaleController.getString(R.string.Default) + ")";
+                            textCell.setTextAndValue(LocaleController.getString(R.string.customGroupVoipAudioBitrate), value, divider);
                         }
                     }
                 } else {
@@ -545,6 +548,11 @@ public class NekoExperimentalSettingsActivity extends BaseNekoXSettingsActivity 
     @Override
     protected void setCanNotChange() {
         super.setCanNotChange();
+
+        cellGroup.rows.remove(customCustomChannelLabelRow);
+        if (!NaConfig.INSTANCE.getShowChannelIcon().Bool()) {
+            cellGroup.rows.add(cellGroup.rows.indexOf(showChannelIconRow) + 1, customCustomChannelLabelRow);
+        }
 
         if (!NaConfig.INSTANCE.getShowHiddenFeature().Bool()) {
             cellGroup.rows.remove(localPremiumRow);

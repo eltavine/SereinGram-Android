@@ -46,7 +46,7 @@ class ProxyTileService : TileService() {
         }
         tile.label = getString(R.string.Proxy)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            tile.subtitle = if (isLocked) null else proxy?.address ?: getString(R.string.serein_proxy_tile_none)
+            tile.subtitle = if (isLocked) null else proxy?.settings?.address ?: getString(R.string.serein_proxy_tile_none)
         }
         tile.icon = Icon.createWithResource(this, R.drawable.outline_shield_plain_24)
         tile.updateTile()

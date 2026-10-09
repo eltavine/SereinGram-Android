@@ -39,6 +39,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
 import org.json.JSONObject;
+import org.telegram.messenger.utils.Choreographer60FpsContent;
 import org.telegram.messenger.voip.VideoCapturerDevice;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.TLRPC;
@@ -104,7 +105,7 @@ public class ApplicationLoader extends Application {
         } catch (Throwable ignore) {
         }
         Thread.currentThread().setUncaughtExceptionHandler((thread, error) -> {
-            Log.e("nekox", "from " + thread.toString(), error);
+            Log.e("nagram", "from " + thread.toString(), error);
             AnalyticsHelper.captureException(error);
         });
     }
@@ -389,7 +390,15 @@ public class ApplicationLoader extends Application {
 
         LauncherIconController.tryFixLauncherIconIfNeeded();
         ProxyRotationController.init();
+
+        //if (BuildConfig.DEBUG_PRIVATE_VERSION) {
+        //    Choreographer60FpsContent.getInstance().addFrameCallback(debugEverySecondChecks, 1);
+        //}
     }
+
+    private final Runnable debugEverySecondChecks = () -> AndroidUtilities.runOnUIThread(() -> {
+        NotificationCenter.sanitize();
+    });
 
     // Local Push Service, TFoss implementation
     public static void startPushService() {
