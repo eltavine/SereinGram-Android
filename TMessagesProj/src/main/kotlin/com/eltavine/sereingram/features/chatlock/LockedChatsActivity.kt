@@ -6,15 +6,15 @@ import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.support.Chats
 import com.eltavine.sereingram.ui.ChatCell
 import com.eltavine.sereingram.ui.RowAction
+import com.eltavine.sereingram.ui.SettingsListFragment
 import com.eltavine.sereingram.ui.showRowMenu
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
-import org.telegram.ui.Components.UniversalFragment
 
 /** The chats of this account that ask to be unlocked before they open. */
-internal class LockedChatsActivity(private val options: Options) : UniversalFragment() {
+internal class LockedChatsActivity(private val options: Options) : SettingsListFragment() {
     private val shown = ArrayList<Long>()
 
     override fun getTitle(): CharSequence = getString(R.string.serein_lock_chats)

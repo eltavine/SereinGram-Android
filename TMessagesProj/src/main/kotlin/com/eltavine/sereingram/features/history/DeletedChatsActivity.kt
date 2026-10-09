@@ -6,6 +6,7 @@ import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.ports.KeptChat
 import com.eltavine.sereingram.ports.RecordKind
 import com.eltavine.sereingram.ui.ChatCell
+import com.eltavine.sereingram.ui.SettingsListFragment
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.LocaleController.getString
@@ -13,13 +14,12 @@ import org.telegram.messenger.R
 import org.telegram.messenger.Utilities
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
-import org.telegram.ui.Components.UniversalFragment
 
 /** Every chat with kept deleted messages, the latest deletion first; each opens its own list. */
 internal class DeletedChatsActivity(
     private val store: HistoryStore,
     private val forgetMedia: (dialogId: Long) -> Unit,
-) : UniversalFragment() {
+) : SettingsListFragment() {
     private var chats: List<KeptChat>? = null
 
     override fun onResume() {

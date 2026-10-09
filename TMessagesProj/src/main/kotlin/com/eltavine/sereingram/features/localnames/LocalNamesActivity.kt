@@ -4,16 +4,16 @@ import android.view.View
 import com.eltavine.sereingram.support.Chats
 import com.eltavine.sereingram.ui.ChatCell
 import com.eltavine.sereingram.ui.RowAction
+import com.eltavine.sereingram.ui.SettingsListFragment
 import com.eltavine.sereingram.ui.showRowMenu
 import org.telegram.messenger.LocaleController.formatString
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
-import org.telegram.ui.Components.UniversalFragment
 
 /** Every local name of this account, with the name Telegram gives where it is known. */
-internal class LocalNamesActivity(private val feature: LocalNamesFeature) : UniversalFragment() {
+internal class LocalNamesActivity(private val feature: LocalNamesFeature) : SettingsListFragment() {
     private val shown = ArrayList<Long>()
 
     override fun getTitle(): CharSequence = getString(R.string.serein_local_names_all)

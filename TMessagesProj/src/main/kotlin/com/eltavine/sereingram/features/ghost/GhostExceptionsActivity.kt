@@ -4,15 +4,15 @@ import android.view.View
 import com.eltavine.sereingram.support.Chats
 import com.eltavine.sereingram.ui.ChatCell
 import com.eltavine.sereingram.ui.RowAction
+import com.eltavine.sereingram.ui.SettingsListFragment
 import com.eltavine.sereingram.ui.showRowMenu
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
-import org.telegram.ui.Components.UniversalFragment
 
 /** The chats of this account that ghost mode lets in on reads or typing. */
-internal class GhostExceptionsActivity(private val gate: GhostGate) : UniversalFragment() {
+internal class GhostExceptionsActivity(private val gate: GhostGate) : SettingsListFragment() {
     private val shown = ArrayList<Long>()
 
     override fun getTitle(): CharSequence = getString(R.string.serein_ghost_exceptions)

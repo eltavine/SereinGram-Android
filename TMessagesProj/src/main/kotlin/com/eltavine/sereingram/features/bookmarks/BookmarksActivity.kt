@@ -4,6 +4,7 @@ import android.view.View
 import com.eltavine.sereingram.ports.Bookmark
 import com.eltavine.sereingram.support.Chats
 import com.eltavine.sereingram.ui.RowAction
+import com.eltavine.sereingram.ui.SettingsListFragment
 import com.eltavine.sereingram.ui.showRowMenu
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.LocaleController.getString
@@ -11,7 +12,6 @@ import org.telegram.messenger.R
 import org.telegram.ui.ChatActivity
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
-import org.telegram.ui.Components.UniversalFragment
 
 /**
  * The bookmarks of one chat, or of all of them when [dialogId] is null. Opened
@@ -21,7 +21,7 @@ internal class BookmarksActivity(
     private val feature: BookmarksFeature,
     private val dialogId: Long?,
     private val chat: ChatActivity?,
-) : UniversalFragment() {
+) : SettingsListFragment() {
     private var bookmarks: List<Bookmark>? = null
 
     // A bookmark may be added or removed in the chat it leads to.

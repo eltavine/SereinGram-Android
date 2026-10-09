@@ -12,6 +12,7 @@ import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.ports.KeptText
 import com.eltavine.sereingram.ports.RecordKind
 import com.eltavine.sereingram.support.Chats
+import com.eltavine.sereingram.ui.SettingsListFragment
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.LocaleController
@@ -24,7 +25,6 @@ import org.telegram.ui.ActionBar.Theme
 import org.telegram.ui.ChatActivity
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
-import org.telegram.ui.Components.UniversalFragment
 import java.io.File
 import java.time.ZoneId
 
@@ -54,7 +54,7 @@ internal class DeletedMessagesActivity(
     private val dialogId: Long,
     private val chat: ChatActivity?,
     private val forgetMedia: () -> Unit,
-) : UniversalFragment() {
+) : SettingsListFragment() {
     private var records: List<KeptText>? = null
 
     override fun onFragmentCreate(): Boolean {

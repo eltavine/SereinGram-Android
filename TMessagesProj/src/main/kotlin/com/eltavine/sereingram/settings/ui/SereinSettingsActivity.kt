@@ -11,6 +11,7 @@ import com.eltavine.sereingram.settings.PageLayout
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsState
+import com.eltavine.sereingram.ui.SettingsListFragment
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
@@ -18,16 +19,15 @@ import org.telegram.ui.ActionBar.BaseFragment
 import org.telegram.ui.Components.BulletinFactory
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
-import org.telegram.ui.Components.UniversalFragment
 
 /**
  * Draws one [SettingsPage] with Telegram's own list rows: each section under its
  * header, closed by its note, and each row by the binder of its kind.
  */
-class SereinSettingsActivity(
+internal class SereinSettingsActivity(
     private val page: SettingsPage,
     private val options: Options,
-) : UniversalFragment(), RowHost {
+) : SettingsListFragment(), RowHost {
     private var layout: PageLayout? = null
     private var picked: ((uri: String) -> Unit)? = null
     private var watching: AutoCloseable? = null

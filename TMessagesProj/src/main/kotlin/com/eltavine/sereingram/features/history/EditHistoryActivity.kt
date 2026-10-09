@@ -7,6 +7,7 @@ import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.hooks.MessageMenuHooks
 import com.eltavine.sereingram.ports.HistoryRecord
 import com.eltavine.sereingram.ports.HistoryStore
+import com.eltavine.sereingram.ui.SettingsListFragment
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.AndroidUtilities.dp
 import org.telegram.messenger.LocaleController
@@ -18,7 +19,6 @@ import org.telegram.ui.ActionBar.BaseFragment
 import org.telegram.ui.ActionBar.Theme
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
-import org.telegram.ui.Components.UniversalFragment
 
 /** "Edit history" in the message menu, shown on messages that have earlier versions kept. */
 internal class EditHistoryEntry(
@@ -47,7 +47,7 @@ internal class EditHistoryActivity(
     private val store: HistoryStore,
     private val dialogId: Long,
     private val messageId: Int,
-) : UniversalFragment() {
+) : SettingsListFragment() {
     private var revisions: List<HistoryRecord>? = null
 
     override fun onFragmentCreate(): Boolean {

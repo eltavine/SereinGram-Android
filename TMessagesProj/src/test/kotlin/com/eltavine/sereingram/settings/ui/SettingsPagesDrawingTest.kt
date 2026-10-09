@@ -25,6 +25,7 @@ import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsState
 import com.eltavine.sereingram.settings.featureSections
+import com.eltavine.sereingram.ui.drawAsSettings
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -113,6 +114,7 @@ class SettingsPagesDrawingTest {
             drawn = drawPage(page, host, items).sections.sumOf { it.rows.size }
             unresolved += items.flatMap { listOfNotNull(it.text, it.subtext, it.textValue) }.map { it.toString() }.filter { "LOC_ERR" in it }
         }, null, null, null)
+        list.drawAsSettings()
         val width = context.resources.displayMetrics.widthPixels
         list.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(MAX_HEIGHT, View.MeasureSpec.AT_MOST))
         list.layout(0, 0, width, list.measuredHeight)
