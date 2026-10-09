@@ -64,7 +64,6 @@ runs:
         ALIAS_NAME: ${{ inputs.key-alias }}
         ALIAS_PASS: ${{ inputs.key-password }}
         SEREIN_SIGNING_SHA1: ${{ inputs.signing-sha1 }}
-        # Telegram's own published API credentials, until SereinGram has its own.
-        TELEGRAM_APP_ID: "4"
-        TELEGRAM_APP_HASH: 014b35b6184100b085b0d0572f9b5103
+      # Without TELEGRAM_APP_ID, the app keeps Nagram's API credentials: Telegram refuses logins with its own
+      # published ones (API_ID_PUBLISHED_FLOOD).
       run: ./gradlew :TMessagesProj:assembleRelease --console=plain
