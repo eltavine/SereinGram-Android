@@ -121,6 +121,16 @@ public abstract interface class com/eltavine/sereingram/hooks/LinkHooks$ConfirmP
 	public abstract fun confirms (Ljava/lang/String;)Z
 }
 
+public final class com/eltavine/sereingram/hooks/LocaleHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/LocaleHooks;
+	public final fun getStringPacks ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun packsFor (Ljava/util/Locale;)Ljava/util/List;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/LocaleHooks$StringPacks {
+	public abstract fun packsFor (Ljava/util/Locale;)Ljava/util/List;
+}
+
 public final class com/eltavine/sereingram/hooks/MessageHooks {
 	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/MessageHooks;
 	public static final fun decorateTime (ILjava/lang/Object;Ljava/lang/String;)Ljava/lang/String;

@@ -6,6 +6,7 @@ import io.sentry.android.gradle.extensions.SentryPluginExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.withType
@@ -29,6 +30,18 @@ class SereinApplicationPlugin : Plugin<Project> {
             target.dependencies.add("testImplementation", target.libs.library("ktor-client-mock"))
             // Robolectric loads all of the app's resources into each of its sandboxes, which outgrows the 512 MB a test JVM gets.
             target.tasks.withType<Test>().configureEach { maxHeapSize = "2g" }
+            // Telegram shows the strings of packs that its build makes of src/main/res alone. The brand
+            // overlay joins them as a pack of its own, which the app loads after Nagram's; the tasks
+            // are upstream's, so a renamed input fails the build here rather than the brand going.
+            target.tasks.configureEach {
+                val (defaults, translations) = when {
+                    NAMESPACE_PACKS.matches(name) -> "stringsXml" to "localizationFiles"
+                    NAMESPACE_LOOKUP.matches(name) -> "defaultLocalizationFiles" to "localizationFiles"
+                    else -> return@configureEach
+                }
+                (property(defaults) as ConfigurableFileCollection).from(target.fileTree(OVERLAY_RES) { include("values/strings_*.xml") })
+                (property(translations) as ConfigurableFileCollection).from(target.fileTree(OVERLAY_RES) { include("values-*/strings_*.xml") })
+            }
             val properties = SereinProperties(target)
             target.pluginManager.withPlugin("io.sentry.android.gradle") {
                 // SereinGram never starts Sentry, so its native crash handling and session replay only weigh.
@@ -106,6 +119,8 @@ class SereinApplicationPlugin : Plugin<Project> {
         const val OVERLAY_RES = "src/serein/res"
         const val OVERLAY_MANIFEST = "src/serein/AndroidManifest.xml"
         const val TEST_MANIFEST = "src/serein/test/AndroidManifest.xml"
+        val NAMESPACE_PACKS = Regex("generate\\w+NamespaceStrings")
+        val NAMESPACE_LOOKUP = Regex("generate\\w+NamespaceLocalizationUtilsJava")
     }
 }
 

@@ -9,6 +9,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.eltavine.sereingram.app.SereinApp
 import com.eltavine.sereingram.app.categoryTitle
 import com.eltavine.sereingram.app.rootPage
+import com.eltavine.sereingram.app.showSereinStrings
 import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.core.KeyValueStore
 import com.eltavine.sereingram.core.MemoryKeyValueStore
@@ -41,7 +42,8 @@ import java.io.File
 /**
  * Draws the SereinGram page and every feature's page with Telegram's own rows, as a
  * phone would, once with the defaults and once with some features on. Each page must
- * draw without a fault; the pictures go to build/reports/serein-settings to be looked at.
+ * draw without a fault and with every text found in Telegram's string packs; the pictures
+ * go to build/reports/serein-settings to be looked at.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -78,15 +80,20 @@ class SettingsPagesDrawingTest {
 
         val faults = ArrayList<String>()
         Faults.reporters.install { message, error -> faults += "$message: $error" }.use {
-            pages.forEach { (name, page) -> assertTrue("$name drew nothing", draw(context, page, File(pictures, "$name.png")) > 0) }
-            state[HistoryOptions.saveDeleted] = true
-            state[DnsOptions.mode] = DnsMode.CUSTOM.code
-            state[DnsOptions.customServer] = "dns.example/dns-query"
-            state[TranscriptionOptions.enabled] = true
-            pages.forEach { (name, page) -> draw(context, page, File(pictures, "$name-on.png")) }
+            showSereinStrings(context).use {
+                pages.forEach { (name, page) -> assertTrue("$name drew nothing", draw(context, page, File(pictures, "$name.png")) > 0) }
+                state[HistoryOptions.saveDeleted] = true
+                state[DnsOptions.mode] = DnsMode.CUSTOM.code
+                state[DnsOptions.customServer] = "dns.example/dns-query"
+                state[TranscriptionOptions.enabled] = true
+                pages.forEach { (name, page) -> draw(context, page, File(pictures, "$name-on.png")) }
+            }
         }
         assertEquals(emptyList<String>(), faults)
+        assertEquals("texts Telegram could not find", emptyList<String>(), unresolved)
     }
+
+    private val unresolved = ArrayList<String>()
 
     private fun draw(context: Context, page: SettingsPage, picture: File): Int {
         var drawn = 0
@@ -104,6 +111,7 @@ class SettingsPagesDrawingTest {
         }
         val list = UniversalRecyclerView(context, 0, 0, { items, _ ->
             drawn = drawPage(page, host, items).sections.sumOf { it.rows.size }
+            unresolved += items.flatMap { listOfNotNull(it.text, it.subtext, it.textValue) }.map { it.toString() }.filter { "LOC_ERR" in it }
         }, null, null, null)
         val width = context.resources.displayMetrics.widthPixels
         list.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(MAX_HEIGHT, View.MeasureSpec.AT_MOST))

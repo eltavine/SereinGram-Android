@@ -30,6 +30,7 @@ import com.eltavine.sereingram.features.sending.SendingFeature
 import com.eltavine.sereingram.features.services.ServicesModule
 import com.eltavine.sereingram.features.timestamps.TimestampsFeature
 import com.eltavine.sereingram.features.transcription.TranscriptionFeature
+import com.eltavine.sereingram.hooks.LocaleHooks
 import com.eltavine.sereingram.ports.BookmarkStore
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.ports.LocalNameStore
@@ -56,6 +57,7 @@ object SereinApp {
             return
         }
         Faults.reporters.install { message, error -> FileLog.e("SereinGram: $message", error) }
+        LocaleHooks.stringPacks.install(SereinStringPacks)
         options = Options(PreferencesStores(application))
         val modules = modules(application)
         val context = ModuleContext(options, Faults::report)

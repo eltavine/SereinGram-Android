@@ -4674,6 +4674,7 @@ public class LocaleController {
                 builder.addResLocalization(ApplicationLoader.applicationContext, asset);
             }
         }
+        for (String asset : com.eltavine.sereingram.hooks.LocaleHooks.packsFor(currentLocale)) builder.addResLocalization(ApplicationLoader.applicationContext, asset);
     }
 
     private void checkLocalizationInternal() {
