@@ -175,18 +175,6 @@ from its code.
 - Linux based on Debian or Arch Linux, or macOS. On Windows, use WSL2 or a
   Linux virtual machine.
 - JDK 21.
-- Native tools: `gcc`, `go`, `make`, `cmake`, `ninja`, `yasm` and `meson`.
-
-  ```shell
-  # Debian and its derivatives
-  sudo apt install gcc golang make cmake ninja-build yasm meson
-  # Arch Linux and its derivatives
-  sudo pacman -S base-devel go ninja cmake yasm meson
-  # macOS
-  xcode-select --install
-  brew install go cmake ninja yasm meson
-  ```
-
 - Android SDK: `build-tools;36.0.0`, `platforms;android-36`,
   `ndk;27.2.12479018` and `cmake;3.22.1`, in `$HOME/Android/SDK` or wherever
   `ANDROID_HOME` points. [Android Studio](https://developer.android.com/studio)
@@ -204,11 +192,12 @@ from its code.
    git submodule update --init --recursive
    ```
 
-2. Build the native dependencies, then the external libraries and the native
-   code.
+2. Build the native code. Telegram ships the libraries it links, such as
+   FFmpeg and BoringSSL, prebuilt in `TMessagesProj/jni/prebuild`, so the
+   NDK and CMake above are all it takes. `NATIVE_TARGET=arm64-v8a` builds for
+   one ABI only.
 
    ```shell
-   ./run init libs
    ./run libs native
    ```
 
