@@ -254,13 +254,10 @@
     <string name="serein_playback_seconds_short">%1$ds</string>
     <string name="serein_playback_double_tap_seek_note">Double-tapping the left or right third of a playing video in the media viewer jumps back or ahead by this much; Telegram jumps 10 seconds.</string>
     <string name="serein_sending_title">Sending</string>
-    <string name="serein_sending_summary">Ask before stickers and GIFs</string>
-    <string name="serein_sending_ask_before_sticker">Ask before sending stickers</string>
-    <string name="serein_sending_ask_before_sticker_info">A tap in the sticker panel asks first</string>
+    <string name="serein_sending_summary">Ask before GIFs</string>
     <string name="serein_sending_ask_before_gif">Ask before sending GIFs</string>
     <string name="serein_sending_ask_before_gif_info">A tap in the GIF panel asks first</string>
-    <string name="serein_sending_ask_note">Without these, a tap in a chat\'s sticker and GIF panel sends at once. Stickers suggested while you type an emoji, and stickers and GIFs sent as replies to stories, still go at once.</string>
-    <string name="serein_sending_confirm_sticker">Send this sticker?</string>
+    <string name="serein_sending_ask_note">Without it, a tap in a chat\'s GIF panel sends at once. GIFs sent as replies to stories still go at once. Whether stickers ask first is up to Nagram\'s own chat settings.</string>
     <string name="serein_sending_confirm_gif">Send this GIF?</string>
     <string name="serein_qr_title">QR codes</string>
     <string name="serein_qr_summary">Read QR codes in photos</string>

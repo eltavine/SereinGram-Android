@@ -24,19 +24,19 @@ class SendHooksTest {
     }
 
     @Test
-    fun aConfirmerHoldsBackOnlyWhatItAsksAbout() {
+    fun aConfirmerHoldsBackAGifUntilTheUserAgrees() {
         val sent = mutableListOf<String>()
         val asked = mutableListOf<Runnable>()
         val installs = listOf(
-            SendHooks.confirmers.install { _, _, _, _ -> throw IllegalStateException() },
-            SendHooks.confirmers.install { _, tapped, _, send -> (tapped == SendHooks.Tapped.STICKER).also { if (it) asked += send } },
+            SendHooks.confirmers.install { _, _, _ -> throw IllegalStateException() },
+            SendHooks.confirmers.install { account, _, send -> (account == 0).also { if (it) asked += send } },
         )
         try {
-            assertTrue(SendHooks.asksBeforeSendingSticker(0, "chat", { sent += "sticker" }))
-            assertFalse(SendHooks.asksBeforeSendingGif(0, "chat", { sent += "gif" }))
+            assertFalse(SendHooks.asksBeforeSendingGif(1, "chat", { sent += "unasked" }))
+            assertTrue(SendHooks.asksBeforeSendingGif(0, "chat", { sent += "gif" }))
             assertEquals(emptyList(), sent)
             asked.single().run()
-            assertEquals(listOf("sticker"), sent)
+            assertEquals(listOf("gif"), sent)
         } finally {
             installs.forEach(AutoCloseable::close)
         }
@@ -44,8 +44,8 @@ class SendHooksTest {
 
     @Test
     fun nothingIsAskedOutsideAChat() {
-        SendHooks.confirmers.install { _, _, _, _ -> true }.use {
-            assertFalse(SendHooks.asksBeforeSendingSticker(0, null, {}))
+        SendHooks.confirmers.install { _, _, _ -> true }.use {
+            assertFalse(SendHooks.asksBeforeSendingGif(0, null, {}))
         }
     }
 

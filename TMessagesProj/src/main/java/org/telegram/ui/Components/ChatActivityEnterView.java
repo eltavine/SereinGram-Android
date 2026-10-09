@@ -13723,7 +13723,6 @@ public class ChatActivityEnterView extends FrameLayout implements
                     }
                     MediaDataController.getInstance(currentAccount).addRecentSticker(MediaDataController.TYPE_IMAGE, parent, sticker, (int) (System.currentTimeMillis() / 1000), false);
                 };
-                if (com.eltavine.sereingram.hooks.SendHooks.asksBeforeSendingSticker(currentAccount, parentFragment, runnable)) return;
                 if (!showConfirmAlert(runnable)) {
                     if (NaConfig.INSTANCE.getAskBeforeSendingSticker().Bool()) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity != null ? parentActivity : getContext(), resourcesProvider);

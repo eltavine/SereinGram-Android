@@ -310,7 +310,6 @@ public abstract interface class com/eltavine/sereingram/hooks/SecretChatHooks$Re
 public final class com/eltavine/sereingram/hooks/SendHooks {
 	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/SendHooks;
 	public static final fun asksBeforeSendingGif (ILjava/lang/Object;Ljava/lang/Runnable;)Z
-	public static final fun asksBeforeSendingSticker (ILjava/lang/Object;Ljava/lang/Runnable;)Z
 	public static final fun beforeSend (ILjava/lang/Object;)V
 	public static final fun forwardScheduleDate (IJI)I
 	public final fun getConfirmers ()Lcom/eltavine/sereingram/core/Handlers;
@@ -319,7 +318,7 @@ public final class com/eltavine/sereingram/hooks/SendHooks {
 }
 
 public abstract interface class com/eltavine/sereingram/hooks/SendHooks$Confirmer {
-	public abstract fun asks (ILcom/eltavine/sereingram/hooks/SendHooks$Tapped;Ljava/lang/Object;Ljava/lang/Runnable;)Z
+	public abstract fun asks (ILjava/lang/Object;Ljava/lang/Runnable;)Z
 }
 
 public abstract interface class com/eltavine/sereingram/hooks/SendHooks$ForwardScheduler {
@@ -328,14 +327,6 @@ public abstract interface class com/eltavine/sereingram/hooks/SendHooks$ForwardS
 
 public abstract interface class com/eltavine/sereingram/hooks/SendHooks$Rewriter {
 	public abstract fun beforeSend (ILjava/lang/Object;)V
-}
-
-public final class com/eltavine/sereingram/hooks/SendHooks$Tapped : java/lang/Enum {
-	public static final field GIF Lcom/eltavine/sereingram/hooks/SendHooks$Tapped;
-	public static final field STICKER Lcom/eltavine/sereingram/hooks/SendHooks$Tapped;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/hooks/SendHooks$Tapped;
-	public static fun values ()[Lcom/eltavine/sereingram/hooks/SendHooks$Tapped;
 }
 
 public final class com/eltavine/sereingram/hooks/SettingsHooks {

@@ -254,13 +254,10 @@
     <string name="serein_playback_seconds_short">%1$d 秒</string>
     <string name="serein_playback_double_tap_seek_note">在媒体查看器中播放视频时，双击画面左侧或右侧三分之一处会后退或前进这么多；Telegram 默认为 10 秒。</string>
     <string name="serein_sending_title">发送</string>
-    <string name="serein_sending_summary">发送贴纸和 GIF 前确认</string>
-    <string name="serein_sending_ask_before_sticker">发送贴纸前确认</string>
-    <string name="serein_sending_ask_before_sticker_info">在贴纸面板中点按后会先询问</string>
+    <string name="serein_sending_summary">发送 GIF 前确认</string>
     <string name="serein_sending_ask_before_gif">发送 GIF 前确认</string>
     <string name="serein_sending_ask_before_gif_info">在 GIF 面板中点按后会先询问</string>
-    <string name="serein_sending_ask_note">关闭时，在聊天的贴纸和 GIF 面板中点一下就会立即发送。输入表情时推荐的贴纸，以及回复动态时发送的贴纸和 GIF，仍会立即发出。</string>
-    <string name="serein_sending_confirm_sticker">发送这张贴纸？</string>
+    <string name="serein_sending_ask_note">关闭时，在聊天的 GIF 面板中点一下就会立即发送。回复动态时发送的 GIF 仍会立即发出。贴纸是否先询问，由 Nagram 自己的聊天设置决定。</string>
     <string name="serein_sending_confirm_gif">发送这个 GIF？</string>
     <string name="serein_qr_title">二维码</string>
     <string name="serein_qr_summary">识别图片中的二维码</string>

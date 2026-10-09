@@ -20,9 +20,9 @@
   ],
   "budget": {
     "all_files": 332,
-    "all_added_lines": 327,
+    "all_added_lines": 326,
     "source_files": 44,
-    "source_added_lines": 107
+    "source_added_lines": 106
   },
   "hooks": {
     "TMessagesProj/src/main/java/org/telegram/messenger/AndroidUtilities.java": [
@@ -118,8 +118,7 @@
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java": [
       "hooks.InputHooks.pastesPlainText",
-      "hooks.SendHooks.asksBeforeSendingGif",
-      "hooks.SendHooks.asksBeforeSendingSticker"
+      "hooks.SendHooks.asksBeforeSendingGif"
     ],
     "TMessagesProj/src/main/java/org/telegram/ui/Components/EditTextCaption.java": [
       "hooks.InputHooks.pastesPlainText"

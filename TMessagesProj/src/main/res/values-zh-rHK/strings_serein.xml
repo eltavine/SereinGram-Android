@@ -254,13 +254,10 @@
     <string name="serein_playback_seconds_short">%1$d 秒</string>
     <string name="serein_playback_double_tap_seek_note">在媒體檢視器中播放影片時，點兩下畫面左側或右側三分之一處會倒轉或快轉這麼多；Telegram 預設為 10 秒。</string>
     <string name="serein_sending_title">傳送</string>
-    <string name="serein_sending_summary">傳送貼圖和 GIF 前確認</string>
-    <string name="serein_sending_ask_before_sticker">傳送貼圖前確認</string>
-    <string name="serein_sending_ask_before_sticker_info">在貼圖面板中點一下後會先詢問</string>
+    <string name="serein_sending_summary">傳送 GIF 前確認</string>
     <string name="serein_sending_ask_before_gif">傳送 GIF 前確認</string>
     <string name="serein_sending_ask_before_gif_info">在 GIF 面板中點一下後會先詢問</string>
-    <string name="serein_sending_ask_note">關閉時，在聊天的貼圖和 GIF 面板中點一下就會立即傳送。輸入表情符號時建議的貼圖，以及回覆限時動態時傳送的貼圖和 GIF，仍會立即送出。</string>
-    <string name="serein_sending_confirm_sticker">傳送這張貼圖？</string>
+    <string name="serein_sending_ask_note">關閉時，在聊天的 GIF 面板中點一下就會立即傳送。回覆限時動態時傳送的 GIF 仍會立即送出。貼圖是否先詢問，由 Nagram 自己的聊天設定決定。</string>
     <string name="serein_sending_confirm_gif">傳送這個 GIF？</string>
     <string name="serein_qr_title">QR 碼</string>
     <string name="serein_qr_summary">辨識圖片中的 QR 碼</string>

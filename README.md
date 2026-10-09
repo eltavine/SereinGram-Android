@@ -125,7 +125,7 @@ from its code.
   <sub>After NagramX</sub>
 - **Paste as plain text** in messages and captions.<br>
   <sub>[NagramX #415](https://github.com/risin42/NagramX/issues/415)</sub>
-- **Ask before sending stickers and GIFs** tapped in their panel.<br>
+- **Ask before sending GIFs** tapped in their panel.<br>
   <sub>After OctoGram</sub>
 
 ### Voice and media
