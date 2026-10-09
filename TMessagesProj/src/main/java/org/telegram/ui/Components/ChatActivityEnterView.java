@@ -13725,7 +13725,21 @@ public class ChatActivityEnterView extends FrameLayout implements
                 };
                 if (com.eltavine.sereingram.hooks.SendHooks.asksBeforeSendingSticker(currentAccount, parentFragment, runnable)) return;
                 if (!showConfirmAlert(runnable)) {
-                    runnable.run();
+                    if (NaConfig.INSTANCE.getAskBeforeSendingSticker().Bool()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity != null ? parentActivity : getContext(), resourcesProvider);
+                        builder.setTitle(LocaleController.getString(R.string.ConfirmSendSticker));
+                        builder.setMessage(LocaleController.getString(R.string.ConfirmSendStickerText));
+                        builder.setPositiveButton(LocaleController.getString(R.string.OK), (dialogInterface, i) -> runnable.run());
+                        builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
+                        if (parentFragment != null) {
+                            parentFragment.showDialog(builder.create());
+                        }
+                        if (parentFragment == null) {
+                            builder.show();
+                        }
+                    } else {
+                        runnable.run();
+                    }
                 }
             });
         }

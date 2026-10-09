@@ -3695,6 +3695,11 @@ public class MessageObject {
 
     public boolean translated = false;
     public boolean summarized = false;
+    /**
+     * NekoX: the current translation was produced by a third party provider instead of Telegram,
+     * so it stays visible regardless of the dialog wide auto translation setting.
+     */
+    public boolean translatedLocally = false;
     public boolean updateTranslation(boolean force) {
         boolean replyUpdated = replyMessageObject != null && replyMessageObject != this && replyMessageObject.updateTranslation(force);
         TranslateController translateController = MessagesController.getInstance(currentAccount).getTranslateController();
@@ -3753,6 +3758,21 @@ public class MessageObject {
                 generateCaption();
             }
             return replyUpdated || true;
+        } else if (messageOwner != null && translatedLocally && (translatedText != null || messageOwner.translatedPoll != null)) {
+            // NekoX: translations produced by third party providers are bound to the message
+            // itself instead of the dialog wide auto translation setting.
+            if (translated && !summarized) {
+                return replyUpdated || false;
+            }
+            translated = true;
+            summarized = false;
+            if (type == TYPE_ARTICLE) {
+                generateLayout(null);
+            } else if (translatedText != null) {
+                applyNewText(translatedText.text);
+                generateCaption();
+            }
+            return replyUpdated || true;
         } else if (messageOwner != null && (force || translated || summarized)) {
             translated = false;
             summarized = false;
@@ -3765,6 +3785,21 @@ public class MessageObject {
             return replyUpdated || true;
         }
         return replyUpdated || false;
+    }
+
+    /**
+     * NekoX: adopts the locally produced translation state of {@code other} and re-applies it.
+     *
+     * <p>Used when a message is rebuilt from its {@link TLRPC.Message} (see
+     * {@code MessageHelper#resetMessageContent}): the freshly constructed object runs
+     * {@link #updateTranslation(boolean)} while the local flag is still unset, so the state has to
+     * be restored afterwards for the translation to remain visible.
+     */
+    public void applyLocalTranslationState(MessageObject other) {
+        translatedLocally = other != null && other.translatedLocally;
+        if (translatedLocally) {
+            updateTranslation(false);
+        }
     }
 
     public void applyNewText() {
@@ -6085,8 +6120,6 @@ public class MessageObject {
                         }
                     }
                 }
-            } else if (messageOwner.translated && !TextUtils.isEmpty(messageOwner.translatedMessage)) {
-                messageText = messageOwner.translatedMessage;
             } else {
                 if (messageOwner.message != null) {
                     try {
@@ -7658,13 +7691,6 @@ public class MessageObject {
         } else {
             captionSummarized = false;
             captionTranslated = false;
-        }
-        if (messageOwner.translated && messageOwner.translatedMessage != null && !messageOwner.translatedMessage.isEmpty()) {
-            // NekoX Translate
-            captionSummarized = false;
-            captionTranslated = true;
-            text = messageOwner.translatedMessage;
-            // keep the entities as is
         }
         if (!isMediaEmpty() && !(getMedia(messageOwner) instanceof TLRPC.TL_messageMediaGame) && !TextUtils.isEmpty(text)) {
             caption = Emoji.replaceEmoji(text, Theme.chat_msgTextPaint.getFontMetricsInt(), false);
