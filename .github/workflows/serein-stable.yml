@@ -62,7 +62,7 @@ jobs:
           fi
 
       - name: Check out the libraries Gradle configures.
-        run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath
+        run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath TMessagesProj_Modules/media
 
       - name: Check the secrets of the telegram environment.
         env:

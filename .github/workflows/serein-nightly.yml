@@ -56,7 +56,7 @@ jobs:
           persist-credentials: false
 
       - name: Check out the libraries Gradle configures.
-        run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath
+        run: git submodule update --init --depth 1 TMessagesProj/lib/jlatexmath TMessagesProj_Modules/media
 
       - name: Check that main has not moved past the commit.
         id: newest
