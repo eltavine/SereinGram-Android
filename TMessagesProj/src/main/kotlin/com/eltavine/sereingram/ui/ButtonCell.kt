@@ -47,6 +47,9 @@ internal class ButtonCell private constructor() : UItem.UItemFactory<TextCell>()
             cell.valueTextView.setTextColor(Theme.getColor(Theme.key_text_RedRegular))
         }
         cell.setEnabled(item.enabled, same)
+        // TextCell fades only its texts, which would leave a greyed-out row's icon looking usable.
+        val iconAlpha = if (item.enabled) 1f else 0.5f
+        if (same) cell.imageView.animate().alpha(iconAlpha).start() else cell.imageView.alpha = iconAlpha
         cell.tag = item.id
     }
 

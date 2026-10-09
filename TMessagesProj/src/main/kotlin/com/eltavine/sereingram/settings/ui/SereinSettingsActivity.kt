@@ -13,6 +13,7 @@ import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsState
 import com.eltavine.sereingram.ui.SettingsListFragment
 import org.telegram.messenger.AndroidUtilities
+import org.telegram.messenger.BotWebViewVibrationEffect
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
 import org.telegram.ui.ActionBar.BaseFragment
@@ -44,7 +45,13 @@ internal class SereinSettingsActivity(
     }
 
     override fun onClick(item: UItem, view: View, position: Int, x: Float, y: Float) {
-        val row = layout?.rowOf(item.id)?.takeIf { it.enabled } ?: return
+        val row = layout?.rowOf(item.id) ?: return
+        if (!row.enabled) {
+            // As Telegram answers a tap on a row that cannot be used now, so that the tap does not seem lost.
+            AndroidUtilities.shakeViewSpring(view, -3f)
+            BotWebViewVibrationEffect.APP_ERROR.vibrate()
+            return
+        }
         Faults.guard("settings row", fallback = Unit) { binderOf(row.row).tap(row.row, item.id - row.id, this, view) }
     }
 
