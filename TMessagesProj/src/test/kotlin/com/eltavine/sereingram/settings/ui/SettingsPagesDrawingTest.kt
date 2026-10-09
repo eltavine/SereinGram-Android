@@ -37,6 +37,7 @@ import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.ApplicationLoader
 import org.telegram.ui.ActionBar.BaseFragment
 import org.telegram.ui.ActionBar.Theme
+import org.telegram.ui.Components.ItemOptions
 import org.telegram.ui.Components.UniversalRecyclerView
 import java.io.File
 
@@ -107,6 +108,8 @@ class SettingsPagesDrawingTest {
             override fun <T : Any> commit(row: SettingsRow.Editor<T>, value: T) = Unit
 
             override fun open(page: SettingsPage) = Unit
+
+            override fun options(row: View): ItemOptions = error("drawing needs no screen")
 
             override fun pick(mimeTypes: List<String>, picked: (uri: String) -> Unit) = Unit
         }

@@ -82,7 +82,7 @@ public sealed interface SettingsRow {
 
     /** How a [Choice] is drawn; the styles that make its title a header leave out its summary, which a section note can carry. */
     public enum class ChoiceStyle {
-        /** A row with the current choice that opens the list of them. */
+        /** A row with the current choice that offers all of them in a menu over it. */
         DIALOG,
 
         /** Every choice as a row of its own, under the title as a header, with what [Choice.describe] says. */

@@ -6,7 +6,6 @@ import com.eltavine.sereingram.ui.ButtonCell
 import com.eltavine.sereingram.ui.RadioCell
 import com.eltavine.sereingram.ui.SliderCell
 import org.telegram.messenger.LocaleController.getString
-import org.telegram.ui.Components.AlertsCreator
 import org.telegram.ui.Components.UItem
 import kotlin.math.abs
 
@@ -40,19 +39,17 @@ internal object ChoiceBinder : RowBinder<SettingsRow.Choice> {
 
     override fun tap(row: SettingsRow.Choice, index: Int, host: RowHost, view: View) {
         when (row.style) {
-            SettingsRow.ChoiceStyle.DIALOG -> choose(row, host)
+            SettingsRow.ChoiceStyle.DIALOG -> choose(row, host, view)
             SettingsRow.ChoiceStyle.INLINE -> row.choices.getOrNull(index)?.let { host.commit(row, it) }
             SettingsRow.ChoiceStyle.SLIDER -> Unit
         }
     }
 
-    private fun choose(row: SettingsRow.Choice, host: RowHost) {
-        val activity = host.fragment.parentActivity ?: return
-        val labels = row.choices.map { row.label(it).toString() }.toTypedArray()
-        val chosen = row.choices.indexOf(host.state[row.option])
-        val dialog = AlertsCreator.createSingleChoiceDialog(activity, labels, getString(row.title), chosen) { _, which ->
-            row.choices.getOrNull(which)?.let { host.commit(row, it) }
-        }
-        host.fragment.showDialog(dialog)
+    // As Telegram and Nagram offer the values of a setting: a menu over its row, with the current one checked.
+    private fun choose(row: SettingsRow.Choice, host: RowHost, view: View) {
+        val current = host.state[row.option]
+        val menu = host.options(view)
+        row.choices.forEach { choice -> menu.addChecked(choice == current, row.label(choice)) { host.commit(row, choice) } }
+        menu.show()
     }
 }

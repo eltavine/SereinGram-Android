@@ -6,6 +6,7 @@ import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsState
 import org.telegram.ui.ActionBar.BaseFragment
+import org.telegram.ui.Components.ItemOptions
 import org.telegram.ui.Components.UItem
 
 /** The page that shows a row, as the row's binder needs it. */
@@ -22,6 +23,9 @@ internal interface RowHost {
     fun <T : Any> commit(row: SettingsRow.Editor<T>, value: T)
 
     fun open(page: SettingsPage)
+
+    /** Telegram's menu over [row], an item the page drew, to fill and show. */
+    fun options(row: View): ItemOptions
 
     /** Lets the user pick a document of [mimeTypes], then hands [picked] its content URI. */
     fun pick(mimeTypes: List<String>, picked: (uri: String) -> Unit)

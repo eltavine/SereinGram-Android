@@ -12,12 +12,14 @@ import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsState
 import com.eltavine.sereingram.ui.SettingsListFragment
+import com.eltavine.sereingram.ui.rowOptions
 import org.telegram.messenger.AndroidUtilities
 import org.telegram.messenger.BotWebViewVibrationEffect
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.R
 import org.telegram.ui.ActionBar.BaseFragment
 import org.telegram.ui.Components.BulletinFactory
+import org.telegram.ui.Components.ItemOptions
 import org.telegram.ui.Components.UItem
 import org.telegram.ui.Components.UniversalAdapter
 
@@ -100,6 +102,8 @@ internal class SereinSettingsActivity(
             Restarts.offer(this)
         }
     }
+
+    override fun options(row: View): ItemOptions = rowOptions(row)
 
     override fun open(page: SettingsPage) {
         presentFragment(SereinSettingsActivity(page, options).apply { setCurrentAccount(this@SereinSettingsActivity.currentAccount) })
