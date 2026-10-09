@@ -260,13 +260,24 @@ public final class com/eltavine/sereingram/settings/SettingsState {
 public final class com/eltavine/sereingram/settings/SettingsTint : java/lang/Enum {
 	public static final field BLUE Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field BLUE_DEEP Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field BROWN Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field CORAL Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field CYAN Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field GRAY Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field GREEN Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field INDIGO Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field LIME Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field MAGENTA Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field ORANGE Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field ORANGE_DEEP Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field PINK Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field PURPLE Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field RED Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field SKY Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field SLATE Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field TEAL Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field VIOLET Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field YELLOW Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static fun values ()[Lcom/eltavine/sereingram/settings/SettingsTint;

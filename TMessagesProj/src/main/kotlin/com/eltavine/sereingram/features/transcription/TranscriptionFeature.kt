@@ -141,7 +141,7 @@ object TranscriptionFeature : SereinModule, SettingsContributor {
 
     override val settingsCategory: SettingsCategory = SettingsCategory.MEDIA
 
-    override val settingsTint: SettingsTint = SettingsTint.BLUE
+    override val settingsTint: SettingsTint = SettingsTint.SKY
 
     override val settingsOrder: Int = 1
 

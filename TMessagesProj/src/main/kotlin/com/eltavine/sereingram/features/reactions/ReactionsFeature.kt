@@ -37,7 +37,7 @@ object ReactionsFeature : SereinModule, SettingsContributor {
 
     override val settingsCategory: SettingsCategory = SettingsCategory.MESSAGES
 
-    override val settingsTint: SettingsTint = SettingsTint.RED
+    override val settingsTint: SettingsTint = SettingsTint.PINK
 
     override val settingsOrder: Int = 3
 

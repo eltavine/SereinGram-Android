@@ -52,7 +52,7 @@ object SendingFeature : SereinModule, SettingsContributor {
 
     override val settingsCategory: SettingsCategory = SettingsCategory.CHATS
 
-    override val settingsTint: SettingsTint = SettingsTint.PURPLE
+    override val settingsTint: SettingsTint = SettingsTint.VIOLET
 
     override val settingsOrder: Int = 3
 

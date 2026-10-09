@@ -114,7 +114,7 @@ class BookmarksFeature(private val stores: (account: Int) -> BookmarkStore) : Se
 
     override val settingsCategory: SettingsCategory = SettingsCategory.MESSAGES
 
-    override val settingsTint: SettingsTint = SettingsTint.ORANGE
+    override val settingsTint: SettingsTint = SettingsTint.YELLOW
 
     override val settingsOrder: Int = 1
 

@@ -29,7 +29,7 @@ object PlaybackFeature : SereinModule, SettingsContributor {
 
     override val settingsCategory: SettingsCategory = SettingsCategory.MEDIA
 
-    override val settingsTint: SettingsTint = SettingsTint.ORANGE
+    override val settingsTint: SettingsTint = SettingsTint.CORAL
 
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_playback_title,

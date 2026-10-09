@@ -53,7 +53,7 @@ object GhostFeature : SereinModule, SettingsContributor {
 
     override val settingsCategory: SettingsCategory = SettingsCategory.PRIVACY
 
-    override val settingsTint: SettingsTint = SettingsTint.BLUE_DEEP
+    override val settingsTint: SettingsTint = SettingsTint.INDIGO
 
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_ghost_title,

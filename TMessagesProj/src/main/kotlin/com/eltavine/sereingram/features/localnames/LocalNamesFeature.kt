@@ -150,7 +150,7 @@ class LocalNamesFeature(stores: (account: Int) -> LocalNameStore) : SereinModule
 
     override val settingsCategory: SettingsCategory = SettingsCategory.CHATS
 
-    override val settingsTint: SettingsTint = SettingsTint.GREEN
+    override val settingsTint: SettingsTint = SettingsTint.LIME
 
     override val settingsPage: SettingsPage = SettingsPage(
         R.string.serein_local_names_title,

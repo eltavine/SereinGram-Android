@@ -42,7 +42,7 @@ object QrCodeFeature : SereinModule, SettingsContributor {
 
     override val settingsCategory: SettingsCategory = SettingsCategory.MEDIA
 
-    override val settingsTint: SettingsTint = SettingsTint.GREEN
+    override val settingsTint: SettingsTint = SettingsTint.TEAL
 
     override val settingsOrder: Int = 2
 

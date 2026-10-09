@@ -45,7 +45,7 @@ object MessageMenuFeature : SereinModule, SettingsContributor {
 
     override val settingsCategory: SettingsCategory = SettingsCategory.MESSAGES
 
-    override val settingsTint: SettingsTint = SettingsTint.CYAN
+    override val settingsTint: SettingsTint = SettingsTint.MAGENTA
 
     override val settingsOrder: Int = 4
 

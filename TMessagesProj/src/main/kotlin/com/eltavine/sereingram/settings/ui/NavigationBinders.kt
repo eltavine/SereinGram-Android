@@ -4,13 +4,11 @@ import android.view.View
 import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsState
-import com.eltavine.sereingram.settings.SettingsTint
 import com.eltavine.sereingram.ui.ButtonCell
 import com.eltavine.sereingram.ui.FeatureCell
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.browser.Browser
 import org.telegram.ui.ActionBar.BaseFragment
-import org.telegram.ui.Components.IconBackgroundColors
 import org.telegram.ui.Components.UItem
 
 internal object SubpageBinder : RowBinder<SettingsRow.Subpage> {
@@ -23,24 +21,12 @@ internal object SubpageBinder : RowBinder<SettingsRow.Subpage> {
         items += if (tint == null) {
             ButtonCell.of(id, title, icon = row.icon, value = status, summary = summary, enabled = enabled)
         } else {
-            val colors = tint.colors()
-            FeatureCell.of(id, colors.top, colors.bottom, row.icon, title, summary, status, enabled)
+            val gradient = tint.gradient
+            FeatureCell.of(id, gradient.top, gradient.bottom, row.icon, title, summary, status, enabled)
         }
     }
 
     override fun tap(row: SettingsRow.Subpage, index: Int, host: RowHost, view: View) = host.open(row.page)
-
-    private fun SettingsTint.colors(): IconBackgroundColors = when (this) {
-        SettingsTint.BLUE -> IconBackgroundColors.BLUE
-        SettingsTint.BLUE_DEEP -> IconBackgroundColors.BLUE_DEEP
-        SettingsTint.CYAN -> IconBackgroundColors.CYAN
-        SettingsTint.GREEN -> IconBackgroundColors.GREEN
-        SettingsTint.ORANGE -> IconBackgroundColors.ORANGE
-        SettingsTint.ORANGE_DEEP -> IconBackgroundColors.ORANGE_DEEP
-        SettingsTint.RED -> IconBackgroundColors.RED
-        SettingsTint.PURPLE -> IconBackgroundColors.PURPLE
-        SettingsTint.GRAY -> IconBackgroundColors.GRAY
-    }
 }
 
 internal object ScreenBinder : RowBinder<SettingsRow.Screen> {

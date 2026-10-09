@@ -43,6 +43,12 @@ class SettingsPagesTest {
         }
     }
 
+    // A colour shared would make two features look alike.
+    @Test
+    fun everyFeatureTileHasAColourOfItsOwn() {
+        assertEquals(contributors.size, contributors.map { it.settingsTint }.distinct().size)
+    }
+
     @Test
     fun everyPageLaysOutWithoutAFault() {
         val faults = ArrayList<String>()

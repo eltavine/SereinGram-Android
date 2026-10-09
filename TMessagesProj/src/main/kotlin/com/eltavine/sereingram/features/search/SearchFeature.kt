@@ -28,7 +28,7 @@ object SearchFeature : SereinModule, SettingsContributor {
 
     override val settingsCategory: SettingsCategory = SettingsCategory.INTERFACE
 
-    override val settingsTint: SettingsTint = SettingsTint.BLUE_DEEP
+    override val settingsTint: SettingsTint = SettingsTint.SLATE
 
     override val settingsOrder: Int = 1
 
