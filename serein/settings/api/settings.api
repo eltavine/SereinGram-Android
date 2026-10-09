@@ -56,6 +56,7 @@ public final class com/eltavine/sereingram/settings/SettingsCondition$DefaultImp
 public abstract interface class com/eltavine/sereingram/settings/SettingsContributor {
 	public abstract fun getSettingsCategory ()Lcom/eltavine/sereingram/settings/SettingsCategory;
 	public abstract fun getSettingsIcon ()I
+	public abstract fun getSettingsKey ()Ljava/lang/String;
 	public abstract fun getSettingsOrder ()I
 	public abstract fun getSettingsPage ()Lcom/eltavine/sereingram/settings/SettingsPage;
 	public abstract fun getSettingsTint ()Lcom/eltavine/sereingram/settings/SettingsTint;
@@ -63,12 +64,14 @@ public abstract interface class com/eltavine/sereingram/settings/SettingsContrib
 
 public final class com/eltavine/sereingram/settings/SettingsContributor$DefaultImpls {
 	public static fun getSettingsCategory (Lcom/eltavine/sereingram/settings/SettingsContributor;)Lcom/eltavine/sereingram/settings/SettingsCategory;
+	public static fun getSettingsKey (Lcom/eltavine/sereingram/settings/SettingsContributor;)Ljava/lang/String;
 	public static fun getSettingsOrder (Lcom/eltavine/sereingram/settings/SettingsContributor;)I
 	public static fun getSettingsTint (Lcom/eltavine/sereingram/settings/SettingsContributor;)Lcom/eltavine/sereingram/settings/SettingsTint;
 }
 
 public final class com/eltavine/sereingram/settings/SettingsContributorKt {
-	public static final fun featureSections (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+	public static final fun featureSections (Ljava/util/List;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+	public static synthetic fun featureSections$default (Ljava/util/List;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/util/List;
 }
 
 public final class com/eltavine/sereingram/settings/SettingsPage {
@@ -179,10 +182,11 @@ public final class com/eltavine/sereingram/settings/SettingsRow$Screen : com/elt
 }
 
 public final class com/eltavine/sereingram/settings/SettingsRow$Subpage : com/eltavine/sereingram/settings/SettingsRow {
-	public fun <init> (Lcom/eltavine/sereingram/settings/SettingsPage;ILcom/eltavine/sereingram/settings/SettingsTint;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
-	public synthetic fun <init> (Lcom/eltavine/sereingram/settings/SettingsPage;ILcom/eltavine/sereingram/settings/SettingsTint;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/eltavine/sereingram/settings/SettingsPage;ILcom/eltavine/sereingram/settings/SettingsTint;Ljava/lang/String;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (Lcom/eltavine/sereingram/settings/SettingsPage;ILcom/eltavine/sereingram/settings/SettingsTint;Ljava/lang/String;Lcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
 	public final fun getIcon ()I
+	public final fun getKey ()Ljava/lang/String;
 	public final fun getPage ()Lcom/eltavine/sereingram/settings/SettingsPage;
 	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
 	public fun getSummary ()Ljava/lang/Integer;
@@ -281,5 +285,17 @@ public final class com/eltavine/sereingram/settings/SettingsTint : java/lang/Enu
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static fun values ()[Lcom/eltavine/sereingram/settings/SettingsTint;
+}
+
+public final class com/eltavine/sereingram/settings/TileTints : com/eltavine/sereingram/core/SereinModule {
+	public static final field INSTANCE Lcom/eltavine/sereingram/settings/TileTints;
+	public final fun decode (Ljava/lang/String;)Ljava/util/Map;
+	public final fun encode (Ljava/util/Map;)Ljava/lang/String;
+	public fun forgetAccount (I)V
+	public fun getId ()Ljava/lang/String;
+	public fun getOptions ()Ljava/util/List;
+	public final fun getTints ()Lcom/eltavine/sereingram/core/Option;
+	public fun start (Lcom/eltavine/sereingram/core/ModuleContext;)V
+	public final fun with (Ljava/lang/String;Ljava/lang/String;Lcom/eltavine/sereingram/settings/SettingsTint;)Ljava/lang/String;
 }
 

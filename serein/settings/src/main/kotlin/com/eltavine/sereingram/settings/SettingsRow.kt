@@ -104,12 +104,14 @@ public sealed interface SettingsRow {
 
     /**
      * Opens [page], saying what it holds with its summary and status. With a [tint], [icon]
-     * sits on a tile of that colour, as features do on Telegram's own main settings.
+     * sits on a tile of that colour, as features do on Telegram's own main settings; with a
+     * [key] too, the user may give the tile a colour or a picture of their own, kept under it.
      */
     public class Subpage(
         public val page: SettingsPage,
         public val icon: Int = 0,
         public val tint: SettingsTint? = null,
+        public val key: String? = null,
         override val shownWhen: SettingsCondition = SettingsCondition.ALWAYS,
         override val enabledWhen: SettingsCondition = SettingsCondition.ALWAYS,
     ) : SettingsRow {

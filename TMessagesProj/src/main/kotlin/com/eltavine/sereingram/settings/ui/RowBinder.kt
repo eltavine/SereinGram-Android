@@ -38,6 +38,9 @@ internal interface RowBinder<R : SettingsRow> {
 
     /** Handles a tap on the [index]th item of the row, counted from its first. */
     fun tap(row: R, index: Int, host: RowHost, view: View)
+
+    /** Handles a long press on the [index]th item of the row; false when the row offers nothing for one. */
+    fun longTap(row: R, index: Int, host: RowHost, view: View): Boolean = false
 }
 
 /** The binder for [row]; a kind of row without one does not build. */

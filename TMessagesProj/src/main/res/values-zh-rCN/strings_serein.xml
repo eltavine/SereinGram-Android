@@ -21,6 +21,13 @@
     <string name="serein_settings_restart_needed">重启 SereinGram 后生效。</string>
     <string name="serein_settings_restart">重启</string>
     <string name="serein_settings_no_file_picker">此设备上没有可以选择文件的应用。</string>
+    <string name="serein_tiles_hint">长按功能可为其图标换上自选的颜色或图片。图片只保存在本设备上，不会写入备份。</string>
+    <string name="serein_tiles_colour">图标颜色</string>
+    <string name="serein_tiles_colour_n">颜色 %1$d</string>
+    <string name="serein_tiles_picture">选择图片</string>
+    <string name="serein_tiles_remove_picture">移除图片</string>
+    <string name="serein_tiles_reset">恢复默认图标</string>
+    <string name="serein_tiles_picture_failed">无法使用这张图片。</string>
     <string name="serein_declutter_title">隐藏界面元素</string>
     <string name="serein_declutter_summary">Premium、帮助、按钮与回应</string>
     <string name="serein_declutter_settings">设置</string>

@@ -3,9 +3,11 @@ package com.eltavine.sereingram.app
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.hooks.SettingsHooks
 import com.eltavine.sereingram.settings.SettingsCategory
+import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsSection
+import com.eltavine.sereingram.settings.featureSections
 import com.eltavine.sereingram.settings.ui.SereinSettingsActivity
 import org.telegram.messenger.BuildConfig
 import org.telegram.messenger.LocaleController.getString
@@ -34,8 +36,15 @@ internal fun installSettingsEntry(options: Options, sections: List<SettingsSecti
 /** The SereinGram page: [sections] and, closing them, what SereinGram is and where it lives. */
 internal fun rootPage(sections: List<SettingsSection>): SettingsPage = SettingsPage(R.string.NekoX, sections + aboutSection())
 
+/** The groups of the SereinGram page that open the pages of [contributors]. */
+internal fun featureSectionsOf(contributors: List<SettingsContributor>): List<SettingsSection> =
+    featureSections(contributors, note = ::categoryNote, header = ::categoryTitle)
+
+// How tiles take a colour or a picture of the user's own is told with the group of the app's look.
+private fun categoryNote(category: SettingsCategory): Int? = R.string.serein_tiles_hint.takeIf { category == SettingsCategory.INTERFACE }
+
 /** The header of each group of features on the SereinGram page. */
-internal fun categoryTitle(category: SettingsCategory): Int = when (category) {
+private fun categoryTitle(category: SettingsCategory): Int = when (category) {
     SettingsCategory.PRIVACY -> R.string.serein_settings_category_privacy
     SettingsCategory.MESSAGES -> R.string.serein_settings_category_messages
     SettingsCategory.CHATS -> R.string.serein_settings_category_chats

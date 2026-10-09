@@ -1,5 +1,6 @@
 package com.eltavine.sereingram.settings
 
+import com.eltavine.sereingram.core.SereinModule
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -55,5 +56,28 @@ class FeatureSectionsTest {
 
         assertEquals(40, row.icon)
         assertEquals(SettingsTint.PURPLE, row.tint)
+    }
+
+    private object Ghost : SereinModule, SettingsContributor {
+        override val id: String = "ghost"
+        override val settingsPage = SettingsPage(5, emptyList())
+        override val settingsIcon: Int = 50
+    }
+
+    @Test
+    fun aModulesRowIsKeptUnderTheModulesId() {
+        val rows = featureSections(listOf(Ghost, Unsorted())) { null }.single().rows.map { it as SettingsRow.Subpage }
+
+        assertEquals(listOf("ghost", null), rows.map { it.key })
+    }
+
+    @Test
+    fun aCategoryMayHaveANoteUnderIt() {
+        val sections = featureSections(
+            listOf(Feature(1, SettingsCategory.MEDIA), Feature(2, SettingsCategory.INTERFACE)),
+            note = { category -> 200.takeIf { category == SettingsCategory.INTERFACE } },
+        ) { null }
+
+        assertEquals(listOf(null, 200), sections.map { it.note })
     }
 }

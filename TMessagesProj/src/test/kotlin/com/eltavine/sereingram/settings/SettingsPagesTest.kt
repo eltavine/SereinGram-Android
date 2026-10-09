@@ -3,7 +3,7 @@ package com.eltavine.sereingram.settings
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import com.eltavine.sereingram.app.SereinApp
-import com.eltavine.sereingram.app.categoryTitle
+import com.eltavine.sereingram.app.featureSectionsOf
 import com.eltavine.sereingram.app.rootPage
 import com.eltavine.sereingram.core.Faults
 import com.eltavine.sereingram.features.backup.BackupSettings
@@ -43,9 +43,10 @@ class SettingsPagesTest {
         }
     }
 
-    // A colour shared would make two features look alike.
+    // A tile's colour and picture are kept under its key, and a colour shared would make two features look alike.
     @Test
-    fun everyFeatureTileHasAColourOfItsOwn() {
+    fun everyFeatureTileHasAKeyAndAColourOfItsOwn() {
+        assertEquals(contributors.size, contributors.mapNotNull { it.settingsKey }.distinct().size)
         assertEquals(contributors.size, contributors.map { it.settingsTint }.distinct().size)
     }
 
@@ -61,7 +62,7 @@ class SettingsPagesTest {
     // A slider's title is its header and its section's note explains it; an inline choice says what each choice does.
     @Test
     fun everyRowSaysWhatItDoes() {
-        val root = rootPage(featureSections(contributors, ::categoryTitle) + BackupSettings.section(state.options, emptyList()))
+        val root = rootPage(featureSectionsOf(contributors) + BackupSettings.section(state.options, emptyList()))
         val silent = rowsOf(root).filter { row ->
             when {
                 row is SettingsRow.Choice && row.style == SettingsRow.ChoiceStyle.SLIDER -> false

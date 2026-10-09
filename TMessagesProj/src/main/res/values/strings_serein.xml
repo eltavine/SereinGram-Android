@@ -21,6 +21,13 @@
     <string name="serein_settings_restart_needed">This takes effect once SereinGram restarts.</string>
     <string name="serein_settings_restart">Restart</string>
     <string name="serein_settings_no_file_picker">No app on this device can pick a file.</string>
+    <string name="serein_tiles_hint">Long-press a feature to give its icon a colour or a picture of your own. Pictures stay on this device and are not backed up.</string>
+    <string name="serein_tiles_colour">Icon colour</string>
+    <string name="serein_tiles_colour_n">Colour %1$d</string>
+    <string name="serein_tiles_picture">Choose picture</string>
+    <string name="serein_tiles_remove_picture">Remove picture</string>
+    <string name="serein_tiles_reset">Restore icon</string>
+    <string name="serein_tiles_picture_failed">This picture could not be used.</string>
     <string name="serein_declutter_title">Hide elements</string>
     <string name="serein_declutter_summary">Premium, Help, buttons and reactions</string>
     <string name="serein_declutter_settings">Settings</string>

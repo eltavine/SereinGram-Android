@@ -4,10 +4,12 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.net.Uri
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import com.eltavine.sereingram.app.SereinApp
-import com.eltavine.sereingram.app.categoryTitle
+import com.eltavine.sereingram.app.featureSectionsOf
 import com.eltavine.sereingram.app.rootPage
 import com.eltavine.sereingram.app.showSereinStrings
 import com.eltavine.sereingram.core.Faults
@@ -16,15 +18,18 @@ import com.eltavine.sereingram.core.MemoryKeyValueStore
 import com.eltavine.sereingram.core.OptionScope
 import com.eltavine.sereingram.core.Options
 import com.eltavine.sereingram.features.backup.BackupSettings
+import com.eltavine.sereingram.features.dns.DnsFeature
 import com.eltavine.sereingram.features.dns.DnsMode
 import com.eltavine.sereingram.features.dns.DnsOptions
+import com.eltavine.sereingram.features.ghost.GhostFeature
 import com.eltavine.sereingram.features.history.HistoryOptions
 import com.eltavine.sereingram.features.transcription.TranscriptionOptions
 import com.eltavine.sereingram.settings.SettingsContributor
 import com.eltavine.sereingram.settings.SettingsPage
 import com.eltavine.sereingram.settings.SettingsRow
 import com.eltavine.sereingram.settings.SettingsState
-import com.eltavine.sereingram.settings.featureSections
+import com.eltavine.sereingram.settings.SettingsTint
+import com.eltavine.sereingram.settings.TileTints
 import com.eltavine.sereingram.ui.drawAsSettings
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -77,7 +82,7 @@ class SettingsPagesDrawingTest {
         Theme.createCommonResources(context)
         val modules = SereinApp.modules(context)
         val contributors = modules.modules.filterIsInstance<SettingsContributor>()
-        val pages = listOf("serein" to rootPage(featureSections(contributors, ::categoryTitle) + BackupSettings.section(options, modules.options))) +
+        val pages = listOf("serein" to rootPage(featureSectionsOf(contributors) + BackupSettings.section(options, modules.options))) +
             contributors.map { it::class.java.simpleName.removeSuffix("Feature").lowercase() to it.settingsPage }
 
         val faults = ArrayList<String>()
@@ -88,7 +93,15 @@ class SettingsPagesDrawingTest {
                 state[DnsOptions.mode] = DnsMode.CUSTOM.code
                 state[DnsOptions.customServer] = "dns.example/dns-query"
                 state[TranscriptionOptions.enabled] = true
-                pages.forEach { (name, page) -> draw(context, page, File(pictures, "$name-on.png")) }
+                // A colour and a picture of the user's own on two tiles of the SereinGram page.
+                state[TileTints.tints] = TileTints.with("", DnsFeature.id, SettingsTint.BROWN)
+                TilePictures.save(GhostFeature.id, Uri.fromFile(samplePicture(context)))
+                try {
+                    pages.forEach { (name, page) -> draw(context, page, File(pictures, "$name-on.png")) }
+                } finally {
+                    TilePictures.remove(GhostFeature.id)
+                }
+                drawView(TileMenu.palette(context, GhostFeature.settingsIcon, SettingsTint.INDIGO) {}, File(pictures, "tile-palette.png"))
             }
         }
         assertEquals(emptyList<String>(), faults)
@@ -96,6 +109,29 @@ class SettingsPagesDrawingTest {
     }
 
     private val unresolved = ArrayList<String>()
+
+    // A face on a stripe, so that a tile shows whether its picture is cropped from the middle.
+    private fun samplePicture(context: Context): File {
+        val image = Bitmap.createBitmap(480, 320, Bitmap.Config.ARGB_8888)
+        Canvas(image).apply {
+            drawColor(0xFF2A9D8F.toInt())
+            drawRect(80f, 0f, 400f, 320f, Paint().apply { color = 0xFFE9C46A.toInt() })
+            drawCircle(240f, 160f, 110f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFE76F51.toInt() })
+        }
+        return File(context.cacheDir, "tile-sample.png").apply { outputStream().use { image.compress(Bitmap.CompressFormat.PNG, 100, it) } }
+    }
+
+    private fun drawView(view: View, picture: File) {
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+        val bitmap = Bitmap.createBitmap(view.measuredWidth.coerceAtLeast(1), view.measuredHeight.coerceAtLeast(1), Bitmap.Config.ARGB_8888)
+        Canvas(bitmap).apply {
+            drawColor(Theme.getColor(Theme.key_dialogBackground))
+            view.draw(this)
+        }
+        picture.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        bitmap.recycle()
+    }
 
     private fun draw(context: Context, page: SettingsPage, picture: File): Int {
         var drawn = 0

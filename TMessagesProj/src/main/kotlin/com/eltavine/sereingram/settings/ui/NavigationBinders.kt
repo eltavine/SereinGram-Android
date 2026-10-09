@@ -21,12 +21,21 @@ internal object SubpageBinder : RowBinder<SettingsRow.Subpage> {
         items += if (tint == null) {
             ButtonCell.of(id, title, icon = row.icon, value = status, summary = summary, enabled = enabled)
         } else {
-            val gradient = tint.gradient
-            FeatureCell.of(id, gradient.top, gradient.bottom, row.icon, title, summary, status, enabled)
+            val key = row.key
+            val chosen = key?.let { TileMenu.chosenTint(host.state, it) }
+            val picture = key?.let { Faults.guard("settings tile picture", fallback = null) { TilePictures.of(it) } }
+            val gradient = (chosen ?: tint).gradient
+            FeatureCell.of(id, gradient.top, gradient.bottom, row.icon, title, summary, status, enabled, ownColours = chosen != null, picture = picture)
         }
     }
 
     override fun tap(row: SettingsRow.Subpage, index: Int, host: RowHost, view: View) = host.open(row.page)
+
+    override fun longTap(row: SettingsRow.Subpage, index: Int, host: RowHost, view: View): Boolean {
+        val key = row.key?.takeIf { row.tint != null } ?: return false
+        TileMenu.show(row, key, host, view)
+        return true
+    }
 }
 
 internal object ScreenBinder : RowBinder<SettingsRow.Screen> {

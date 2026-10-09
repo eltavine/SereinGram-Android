@@ -57,7 +57,10 @@ internal class SereinSettingsActivity(
         Faults.guard("settings row", fallback = Unit) { binderOf(row.row).tap(row.row, item.id - row.id, this, view) }
     }
 
-    override fun onLongClick(item: UItem, view: View, position: Int, x: Float, y: Float): Boolean = false
+    override fun onLongClick(item: UItem, view: View, position: Int, x: Float, y: Float): Boolean {
+        val row = layout?.rowOf(item.id)?.takeIf { it.enabled } ?: return false
+        return Faults.guard("settings row", fallback = false) { binderOf(row.row).longTap(row.row, item.id - row.id, this, view) }
+    }
 
     // Options also change elsewhere while the page shows, such as when a backup is restored, often on
     // another thread and many at once; the page draws once after them.

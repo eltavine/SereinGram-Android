@@ -1,5 +1,7 @@
 package com.eltavine.sereingram.settings
 
+import com.eltavine.sereingram.core.SereinModule
+
 /** A module with its own page, opened from a row of the SereinGram settings page. */
 public interface SettingsContributor {
     public val settingsPage: SettingsPage
@@ -15,6 +17,9 @@ public interface SettingsContributor {
 
     /** Where the row goes in its group, lowest first; rows of the same order keep the order of the modules. */
     public val settingsOrder: Int get() = 0
+
+    /** The name the user's colour and picture for the row's tile are kept under; a module's own id unless given. */
+    public val settingsKey: String? get() = (this as? SereinModule)?.id
 }
 
 /** The groups of the SereinGram page, in the order they show. */
@@ -49,17 +54,22 @@ public enum class SettingsTint {
 
 /**
  * The sections of the SereinGram page that open the contributors' pages: one for each
- * [SettingsCategory] that has any, in the categories' order and under the [header] each
- * gets. Within a category the rows follow [SettingsContributor.settingsOrder], and then
- * the order of [contributors].
+ * [SettingsCategory] that has any, in the categories' order, under the [header] and above
+ * the [note] each gets. Within a category the rows follow [SettingsContributor.settingsOrder],
+ * and then the order of [contributors].
  */
-public fun featureSections(contributors: List<SettingsContributor>, header: (SettingsCategory) -> Int?): List<SettingsSection> =
+public fun featureSections(
+    contributors: List<SettingsContributor>,
+    note: (SettingsCategory) -> Int? = { null },
+    header: (SettingsCategory) -> Int?,
+): List<SettingsSection> =
     contributors.withIndex()
         .sortedWith(compareBy({ it.value.settingsCategory }, { it.value.settingsOrder }, { it.index }))
         .groupBy({ it.value.settingsCategory }, { it.value })
         .map { (category, members) ->
             SettingsSection(
                 header = header(category),
-                rows = members.map { SettingsRow.Subpage(it.settingsPage, it.settingsIcon, it.settingsTint) },
+                note = note(category),
+                rows = members.map { SettingsRow.Subpage(it.settingsPage, it.settingsIcon, it.settingsTint, key = it.settingsKey) },
             )
         }

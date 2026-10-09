@@ -35,8 +35,8 @@ import com.eltavine.sereingram.ports.BookmarkStore
 import com.eltavine.sereingram.ports.HistoryStore
 import com.eltavine.sereingram.ports.LocalNameStore
 import com.eltavine.sereingram.settings.SettingsContributor
+import com.eltavine.sereingram.settings.TileTints
 import com.eltavine.sereingram.settings.editors
-import com.eltavine.sereingram.settings.featureSections
 import com.eltavine.sereingram.support.Logouts
 import org.telegram.messenger.FileLog
 import java.io.File
@@ -65,7 +65,7 @@ object SereinApp {
         Logouts.observe { account -> modules.forgetAccount(account, context) }
         val contributors = modules.modules.filterIsInstance<SettingsContributor>()
         val restarting = contributors.flatMap { it.settingsPage.editors() }.filter { it.restarts }.map { it.option }
-        installSettingsEntry(options, featureSections(contributors, ::categoryTitle) + BackupSettings.section(options, modules.options, restarting))
+        installSettingsEntry(options, featureSectionsOf(contributors) + BackupSettings.section(options, modules.options, restarting))
     }
 
     /** Every module of the app, in start order; building the registry checks their ids and option keys. */
@@ -97,6 +97,7 @@ object SereinApp {
                 SendingFeature,
                 TimestampsFeature,
                 TranscriptionFeature,
+                TileTints,
             ),
         )
     }
