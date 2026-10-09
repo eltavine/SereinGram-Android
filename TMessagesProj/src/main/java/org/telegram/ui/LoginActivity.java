@@ -3456,12 +3456,10 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                             needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), getString("CodeExpired", R.string.CodeExpired));
                         } else if (error.text.startsWith("FLOOD_WAIT")) {
                             needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), getString("FloodWait", R.string.FloodWait));
+                        } else if (req instanceof TLRPC.TL_auth_sendCode && error.code != -1000) {
+                            needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), getString(R.string.ErrorOccurred) + "\n" + error.text);
                         } else if (error.code != -1000) {
-                            if (req instanceof TLRPC.TL_auth_sendCode) {
-                                needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), getString(R.string.ErrorOccurred) + "\n" + error.text);
-                            } else {
-                                AlertsCreator.processError(currentAccount, error, LoginActivity.this, req, phoneInputData.phoneNumber);
-                            }
+                            AlertsCreator.processError(currentAccount, error, LoginActivity.this, req, phoneInputData.phoneNumber);
                         }
                     }
                 }
