@@ -1,26 +1,18 @@
-import contextlib
 import json
-import os
-from html import escape
+from contextlib import suppress
 from pathlib import Path
 from sys import argv
 from typing import Iterable, Union
 
-from pyrogram import Client, enums
+from apk_version import read_apk_version
+from pyrogram import Client
 from pyrogram.types import InputMediaDocument, Message
-from release_caption import (
-    is_changelog_ignored,
-    linkify_prs,
-    read_apk_version,
-    render_test_caption,
-)
 
 api_id = 11535358
 api_hash = "33d372962fadb01df47e6ceed4e33cd6"
 metadata_channel = -1001471208507
 metadata_channel_msg_id = 46
 artifacts_path = Path("artifacts")
-test_version = len(argv) > 3 and argv[3] == "test"
 
 
 def find_apk(abi: str) -> Path:
@@ -38,28 +30,11 @@ def get_thumb() -> str:
 
 
 def get_caption() -> str:
-    with open(artifacts_path / "caption.txt", "r", encoding="utf-8") as f:
-        commit_message = f.read()
-    repository_url = "/".join(
-        part.strip("/")
-        for part in (
-            os.environ.get("GITHUB_SERVER_URL", ""),
-            os.environ.get("GITHUB_REPOSITORY", ""),
-        )
-        if part
-    )
-    if not test_version:
-        if is_changelog_ignored(commit_message):
-            return ""
-        return linkify_prs(escape(commit_message), repository_url)
-    version_name, version_code = get_version()
-    return render_test_caption(
-        commit_message,
-        version_name,
-        str(version_code),
-        os.environ.get("GITHUB_SHA", ""),
-        repository_url,
-    )
+    caption_file = artifacts_path / "caption.txt"
+    if not caption_file.is_file():
+        return ""
+    with open(caption_file, "r", encoding="utf-8") as f:
+        return "Test version, " + f.read().strip()
 
 
 def get_document() -> list["InputMediaDocument"]:
@@ -73,8 +48,9 @@ def get_document() -> list["InputMediaDocument"]:
                     thumb=get_thumb(),
                 )
             )
-    documents[-1].caption = get_caption()
-    documents[-1].parse_mode = enums.ParseMode.HTML
+    caption = get_caption()
+    if caption and documents:
+        documents[-1].caption = caption
     return documents
 
 
@@ -104,9 +80,21 @@ def retry(func):
     return wrapper
 
 
+# The in-app updater reads one document message per ABI from the metadata
+# channel itself, so the APKs are sent there apart from the channel posts.
+@retry
+async def send_to_metadata_channel(client: "Client"):
+    return await client.send_media_group(
+        metadata_channel,
+        media=get_document(),
+    )
+
+
+# The GitLab branch posts to its own channel, and the metadata channel only
+# gets a copy of it, forwarded from there.
 @retry
 async def send_to_channel(client: "Client", cid: str):
-    with contextlib.suppress(ValueError):
+    with suppress(ValueError):
         cid = int(cid)
     return await client.send_media_group(
         cid,
@@ -160,11 +148,14 @@ def get_client(bot_token: str):
 async def main():
     timestamp = get_timestamp()
     bot_token = argv[1]
-    chat_id = argv[2]
+    chat_id = argv[2] if len(argv) > 2 else None
     client = get_client(bot_token)
     await client.start()
-    msg = await send_to_channel(client, chat_id)
-    msg = await forward_to_channel(client, msg)
+    if chat_id:
+        msg = await send_to_channel(client, chat_id)
+        msg = await forward_to_channel(client, msg)
+    else:
+        msg = await send_to_metadata_channel(client)
     await edit_metadata_msg(client, msg, timestamp)
     await client.log_out()
 

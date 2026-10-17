@@ -6,6 +6,7 @@
     <string name="DisablePushAlert">Por favor deshabilite el Servicio Push SereinGram</string>
     <string name="EnablePushAlert">Por favor, activa Servicio Push SereinGram</string>
     <string name="NekoXFaq">Preguntas frecuentes sobre SereinGram</string>
-    <string name="NekoXPushService">Servicio Push SereinGram</string>
-    <string name="NekoXUpdatesChannel">Canal de actualizaciones de SereinGram</string>
+    <string name="NekoXPushService">Servicio Push de SereinGrama</string>
+    <string name="NekoXUpdatesChannel">Canal de actualizaciones de SereinGrama</string>
+    <string name="PassQREncryption">Escanear con SereinGrama para iniciar sesión.</string>
 </resources>

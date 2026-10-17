@@ -6,4 +6,5 @@
     <string name="NekoXFaq">FAQ SereinGram</string>
     <string name="NekoXPushService">Layanan Push SereinGram</string>
     <string name="NekoXUpdatesChannel">Kanal Pembaruan SereinGram</string>
+    <string name="PassQREncryption">Scan with SereinGram to log in.</string>
 </resources>

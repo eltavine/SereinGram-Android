@@ -43,7 +43,7 @@ internal fun Project.checkAndroidGradlePluginVersion(applied: AndroidPluginVersi
 /** The app's SDK levels, set in TMessagesProj/build.gradle, which SereinGram's Android modules share. */
 internal object AppLevels {
     const val COMPILE_SDK = 36
-    const val MIN_SDK = 21
+    const val MIN_SDK = 23
 }
 
 /** `:serein:adapters:room` becomes `com.eltavine.sereingram.adapters.room`. */

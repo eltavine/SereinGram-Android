@@ -5,6 +5,4 @@
     <string name="DisablePushAlert">الرجاء تعطيل \"خدمة دفع SereinGram\"</string>
     <string name="EnablePushAlert">الرجاء تمكين \"خدمة دفع SereinGram\"</string>
     <string name="NekoXFaq">أسئلة SereinGram الشائعة</string>
-    <string name="NekoXPushService">خدمة دفع SereinGram</string>
-    <string name="NekoXUpdatesChannel">قناة تحديثات SereinGram</string>
 </resources>

@@ -5,4 +5,5 @@
     <string name="NekoXFaq">Συχνές ερωτήσεις SereinGram</string>
     <string name="NekoXPushService">Υπηρεσία SereinGram Push</string>
     <string name="NekoXUpdatesChannel">Κανάλι ενημερώσεων SereinGram</string>
+    <string name="PassQREncryption">Σαρώστε με τον SereinGram για να συνδεθείτε.</string>
 </resources>

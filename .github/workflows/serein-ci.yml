@@ -160,7 +160,9 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         env:
           NATIVE_TARGET: ${{ matrix.abi }}
-        run: ./run libs native
+        run: |
+          ./run init libs
+          ./run libs native
 
   apk:
     name: APK

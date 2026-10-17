@@ -6,4 +6,5 @@
     <string name="NekoXFaq">ЧаВО SereinGram (EN/CH)</string>
     <string name="NekoXPushService">Сервис уведомлений SereinGram</string>
     <string name="NekoXUpdatesChannel">Канал обновлений SereinGram</string>
+    <string name="PassQREncryption">Сканируйте с SereinGram для входа.</string>
 </resources>

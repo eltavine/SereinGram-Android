@@ -31,6 +31,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Layout;
@@ -63,7 +64,7 @@ import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.ChatObject;
 import org.telegram.messenger.ChatThemeController;
-import org.telegram.messenger.CodeHighlighting;
+import org.telegram.utils.code.highlight.CodeHighlighting;
 import org.telegram.messenger.ContactsController;
 import org.telegram.messenger.DialogObject;
 import org.telegram.messenger.ChatThemeController;
@@ -211,15 +212,52 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
     public boolean isSavedDialogCell;
     public DialogCellTags tags;
 
+    private static final int COMMUNITY_AVATAR_TAP_CHAT = 0;
+    private static final int COMMUNITY_AVATAR_TAP_COMMUNITY = 1;
+    private static final int COMMUNITY_AVATAR_TAP_ARROW = 2;
+    private boolean communityArrowTouched;
+
+    private boolean usesCommunityAvatarSettings() {
+        return isDialogCell && parentFragment != null;
+    }
+
+    private boolean opensCommunityFromAvatar() {
+        if (NaConfig.INSTANCE.getDisableCommunityChatGrouping().Bool()) {
+            return false;
+        }
+        if (!usesCommunityAvatarSettings()) {
+            return true;
+        }
+        final int action = NaConfig.INSTANCE.getCommunityAvatarTapAction().Int();
+        return action == COMMUNITY_AVATAR_TAP_COMMUNITY || action == COMMUNITY_AVATAR_TAP_ARROW && communityArrowTouched;
+    }
+
+    private boolean drawsCommunityArrow() {
+        if (NaConfig.INSTANCE.getDisableCommunityChatGrouping().Bool()) {
+            return false;
+        }
+        return !usesCommunityAvatarSettings() || NaConfig.INSTANCE.getCommunityAvatarTapAction().Int() != COMMUNITY_AVATAR_TAP_CHAT;
+    }
+
     public final StoriesUtilities.AvatarStoryParams storyParams = new StoriesUtilities.AvatarStoryParams(false) {
         @Override
+        public boolean checkOnTouchEvent(MotionEvent event, View view) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                final float ccx = originalAvatarRect.centerX() + dp(20.33f);
+                final float ccy = originalAvatarRect.centerY() + dp(19);
+                communityArrowTouched = Math.abs(event.getX() - ccx) <= dp(10) && Math.abs(event.getY() - ccy) <= dp(10);
+            }
+            return super.checkOnTouchEvent(event, view);
+        }
+
+        @Override
         public boolean isAvatarClickable(long dialogId, TLRPC.Chat chat, TLRPC.User user) {
-            return (chat != null && chat.linked_community_id != 0 || user != null && user.linked_community_id != 0) && !insideCommunityList;
+            return (chat != null && chat.linked_community_id != 0 || user != null && user.linked_community_id != 0) && !insideCommunityList && opensCommunityFromAvatar();
         }
 
         @Override
         public boolean onAvatarClick(View view, long dialogId) {
-            if (parentFragment != null && !insideCommunityList) {
+            if (parentFragment != null && !insideCommunityList && opensCommunityFromAvatar()) {
                 if (dialogId > 0) {
                     final TLRPC.User user = MessagesController.getInstance(currentAccount).getUser(dialogId);
                     if (user != null && user.linked_community_id != 0) {
@@ -613,6 +651,10 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
     protected float xOffset;
 
     private boolean drawCount;
+    private boolean drawGramTransfer;
+    private int gramTransferLeft;
+    private LayerDrawable gramTransferDrawable;
+    private int gramTransferColor;
     private boolean drawCount2 = true;
     private int countTop;
     private int countLeft;
@@ -2654,6 +2696,38 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
         } else {
             drawCount = false;
             drawMention = false;
+        }
+
+        drawGramTransfer = !drawError && customDialog == null && !isFolderCell() && !isForumCell() && !isDialogFolder()
+            && (unreadCount > 0 || markUnread)
+            && message != null && !message.isOutOwner()
+            && message.messageOwner.action instanceof TLRPC.TL_messageActionGramTransfer;
+        if (drawGramTransfer) {
+            int badgesWidth = 0;
+            if (drawCount && drawCount2) {
+                badgesWidth += countWidth + dp(BADGE_GAP);
+            }
+            if (drawMention && drawCount2) {
+                badgesWidth += mentionWidth + dp(BADGE_GAP);
+            }
+            if (drawReactionMention) {
+                badgesWidth += dp(25);
+            }
+            if (drawPollVotesMention) {
+                badgesWidth += dp(25);
+            }
+            if (openBot) {
+                badgesWidth += (int) openButtonRect.width() + dp(4);
+            }
+            gramTransferLeft = LocaleController.isRTL ? dp(BADGE_MARGIN) + badgesWidth
+                : getMeasuredWidth() - dp(BADGE_MARGIN + 28) - badgesWidth;
+            messageWidth -= dp(32);
+            if (LocaleController.isRTL) {
+                messageLeft += dp(32);
+                typingLeft += dp(32);
+                buttonLeft += dp(32);
+                messageNameLeft += dp(32);
+            }
         }
 
         if (handleCurrentPreviewData() != null && !useForceThreeLines) {
@@ -4780,6 +4854,21 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                 }
             }
 
+            if (drawGramTransfer) {
+                if (gramTransferDrawable == null) {
+                    gramTransferDrawable = (LayerDrawable) ContextCompat.getDrawable(getContext(), R.drawable.dialog_gram_transfer).mutate();
+                }
+                final int color = Theme.getColor(isCounterMuted()
+                    ? Theme.key_chats_unreadCounterMuted : Theme.key_chats_unreadCounter, resourcesProvider);
+                if (gramTransferColor != color) {
+                    gramTransferDrawable.getDrawable(0).setColorFilter(new PorterDuffColorFilter(gramTransferColor = color, PorterDuff.Mode.SRC_IN));
+                }
+                final int top = countTop + (dp(BADGE_SIZE) - dp(28)) / 2;
+                gramTransferDrawable.setBounds(gramTransferLeft, top, gramTransferLeft + dp(28), top + dp(28));
+                gramTransferDrawable.setAlpha((int) ((1.0f - reorderIconProgress) * 255));
+                gramTransferDrawable.draw(canvas);
+            }
+
             if (thumbsCount > 0 && updateHelper.typingProgres != 1f) {
                 float alpha = 1f;
                 if (updateHelper.typingProgres > 0) {
@@ -4900,7 +4989,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                 storyParams.forceState = s;
             }
 
-            if (!insideCommunityList && (chat != null && chat.linked_community_id != 0 || user != null && user.linked_community_id != 0) && !drawCommunityAvatar && isDialogCell && !isDialogFolder()) {
+            if (!insideCommunityList && (chat != null && chat.linked_community_id != 0 || user != null && user.linked_community_id != 0) && !drawCommunityAvatar && isDialogCell && !isDialogFolder() && drawsCommunityArrow()) {
                 final float ccx = storyParams.originalAvatarRect.centerX() + dp(20.33f);
                 final float ccy = storyParams.originalAvatarRect.centerY() + dp(19);
                 if (communityArrowDrawable == null) {

@@ -5,4 +5,5 @@
     <string name="NekoXFaq">FAQ SereinGram</string>
     <string name="NekoXPushService">Servizio Push SereinGram</string>
     <string name="NekoXUpdatesChannel">Canale Aggiornamenti SereinGram</string>
+    <string name="PassQREncryption">Scansiona con SereinGram per accedere.</string>
 </resources>

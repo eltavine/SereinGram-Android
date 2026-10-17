@@ -6,4 +6,5 @@
     <string name="CustomTitleHint">Pozostaw puste, aby użyć SereinGram</string>
     <string name="NekoXPushService">Usługa Push SereinGram</string>
     <string name="NekoXUpdatesChannel">Kanał aktualizacji SereinGram</string>
+    <string name="PassQREncryption">Zeskanuj za pomocą SereinGramu, aby się zalogować.</string>
 </resources>

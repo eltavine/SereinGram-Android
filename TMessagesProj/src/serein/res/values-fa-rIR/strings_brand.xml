@@ -5,4 +5,5 @@
     <string name="NekoXFaq">پرسش‌های متداول SereinGram</string>
     <string name="NekoXPushService">خدمات ارسال اعلان SereinGram</string>
     <string name="NekoXUpdatesChannel">کانال بروزرسانی SereinGram</string>
+    <string name="PassQREncryption">برای ورود با SereinGram اسکن کنید.</string>
 </resources>

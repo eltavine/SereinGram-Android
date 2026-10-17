@@ -7,6 +7,7 @@
     <string name="EnablePushAlert">Bitte aktiviere den SereinGram Push-Service</string>
     <string name="NeedChangeNekoSettings">Du musst die SereinGram Einstellungen ändern</string>
     <string name="NekoXFaq">SereinGram FAQ</string>
-    <string name="NekoXPushService">SereinGram Push-Service</string>
+    <string name="NekoXPushService">SereinGram-Push-Dienst</string>
     <string name="NekoXUpdatesChannel">SereinGram-Update-Kanal</string>
+    <string name="PassQREncryption">Scanne mit SereinGram um dich anzumelden.</string>
 </resources>

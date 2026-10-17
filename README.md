@@ -8,7 +8,7 @@ An unofficial Telegram client for Android, built on Nagram.
 
 [![CI](https://github.com/eltavine/SereinGram-Android/actions/workflows/serein-ci.yml/badge.svg?branch=main)](https://github.com/eltavine/SereinGram-Android/actions/workflows/serein-ci.yml)
 [![License](https://img.shields.io/github/license/eltavine/SereinGram-Android)](LICENSE)
-![Android 5.0+](https://img.shields.io/badge/Android-5.0%2B-3DDC84?logo=android&logoColor=white)
+![Android 6.0+](https://img.shields.io/badge/Android-6.0%2B-3DDC84?logo=android&logoColor=white)
 
 [Download](https://github.com/eltavine/SereinGram-Android/releases) ·
 [SereinGram Desktop](https://github.com/eltavine/SereinGram) ·
@@ -37,7 +37,7 @@ Cherrygram, exteraGram, OctoGram or Swiftgram.
 | Nightly | [GitHub prereleases](https://github.com/eltavine/SereinGram-Android/releases) and SereinGram's Telegram channel | Every commit that passes CI on `main` |
 
 The APKs are for `arm64-v8a`, which most phones need, and `armeabi-v7a`, for
-older 32-bit ones, and run on Android 5.0 or later. SereinGram has an
+older 32-bit ones, and run on Android 6.0 or later. SereinGram has an
 application ID of its own, `com.eltavine.sereingram`, so it installs next to
 Telegram and Nagram and shares no data with them.
 
@@ -193,11 +193,12 @@ from its code.
    ```
 
 2. Build the native code. Telegram ships the libraries it links, such as
-   FFmpeg and BoringSSL, prebuilt in `TMessagesProj/jni/prebuild`, so the
-   NDK and CMake above are all it takes. `NATIVE_TARGET=arm64-v8a` builds for
-   one ABI only.
+   FFmpeg and BoringSSL, prebuilt in `TMessagesProj/jni/prebuild`. Initialize
+   Nagram's patches to the call library before building. `NATIVE_TARGET=arm64-v8a`
+   builds for one ABI only.
 
    ```shell
+   ./run init libs
    ./run libs native
    ```
 

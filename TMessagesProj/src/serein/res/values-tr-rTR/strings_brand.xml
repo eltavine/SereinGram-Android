@@ -5,4 +5,5 @@
     <string name="NekoXFaq">SereinGram SSS</string>
     <string name="NekoXPushService">SereinGram Bildirim Hizmeti</string>
     <string name="NekoXUpdatesChannel">SereinGram Güncellemeleri Kanalı</string>
+    <string name="PassQREncryption">Scan with SereinGram to log in.</string>
 </resources>
