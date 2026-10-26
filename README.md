@@ -192,20 +192,19 @@ from its code.
    git submodule update --init --recursive
    ```
 
-2. Build the native code. Telegram ships the libraries it links, such as
-   FFmpeg and BoringSSL, prebuilt in `TMessagesProj/jni/prebuild`. Initialize
-   Nagram's patches to the call library before building. `NATIVE_TARGET=arm64-v8a`
-   builds for one ABI only.
+   Gradle applies the patches in `TMessagesProj/jni/patches` to `tgcalls`
+   before compiling the native code. When an update moves that submodule,
+   reset the patched checkout with
+   `git submodule update --init --force TMessagesProj/jni/tgcalls`.
+   Telegram ships the third-party native libraries prebuilt in
+   `TMessagesProj/jni/prebuild`.
 
-   ```shell
-   ./run init libs
-   ./run libs native
-   ```
-
-3. Optionally, fill in the [build settings](#build-settings).
-4. Replace `TMessagesProj/google-services.json` with your own Firebase
+2. Optionally, fill in the [build settings](#build-settings).
+3. Replace `TMessagesProj/google-services.json` with your own Firebase
    project's if you want push notifications through FCM.
-5. Build with Gradle. The APKs land in `TMessagesProj/build/outputs/apk/`.
+4. Build with Gradle, which also compiles the native code. The APKs land in
+   `TMessagesProj/build/outputs/apk/`. Set `NATIVE_TARGET=arm64-v8a` to build
+   for one ABI only.
 
    ```shell
    ./gradlew assembleRelease   # or assembleDebug

@@ -1,6 +1,8 @@
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 import io.sentry.android.gradle.instrumentation.logcat.LogcatLevel
 
+import java.nio.file.Paths
+
 plugins {
     id 'serein.android.application'
 }
@@ -13,6 +15,7 @@ apply plugin: "io.objectbox"
 
 apply plugin: 'org.telegram.build-plugin'
 apply plugin: 'org.telegram.build-app-plugin'
+apply plugin: 'xyz.nagram.auto-patch-plugin'
 apply plugin: 'idea'
 
 idea {
@@ -39,7 +42,7 @@ idea {
 }
 
 def verName = APP_VERSION_NAME
-def verCode = 1254
+def verCode = 1257
 
 
 def officialVer = APP_VERSION_NAME
@@ -73,7 +76,6 @@ def alias = null
 def pwd = null
 def sentry_token = System.getenv("SENTRY_AUTH_TOKEN")
 def nagram_build_args = System.getenv("NAGRAM_BUILD_ARGS")
-def disableCMakeRelWithDebInfo = System.getenv("COMPILE_NATIVE") == null
 
 Properties properties
 def base64 = System.getenv("LOCAL_PROPERTIES")
@@ -109,6 +111,8 @@ if (!gradle.startParameter.taskNames.isEmpty()) {
 def nativeTarget = System.getenv("NATIVE_TARGET")
 if (nativeTarget == null) nativeTarget = ""
 
+def isWindows = System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != -1
+
 android {
     compileSdkVersion 36
     buildToolsVersion '36.0.0'
@@ -126,17 +130,11 @@ android {
             java {
                 srcDirs "src/main/java"
             }
-            jniLibs {
-                srcDir "src/main/libs"
-            }
         }
 
         release {
             java {
                 srcDirs "src/main/java"
-            }
-            jniLibs {
-                srcDir "src/main/libs"
             }
         }
     }
@@ -208,7 +206,17 @@ android {
         externalNativeBuild {
             cmake {
                 version '3.22.1'
-                arguments '-DANDROID_STL=c++_static', '-DANDROID_PLATFORM=android-21' //, '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON'
+                arguments '-DANDROID_STL=c++_static', '-DANDROID_PLATFORM=android-23' //, '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON'
+                System.getenv('PATH').split(File.pathSeparator).any { path ->
+                    var file = Paths.get("${path}${File.separator}ccache${isWindows ? ".exe" : ""}").toFile()
+                    if (file.exists()) {
+                        println("Using ccache ${file.getAbsolutePath()} isWindows ${isWindows}")
+                        arguments += "-DCMAKE_C_COMPILER_LAUNCHER=${file.getAbsolutePath()}"
+                        arguments += "-DCMAKE_CXX_COMPILER_LAUNCHER=${file.getAbsolutePath()}"
+                        arguments += "-DANDROID_CCACHE=${file.getAbsolutePath()}"
+                        return true
+                    }
+                }
                 targets 'tmessages.49'
             }
         }
@@ -277,26 +285,10 @@ android {
             excludes += ['/fabric/**', '/META-INF/*.version', '/META-INF/*.kotlin_module', '/META-INF/native-image/**', '/builddef.lst', '/*.txt', '/DebugProbesKt.bin', '/okhttp3/internal/publicsuffix/NOTICE']
             excludes += ["META-INF/INDEX.LIST"]  // hutool
         }
-
-        def lib = "libtmessages.*.so"
-        pickFirst "lib/armeabi-v7a/$lib"
-        pickFirst "lib/arm64-v8a/$lib"
     }
 
     buildFeatures {
         buildConfig true
-    }
-
-    tasks.configureEach { task ->
-        if (((task.name.endsWith("Ndk") || task.name.startsWith("generateJsonModel") || task.name.startsWith("externalNativeBuild"))) && !task.name.contains("Debug")) {
-            task.enabled = false
-        }
-        if (task.name.contains("uploadCrashlyticsMappingFile")) {
-            enabled = false
-        }
-        if (disableCMakeRelWithDebInfo && task.name.contains("CMakeRelWithDebInfo")) {
-            enabled = false
-        }
     }
 
     tasks.configureEach { task ->
@@ -558,7 +550,7 @@ sentry {
         // as Gradle will resolve it to the latest version.
         //
         // Defaults to the latest published Sentry version.
-        sentryVersion = '8.58.0'
+        sentryVersion = '8.61.0'
     }
 
     // Disables or enables dependencies metadata reporting for Sentry.

@@ -3687,9 +3687,7 @@ public class ChatActivityEnterView extends FrameLayout implements
 
                 oldSendButton.setVisibility(View.GONE);
             }
-            if (paidMessagesPrice > 0 || isLiveComment) {
-                sendButton.setStarsPrice(paidMessagesPrice, 1);
-            }
+            sendButton.setStarsPrice(paidMessagesPrice, 1);
             updateFieldRight(lastAttachVisible);
         }
         if (isLiveComment) {
@@ -14126,10 +14124,6 @@ public class ChatActivityEnterView extends FrameLayout implements
         }
     }
 
-    public boolean canHidePopup() {
-        return currentPopupContentType != POPUP_CONTENT_BOT_KEYBOARD || botReplyMarkup == null || botButtonsMessageObject == null || !botReplyMarkup.is_persistent;
-    }
-
     public boolean hidePopup(boolean byBackButton) {
         return hidePopup(byBackButton, false);
     }
@@ -14278,6 +14272,13 @@ public class ChatActivityEnterView extends FrameLayout implements
 
     public boolean isPopupShowing() {
         return emojiViewVisible || botKeyboardViewVisible;
+    }
+
+    public boolean canHidePopupByBackButton() {
+        if (!isPopupShowing()) {
+            return false;
+        }
+        return !(currentPopupContentType == POPUP_CONTENT_BOT_KEYBOARD && botReplyMarkup != null && botReplyMarkup.is_persistent && botButtonsMessageObject != null);
     }
 
     public boolean closeCreationLinkDialog(boolean invoked) {

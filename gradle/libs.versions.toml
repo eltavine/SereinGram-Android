@@ -19,7 +19,7 @@ ksp-gradlePlugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-
 # Kotlin's own ABI validation needs Kotlin 2.2, and upstream pins 2.1; this is what it grew out of.
 binaryCompatibilityValidator-gradlePlugin = { module = "org.jetbrains.kotlinx:binary-compatibility-validator", version = "0.18.1" }
 # Matches the classpath in the root build.gradle, which upstream owns.
-sentry-gradlePlugin = { module = "io.sentry:sentry-android-gradle-plugin", version = "6.22.0" }
+sentry-gradlePlugin = { module = "io.sentry:sentry-android-gradle-plugin", version = "6.24.0" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-gradlePlugin = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
