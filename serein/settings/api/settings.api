@@ -157,6 +157,18 @@ public final class com/eltavine/sereingram/settings/SettingsRow$Link : com/eltav
 	public final fun getValue ()Lkotlin/jvm/functions/Function1;
 }
 
+public final class com/eltavine/sereingram/settings/SettingsRow$PickDirectory : com/eltavine/sereingram/settings/SettingsRow {
+	public fun <init> (ILkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function1;Ljava/lang/Integer;ILcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
+	public synthetic fun <init> (ILkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function1;Ljava/lang/Integer;ILcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEnabledWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public final fun getIcon ()I
+	public final fun getPicked ()Lkotlin/jvm/functions/Function3;
+	public fun getShownWhen ()Lcom/eltavine/sereingram/settings/SettingsCondition;
+	public fun getSummary ()Ljava/lang/Integer;
+	public final fun getTitle ()I
+	public final fun getValue ()Lkotlin/jvm/functions/Function1;
+}
+
 public final class com/eltavine/sereingram/settings/SettingsRow$PickFile : com/eltavine/sereingram/settings/SettingsRow {
 	public fun <init> (ILjava/util/List;Lkotlin/jvm/functions/Function2;Ljava/lang/Integer;ILcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;)V
 	public synthetic fun <init> (ILjava/util/List;Lkotlin/jvm/functions/Function2;Ljava/lang/Integer;ILcom/eltavine/sereingram/settings/SettingsCondition;Lcom/eltavine/sereingram/settings/SettingsCondition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V

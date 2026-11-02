@@ -304,4 +304,24 @@
     <string name="serein_dns_custom_server_hint">https://dns.example/dns-query</string>
     <string name="serein_dns_custom_server_invalid">請填寫 DNS over HTTPS 伺服器的 https 網址。</string>
     <string name="serein_dns_note">此設定作用於 Proxy 和 Telegram 的其他網域名稱，以及應用程式呼叫的網路服務，例如翻譯和轉寫。未設定可用的自訂伺服器時，由 Telegram 內建的 DNS 解析。</string>
+    <string name="serein_downloads_title">下載儲存</string>
+    <string name="serein_downloads_summary">將手動下載的檔案儲存至自選資料夾</string>
+    <string name="serein_downloads_directory">儲存資料夾</string>
+    <string name="serein_downloads_directory_info">透過系統檔案選擇器選擇應用程式外的資料夾</string>
+    <string name="serein_downloads_enabled">將下載儲存至此資料夾</string>
+    <string name="serein_downloads_enabled_info">驗證已儲存的檔案，刪除相同的應用程式內副本</string>
+    <string name="serein_downloads_reset">重設儲存資料夾</string>
+    <string name="serein_downloads_reset_info">停止儲存，已儲存的檔案不受影響</string>
+    <string name="serein_downloads_note">請選擇或建立子資料夾，例如 Download/SereinGram。Android 11 以上不允許選擇 Download 根目錄。手動下載的檔案、音樂及影片儲存後會逐位元組驗證，完全一致才刪除應用程式內副本；儲存或驗證失敗時保留原檔案。請在檔案管理員中開啟已儲存的檔案，在聊天中開啟或播放可能會重新下載。既有下載不會搬移。秘密聊天、閱後即焚及受保護的媒體不會匯出。</string>
+    <string name="serein_downloads_failed">無法完成儲存、驗證或清理，應用程式內副本已保留。請檢查剩餘空間及資料夾權限後重試下載。</string>
+    <string name="serein_downloads_attention">請檢查儲存資料夾</string>
+    <string name="serein_downloads_on">已開啟</string>
+    <string name="serein_downloads_off">已關閉</string>
+    <string name="serein_downloads_no_directory">尚未選擇</string>
+    <string name="serein_downloads_selected">已選擇資料夾並開啟外部儲存</string>
+    <string name="serein_downloads_invalid_directory">無法使用此資料夾。請選擇可寫入的資料夾，並允許持續讀取及寫入權限。</string>
+    <string name="serein_downloads_enable_title">外部儲存說明</string>
+    <string name="serein_downloads_enable_message">檔案儲存至指定資料夾並驗證無誤後，應用程式內副本會被清除，以節省儲存空間。\n\n因此，聊天中可能再次顯示下載圖示。這不代表下載失敗，檔案仍在你指定的資料夾中。請使用檔案管理員開啟；再次點選下載圖示可能會重新下載。</string>
+    <string name="serein_downloads_complete_title">下載已完成</string>
+    <string name="serein_downloads_complete_message">檔案已儲存至：\n%1$s\n\n如果聊天中再次顯示下載圖示，只表示應用程式內副本已清除，不代表下載失敗。請到上述資料夾查看檔案，無須重複下載。</string>
 </resources>

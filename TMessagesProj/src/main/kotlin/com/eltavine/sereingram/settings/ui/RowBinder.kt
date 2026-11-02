@@ -29,6 +29,8 @@ internal interface RowHost {
 
     /** Lets the user pick a document of [mimeTypes], then hands [picked] its content URI. */
     fun pick(mimeTypes: List<String>, picked: (uri: String) -> Unit)
+
+    fun pickDirectory(picked: (uri: String, flags: Int) -> Unit)
 }
 
 /** Draws one kind of row as list items, and handles taps on them. */
@@ -55,4 +57,5 @@ internal fun binderOf(row: SettingsRow): RowBinder<SettingsRow> = when (row) {
     is SettingsRow.Link -> LinkBinder
     is SettingsRow.Action -> ActionBinder
     is SettingsRow.PickFile -> PickFileBinder
+    is SettingsRow.PickDirectory -> PickDirectoryBinder
 } as RowBinder<SettingsRow>

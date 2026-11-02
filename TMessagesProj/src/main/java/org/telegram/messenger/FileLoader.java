@@ -1040,6 +1040,7 @@ public class FileLoader extends BaseController {
                 }
 
                 checkDownloadQueue(operation, operation.getQueue(), 0);
+                if (!operation.isPreloadVideoOperation() && parentObject != null) com.eltavine.sereingram.hooks.DownloadHooks.completed(currentAccount, parentObject, finalFile);
             }
 
             @Override

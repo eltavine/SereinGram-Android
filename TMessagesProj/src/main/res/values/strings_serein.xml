@@ -304,4 +304,24 @@
     <string name="serein_dns_custom_server_hint">https://dns.example/dns-query</string>
     <string name="serein_dns_custom_server_invalid">Enter the https address of a DNS-over-HTTPS server.</string>
     <string name="serein_dns_note">The choice applies to proxies and Telegram\'s other host names, and to the web services the app calls, such as translation and transcription. While no usable custom server is set, Telegram\'s own DNS resolves.</string>
+    <string name="serein_downloads_title">Downloads</string>
+    <string name="serein_downloads_summary">Save manually downloaded files to a folder you choose</string>
+    <string name="serein_downloads_directory">Save folder</string>
+    <string name="serein_downloads_directory_info">Choose a folder outside the app with the system file picker</string>
+    <string name="serein_downloads_enabled">Save downloads to this folder</string>
+    <string name="serein_downloads_enabled_info">Verify saved files and remove identical app copies</string>
+    <string name="serein_downloads_reset">Reset save folder</string>
+    <string name="serein_downloads_reset_info">Stop external saving; keep saved files</string>
+    <string name="serein_downloads_note">Choose or create a subfolder such as Download/SereinGram. Android 11 and later do not allow selecting the Download root. After saving a manual file, music or video download, every byte is checked before the identical app copy is removed. If saving or verification fails, the app copy stays. Open saved files in your file manager; opening or playing them in chat may download them again. Existing downloads are not moved. Secret chats, self-destructing and protected media are not exported.</string>
+    <string name="serein_downloads_failed">Could not finish saving, verifying or removing the app copy. The app copy has been kept. Check free space and folder access, then retry the download.</string>
+    <string name="serein_downloads_attention">Check save folder</string>
+    <string name="serein_downloads_on">On</string>
+    <string name="serein_downloads_off">Off</string>
+    <string name="serein_downloads_no_directory">Not selected</string>
+    <string name="serein_downloads_selected">Folder selected; external saving is on</string>
+    <string name="serein_downloads_invalid_directory">Cannot use this folder. Choose a writable folder and allow persistent read and write access.</string>
+    <string name="serein_downloads_enable_title">External saving</string>
+    <string name="serein_downloads_enable_message">Files are saved to your chosen folder and verified before their app copies are removed to save space.\n\nThe download icon may then appear again in the chat. This does not mean the download failed: the saved file is still in your chosen folder. Open it with a file manager; tapping the download icon may download it again.</string>
+    <string name="serein_downloads_complete_title">Download complete</string>
+    <string name="serein_downloads_complete_message">The file has been saved to:\n%1$s\n\nIf the download icon appears again in the chat, it means the app copy has been cleared. The download succeeded. Open the file in this folder; you do not need to download it again.</string>
 </resources>
