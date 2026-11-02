@@ -320,4 +320,8 @@
     <string name="serein_downloads_no_directory">Not selected</string>
     <string name="serein_downloads_selected">Folder selected; external saving is on</string>
     <string name="serein_downloads_invalid_directory">Cannot use this folder. Choose a writable folder and allow persistent read and write access.</string>
+    <string name="serein_downloads_enable_title">External saving</string>
+    <string name="serein_downloads_enable_message">Files are saved to your chosen folder and verified before their app copies are removed to save space.\n\nThe download icon may then appear again in the chat. This does not mean the download failed: the saved file is still in your chosen folder. Open it with a file manager; tapping the download icon may download it again.</string>
+    <string name="serein_downloads_complete_title">Download complete</string>
+    <string name="serein_downloads_complete_message">The file has been saved to:\n%1$s\n\nIf the download icon appears again in the chat, it means the app copy has been cleared. The download succeeded. Open the file in this folder; you do not need to download it again.</string>
 </resources>

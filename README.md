@@ -136,6 +136,8 @@ from its code.
   verification keep the app copy. Open saved files in your file manager;
   opening them in chat may download them again.
   Choose the folder under **Settings → SereinGram → Downloads**.
+  Dialogs on enabling and after each saved download explain the download icon
+  and where to find the file.
   Applies to new manual downloads; existing files are not moved.<br>
   <sub>[SereinGram Android #7](https://github.com/eltavine/SereinGram-Android/issues/7)</sub>
 - **Voice transcription with your own service**: voice and video messages

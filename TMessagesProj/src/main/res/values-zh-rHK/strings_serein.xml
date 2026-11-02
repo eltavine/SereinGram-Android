@@ -320,4 +320,8 @@
     <string name="serein_downloads_no_directory">尚未選擇</string>
     <string name="serein_downloads_selected">已選擇資料夾並開啟外部儲存</string>
     <string name="serein_downloads_invalid_directory">無法使用此資料夾。請選擇可寫入的資料夾，並允許持續讀取及寫入權限。</string>
+    <string name="serein_downloads_enable_title">外部儲存說明</string>
+    <string name="serein_downloads_enable_message">檔案儲存至指定資料夾並驗證無誤後，應用程式內副本會被清除，以節省儲存空間。\n\n因此，聊天中可能再次顯示下載圖示。這不代表下載失敗，檔案仍在你指定的資料夾中。請使用檔案管理員開啟；再次點選下載圖示可能會重新下載。</string>
+    <string name="serein_downloads_complete_title">下載已完成</string>
+    <string name="serein_downloads_complete_message">檔案已儲存至：\n%1$s\n\n如果聊天中再次顯示下載圖示，只表示應用程式內副本已清除，不代表下載失敗。請到上述資料夾查看檔案，無須重複下載。</string>
 </resources>

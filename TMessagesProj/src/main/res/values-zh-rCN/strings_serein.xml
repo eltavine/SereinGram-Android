@@ -320,4 +320,8 @@
     <string name="serein_downloads_no_directory">尚未选择</string>
     <string name="serein_downloads_selected">已选择文件夹并开启外部保存</string>
     <string name="serein_downloads_invalid_directory">无法使用此文件夹。请选择可写入的文件夹，并允许持久读取和写入权限。</string>
+    <string name="serein_downloads_enable_title">外部保存说明</string>
+    <string name="serein_downloads_enable_message">文件保存到指定目录并校验无误后，应用内副本会被清理，以节省存储空间。\n\n因此，聊天中可能再次显示下载图标。这不代表下载失败，文件仍在你指定的目录中。请使用文件管理器打开；再次点击下载图标可能会重新下载。</string>
+    <string name="serein_downloads_complete_title">已完成下载任务</string>
+    <string name="serein_downloads_complete_message">文件已保存到：\n%1$s\n\n如果聊天中再次显示下载图标，只表示应用内副本已清理，不代表下载失败。请到上述目录查看文件，无需重复下载。</string>
 </resources>

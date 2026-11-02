@@ -33,17 +33,27 @@ import org.telegram.ui.LaunchActivity
 import org.telegram.ui.ChatActivity
 import org.telegram.ui.Cells.ChatMessageCell
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 
 /** Publishes completed manual downloads through a user-granted document tree. */
 class DownloadsFeature(private val application: Application) : SereinModule, SettingsContributor {
     override val id: String = "downloads"
     override val options: List<Option<*>> = DownloadOptions.all
     private lateinit var preferences: Options
+    private lateinit var notices: DownloadNotices
     private val io by lazy { Executors.newSingleThreadExecutor { Thread(it, "serein-downloads") } }
     private val exports by lazy { DirectoryExports(application) }
 
     override fun start(context: ModuleContext) {
         preferences = context.options
+        notices = DownloadNotices(application)
+        val wasEnabled = AtomicBoolean(preferences.get(DownloadOptions.enabled))
+        preferences.addListener { option, _ ->
+            if (option == DownloadOptions.enabled) {
+                val enabled = preferences.get(DownloadOptions.enabled)
+                if (!wasEnabled.getAndSet(enabled) && enabled) notices.enabled()
+            }
+        }
         DownloadHooks.completedDownloads.install { account, parent, file ->
             val message = parent as? MessageObject ?: return@install
             if (!eligible(message) || !preferences.get(DownloadOptions.enabled)) return@install
@@ -58,6 +68,7 @@ class DownloadsFeature(private val application: Application) : SereinModule, Set
                 runCatching { exports.save(tree, identity, file, name, mime) }
                     .onSuccess {
                         preferences.reset(DownloadOptions.error)
+                        notices.completed(account, tree)
                         AndroidUtilities.runOnUIThread {
                             if (!file.exists()) {
                                 clearCachedState(message)
@@ -148,6 +159,7 @@ class DownloadsFeature(private val application: Application) : SereinModule, Set
     private fun choose(page: BaseFragment, uri: Uri, flags: Int) {
         io.execute {
             val before = preferences.get(DownloadOptions.directory)
+            val alreadyEnabled = preferences.get(DownloadOptions.enabled)
             val result = runCatching {
                 require(DocumentsContract.isTreeUri(uri))
                 val access = flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
@@ -166,6 +178,8 @@ class DownloadsFeature(private val application: Application) : SereinModule, Set
                 if (before.isNotEmpty() && before != uri.toString()) release(Uri.parse(before))
             }
             AndroidUtilities.runOnUIThread {
+                // Enabling already schedules the explanatory dialog through the options listener.
+                if (result.isSuccess && !alreadyEnabled) return@runOnUIThread
                 val text = getString(if (result.isSuccess) R.string.serein_downloads_selected else R.string.serein_downloads_invalid_directory)
                 BulletinFactory.of(page).createSimpleBulletin(if (result.isSuccess) R.raw.done else R.raw.error, text).show()
             }
