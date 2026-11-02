@@ -15,6 +15,7 @@ import com.eltavine.sereingram.features.chatlock.ChatLockFeature
 import com.eltavine.sereingram.features.chatshortcuts.ChatShortcutsFeature
 import com.eltavine.sereingram.features.declutter.DeclutterFeature
 import com.eltavine.sereingram.features.dns.DnsFeature
+import com.eltavine.sereingram.features.downloads.DownloadsFeature
 import com.eltavine.sereingram.features.ghost.GhostFeature
 import com.eltavine.sereingram.features.history.HistoryFeature
 import com.eltavine.sereingram.features.input.InputFeature
@@ -80,6 +81,7 @@ object SereinApp {
                 ChatShortcutsFeature,
                 DeclutterFeature,
                 DnsFeature,
+                DownloadsFeature(application),
                 HistoryFeature(File(application.filesDir, "serein_media")) { account ->
                     historyStores.computeIfAbsent(account) { RoomHistoryStore(application, account) }
                 },

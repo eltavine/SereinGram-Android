@@ -33,6 +33,7 @@ internal class SereinSettingsActivity(
 ) : SettingsListFragment(), RowHost {
     private var layout: PageLayout? = null
     private var picked: ((uri: String) -> Unit)? = null
+    private var directoryPicked: ((uri: String, flags: Int) -> Unit)? = null
     private var watching: AutoCloseable? = null
     private val redraw = Runnable { refresh() }
 
@@ -127,7 +128,28 @@ internal class SereinSettingsActivity(
         }
     }
 
+    override fun pickDirectory(picked: (uri: String, flags: Int) -> Unit) {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).addFlags(
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION,
+        )
+        try {
+            startActivityForResult(intent, PICK_DIRECTORY)
+            directoryPicked = picked
+        } catch (_: ActivityNotFoundException) {
+            BulletinFactory.of(this).createSimpleBulletin(R.raw.error, getString(R.string.serein_settings_no_file_picker)).show()
+        }
+    }
+
     override fun onActivityResultFragment(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == PICK_DIRECTORY) {
+            val then = directoryPicked
+            directoryPicked = null
+            if (resultCode == Activity.RESULT_OK && data?.data != null) {
+                Faults.guard("settings directory", fallback = Unit) { then?.invoke(data.data.toString(), data.flags) }
+            }
+            return
+        }
         if (requestCode != PICK_FILE) {
             return
         }
@@ -142,5 +164,6 @@ internal class SereinSettingsActivity(
     private companion object {
         // Telegram's own request codes stay well below this.
         const val PICK_FILE = 0x5e17
+        const val PICK_DIRECTORY = 0x5e18
     }
 }

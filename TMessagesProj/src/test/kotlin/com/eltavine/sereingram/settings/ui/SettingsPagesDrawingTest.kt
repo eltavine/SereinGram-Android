@@ -21,6 +21,7 @@ import com.eltavine.sereingram.features.backup.BackupSettings
 import com.eltavine.sereingram.features.dns.DnsFeature
 import com.eltavine.sereingram.features.dns.DnsMode
 import com.eltavine.sereingram.features.dns.DnsOptions
+import com.eltavine.sereingram.features.downloads.DownloadOptions
 import com.eltavine.sereingram.features.ghost.GhostFeature
 import com.eltavine.sereingram.features.history.HistoryOptions
 import com.eltavine.sereingram.features.transcription.TranscriptionOptions
@@ -93,6 +94,8 @@ class SettingsPagesDrawingTest {
                 state[DnsOptions.mode] = DnsMode.CUSTOM.code
                 state[DnsOptions.customServer] = "dns.example/dns-query"
                 state[TranscriptionOptions.enabled] = true
+                state[DownloadOptions.directory] = "content://com.android.externalstorage.documents/tree/primary%3ADownload%2FSereinGram"
+                state[DownloadOptions.enabled] = true
                 // A colour and a picture of the user's own on two tiles of the SereinGram page.
                 state[TileTints.tints] = TileTints.with("", DnsFeature.id, SettingsTint.BROWN)
                 TilePictures.save(GhostFeature.id, Uri.fromFile(samplePicture(context)))
@@ -148,6 +151,7 @@ class SettingsPagesDrawingTest {
             override fun options(row: View): ItemOptions = error("drawing needs no screen")
 
             override fun pick(mimeTypes: List<String>, picked: (uri: String) -> Unit) = Unit
+            override fun pickDirectory(picked: (uri: String, flags: Int) -> Unit) = Unit
         }
         val list = UniversalRecyclerView(context, 0, 0, { items, _ ->
             drawn = drawPage(page, host, items).sections.sumOf { it.rows.size }

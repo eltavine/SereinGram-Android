@@ -304,4 +304,20 @@
     <string name="serein_dns_custom_server_hint">https://dns.example/dns-query</string>
     <string name="serein_dns_custom_server_invalid">請填寫 DNS over HTTPS 伺服器的 https 網址。</string>
     <string name="serein_dns_note">此設定作用於 Proxy 和 Telegram 的其他網域名稱，以及應用程式呼叫的網路服務，例如翻譯和轉寫。未設定可用的自訂伺服器時，由 Telegram 內建的 DNS 解析。</string>
+    <string name="serein_downloads_title">下載儲存</string>
+    <string name="serein_downloads_summary">將手動下載的檔案儲存至自選資料夾</string>
+    <string name="serein_downloads_directory">儲存資料夾</string>
+    <string name="serein_downloads_directory_info">透過系統檔案選擇器選擇應用程式外的資料夾</string>
+    <string name="serein_downloads_enabled">將下載儲存至此資料夾</string>
+    <string name="serein_downloads_enabled_info">下載完成後，以原檔名儲存一份</string>
+    <string name="serein_downloads_reset">重設儲存資料夾</string>
+    <string name="serein_downloads_reset_info">停止儲存，已儲存的檔案不受影響</string>
+    <string name="serein_downloads_note">請選擇或建立子資料夾，例如 Download/SereinGram。Android 11 以上不允許選擇 Download 根目錄。僅適用於新完成的手動檔案、音樂及影片下載，不包含自動載入的媒體。既有下載不會搬移。應用程式快取會保留供播放使用，可另外清除。秘密聊天、閱後即焚及受保護的媒體不會匯出。</string>
+    <string name="serein_downloads_failed">無法將下載儲存至所選資料夾，檔案仍保留在應用程式內。請檢查剩餘空間及資料夾權限，重新選擇資料夾後重試下載。</string>
+    <string name="serein_downloads_attention">請檢查儲存資料夾</string>
+    <string name="serein_downloads_on">已開啟</string>
+    <string name="serein_downloads_off">已關閉</string>
+    <string name="serein_downloads_no_directory">尚未選擇</string>
+    <string name="serein_downloads_selected">已選擇資料夾並開啟外部儲存</string>
+    <string name="serein_downloads_invalid_directory">無法使用此資料夾。請選擇可寫入的資料夾，並允許持續讀取及寫入權限。</string>
 </resources>

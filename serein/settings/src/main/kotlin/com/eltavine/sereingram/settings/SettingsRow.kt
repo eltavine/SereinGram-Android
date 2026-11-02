@@ -162,4 +162,15 @@ public sealed interface SettingsRow {
         override val shownWhen: SettingsCondition = SettingsCondition.ALWAYS,
         override val enabledWhen: SettingsCondition = SettingsCondition.ALWAYS,
     ) : SettingsRow
+
+    /** Picks a directory and passes the URI and granted flags to its owner to persist. */
+    public class PickDirectory(
+        public val title: Int,
+        public val picked: (host: Any, uri: String, flags: Int) -> Unit,
+        public val value: (SettingsState) -> CharSequence? = { null },
+        override val summary: Int? = null,
+        public val icon: Int = 0,
+        override val shownWhen: SettingsCondition = SettingsCondition.ALWAYS,
+        override val enabledWhen: SettingsCondition = SettingsCondition.ALWAYS,
+    ) : SettingsRow
 }

@@ -95,5 +95,6 @@ class SettingsPagesTest {
         is SettingsRow.Link -> row.title
         is SettingsRow.Action -> row.title
         is SettingsRow.PickFile -> row.title
+        is SettingsRow.PickDirectory -> row.title
     }
 }

@@ -81,5 +81,17 @@ internal object PickFileBinder : RowBinder<SettingsRow.PickFile> {
     }
 }
 
+internal object PickDirectoryBinder : RowBinder<SettingsRow.PickDirectory> {
+    override fun draw(row: SettingsRow.PickDirectory, id: Int, enabled: Boolean, host: RowHost, items: MutableList<UItem>) {
+        // Paths need the subtitle's full width; a value on the right would squeeze the title away.
+        val summary = valueOf(row.value, host.state) ?: row.summary?.let(::getString)
+        items += ButtonCell.of(id, getString(row.title), row.icon, summary = summary, enabled = enabled)
+    }
+
+    override fun tap(row: SettingsRow.PickDirectory, index: Int, host: RowHost, view: View) {
+        host.pickDirectory { uri, flags -> row.picked(host.fragment, uri, flags) }
+    }
+}
+
 private fun valueOf(value: (SettingsState) -> CharSequence?, state: SettingsState): CharSequence? =
     Faults.guard("settings value", fallback = null) { value(state) }

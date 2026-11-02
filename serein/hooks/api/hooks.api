@@ -55,6 +55,16 @@ public abstract interface class com/eltavine/sereingram/hooks/DialogsHooks$Title
 	public abstract fun draw (ILjava/lang/Object;Z)Z
 }
 
+public final class com/eltavine/sereingram/hooks/DownloadHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/DownloadHooks;
+	public static final fun completed (ILjava/lang/Object;Ljava/io/File;)V
+	public final fun getCompletedDownloads ()Lcom/eltavine/sereingram/core/Handlers;
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/DownloadHooks$CompletedDownload {
+	public abstract fun completed (ILjava/lang/Object;Ljava/io/File;)V
+}
+
 public final class com/eltavine/sereingram/hooks/HistoryHooks {
 	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/HistoryHooks;
 	public static final fun afterHistoryLoaded (IJIJLjava/util/List;Ljava/util/List;Ljava/util/List;)V

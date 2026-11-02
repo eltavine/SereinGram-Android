@@ -130,6 +130,11 @@ from its code.
 
 ### Voice and media
 
+- **Save manual downloads to a folder of your choice**, including a subfolder
+  of Download, with their original names. Files stay there when the app cache
+  is cleared. Choose the folder under **Settings → SereinGram → Downloads**.
+  Applies to new manual downloads; existing files are not moved.<br>
+  <sub>[SereinGram Android #7](https://github.com/eltavine/SereinGram-Android/issues/7)</sub>
 - **Voice transcription with your own service**: voice and video messages
   become text through any service that speaks OpenAI's transcription API,
   without Telegram Premium.<br>

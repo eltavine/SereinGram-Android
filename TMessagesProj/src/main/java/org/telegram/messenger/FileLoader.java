@@ -1029,6 +1029,7 @@ public class FileLoader extends BaseController {
                     MessageObject messageObject = (MessageObject) parentObject;
                     if (document != null && messageObject.putInDownloadsStore) {
                         getDownloadController().onDownloadComplete(messageObject);
+                        com.eltavine.sereingram.hooks.DownloadHooks.completed(currentAccount, messageObject, finalFile);
                     }
                 }
 
