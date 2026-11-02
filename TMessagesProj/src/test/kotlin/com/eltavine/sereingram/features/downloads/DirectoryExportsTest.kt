@@ -14,6 +14,10 @@ import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.provider.DocumentsContract
 import android.provider.DocumentsProvider
+import android.system.Os
+import android.system.OsConstants
+import android.system.StructStat
+import android.system.ErrnoException
 import androidx.test.core.app.ApplicationProvider
 import androidx.documentfile.provider.DocumentFile
 import org.junit.Assert.*
@@ -30,10 +34,15 @@ import org.robolectric.annotation.RealObject
 import org.robolectric.shadows.ShadowContentResolver
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.FileDescriptor
+import java.nio.file.Files
+import java.nio.file.attribute.BasicFileAttributes
+import java.util.IdentityHashMap
 
 /** Real document-tree operations against a provider, without assuming a filesystem path for a URI. */
 @RunWith(RobolectricTestRunner::class)
-@Config(application = Application::class, sdk = [28, 34], shadows = [DirectoryExportsTest.ProviderCalls::class])
+@Config(application = Application::class, sdk = [28, 34],
+    shadows = [DirectoryExportsTest.ProviderCalls::class, DirectoryExportsTest.HostFileStats::class])
 class DirectoryExportsTest {
     @get:Rule val folder = TemporaryFolder()
     private lateinit var context: Context
@@ -45,9 +54,11 @@ class DirectoryExportsTest {
     @Before
     fun setUp() {
         val application = ApplicationProvider.getApplicationContext<Application>()
+        val cache = folder.newFolder("app-cache")
         // Robolectric does not model the system URI-permission service. Model just the picker grant;
         // queries, creation, streams and deletion still go through the actual document provider.
         context = object : ContextWrapper(application) {
+            override fun getCacheDir(): File = cache
             override fun checkCallingOrSelfUriPermission(uri: android.net.Uri, modeFlags: Int): Int =
                 if (uri.authority == AUTHORITY && access) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
         }
@@ -71,26 +82,30 @@ class DirectoryExportsTest {
                 cursor.getString(cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_MIME_TYPE)))
         }
         assertTrue("Provider root ${root.uri}: type=${root.type}, write=${root.canWrite()}, permission=${context.checkCallingOrSelfUriPermission(root.uri, 2)}", root.isDirectory)
-        source = folder.newFile("cached.bin").apply { writeBytes(ByteArray(100_000) { (it % 249).toByte() }) }
+        source = File(cache, "cached.bin").apply { writeBytes(ByteArray(100_000) { (it % 249).toByte() }) }
+        HostFileStats.source = source
+        HostFileStats.descriptors.clear()
     }
 
     @Test
-    fun aCompletedCopySurvivesCacheDeletionAndIsNotExportedTwice() {
+    fun aVerifiedExportRemovesThePrivateCopyAndARepeatDownloadDoesNotMakeAnotherExport() {
         val exports = DirectoryExports(context)
-        val first = exports.copy(tree, "user:dc:document", source, "report.pdf", "application/pdf")
-        assertEquals(first, DirectoryExports(context).copy(tree, "user:dc:document", source, "report.pdf", "application/pdf"))
-        assertEquals(listOf("report.pdf"), provider.directory.list()!!.toList())
         val bytes = source.readBytes()
-        source.delete()
+        val first = exports.save(tree, "user:dc:document", source, "report.pdf", "application/pdf")
+        assertFalse("The verified app copy must be removed", source.exists())
+        source.writeBytes(bytes)
+        assertEquals(first, DirectoryExports(context).save(tree, "user:dc:document", source, "report.pdf", "application/pdf"))
+        assertFalse(source.exists())
+        assertEquals(listOf("report.pdf"), provider.directory.list()!!.toList())
         assertArrayEquals(bytes, File(provider.directory, "report.pdf").readBytes())
     }
 
     @Test
     fun unrelatedDownloadsWithTheSameNameDoNotOverwriteEachOther() {
         val exports = DirectoryExports(context)
-        exports.copy(tree, "user:dc:first", source, "report.pdf", "application/pdf")
+        exports.save(tree, "user:dc:first", source, "report.pdf", "application/pdf")
         source.writeText("another document")
-        exports.copy(tree, "user:dc:second", source, "report.pdf", "application/pdf")
+        exports.save(tree, "user:dc:second", source, "report.pdf", "application/pdf")
         assertEquals(100_000L, File(provider.directory, "report.pdf").length())
         assertEquals("another document", File(provider.directory, "report (1).pdf").readText())
     }
@@ -98,23 +113,28 @@ class DirectoryExportsTest {
     @Test
     fun deletingAnExportAllowsTheSameDocumentToBeSavedAgain() {
         val exports = DirectoryExports(context)
-        exports.copy(tree, "document", source, "report.pdf", "application/pdf")
+        val bytes = source.readBytes()
+        exports.save(tree, "document", source, "report.pdf", "application/pdf")
         File(provider.directory, "report.pdf").delete()
-        exports.copy(tree, "document", source, "report.pdf", "application/pdf")
-        assertArrayEquals(source.readBytes(), File(provider.directory, "report.pdf").readBytes())
+        source.writeBytes(bytes)
+        exports.save(tree, "document", source, "report.pdf", "application/pdf")
+        assertArrayEquals(bytes, File(provider.directory, "report.pdf").readBytes())
+        assertFalse(source.exists())
     }
 
     @Test
     fun anUnavailableProviderLeavesTheCacheAndNoPartialFile() {
         provider.failOpen = true
+        val bytes = source.readBytes()
         assertThrows(Exception::class.java) {
-            DirectoryExports(context).copy(tree, "document", source, "report.pdf", "application/pdf")
+            DirectoryExports(context).save(tree, "document", source, "report.pdf", "application/pdf")
         }
         assertTrue(source.exists())
         assertTrue(provider.directory.list()!!.isEmpty())
         provider.failOpen = false
-        DirectoryExports(context).copy(tree, "document", source, "report.pdf", "application/pdf")
-        assertArrayEquals(source.readBytes(), File(provider.directory, "report.pdf").readBytes())
+        DirectoryExports(context).save(tree, "document", source, "report.pdf", "application/pdf")
+        assertArrayEquals(bytes, File(provider.directory, "report.pdf").readBytes())
+        assertFalse(source.exists())
     }
 
     @Test
@@ -123,7 +143,7 @@ class DirectoryExportsTest {
         val partial = DocumentsContract.buildDocumentUriUsingTree(android.net.Uri.parse(tree), "partial.pdf")
         context.getSharedPreferences("serein_download_exports", Context.MODE_PRIVATE)
             .edit().putString("pending", partial.toString()).commit()
-        DirectoryExports(context).copy(tree, "document", source, "report.pdf", "application/pdf")
+        DirectoryExports(context).save(tree, "document", source, "report.pdf", "application/pdf")
         assertEquals(listOf("report.pdf"), provider.directory.list()!!.toList())
     }
 
@@ -131,15 +151,109 @@ class DirectoryExportsTest {
     fun aRevokedGrantLeavesTheSourceAndDestinationUntouched() {
         access = false
         assertThrows(java.io.IOException::class.java) {
-            DirectoryExports(context).copy(tree, "document", source, "report.pdf", "application/pdf")
+            DirectoryExports(context).save(tree, "document", source, "report.pdf", "application/pdf")
         }
         assertEquals(100_000L, source.length())
         assertTrue(provider.directory.list()!!.isEmpty())
     }
 
+    @Test
+    fun sameSizeCorruptionInAPreviousExportDoesNotCountAsAnIdenticalCopy() {
+        val bytes = source.readBytes()
+        val exports = DirectoryExports(context)
+        exports.save(tree, "document", source, "report.pdf", "application/pdf")
+        File(provider.directory, "report.pdf").writeBytes(ByteArray(bytes.size) { 42 })
+        source.writeBytes(bytes)
+        exports.save(tree, "document", source, "report.pdf", "application/pdf")
+        assertArrayEquals(bytes, File(provider.directory, "report (1).pdf").readBytes())
+        assertEquals(42.toByte(), File(provider.directory, "report.pdf").readBytes()[0])
+        assertFalse(source.exists())
+    }
+
+    @Test
+    fun anExportThatCannotBeReadBackNeverCausesDeletion() {
+        val bytes = source.readBytes()
+        provider.failRead = true
+        assertThrows(Exception::class.java) {
+            DirectoryExports(context).save(tree, "document", source, "report.pdf", "application/pdf")
+        }
+        assertArrayEquals(bytes, source.readBytes())
+        provider.failRead = false
+        DirectoryExports(context).save(tree, "document", source, "report.pdf", "application/pdf")
+        assertArrayEquals(bytes, File(provider.directory, "report.pdf").readBytes())
+        assertFalse(source.exists())
+    }
+
+    @Test
+    fun aCorruptNewExportKeepsTheOriginalUntilASuccessfulRetry() {
+        val bytes = source.readBytes()
+        provider.onRead = { it.writeBytes(ByteArray(bytes.size) { 42 }) }
+        assertThrows(java.io.IOException::class.java) {
+            DirectoryExports(context).save(tree, "document", source, "report.pdf", "application/pdf")
+        }
+        assertArrayEquals(bytes, source.readBytes())
+        provider.onRead = {}
+        DirectoryExports(context).save(tree, "document", source, "report.pdf", "application/pdf")
+        assertArrayEquals(bytes, File(provider.directory, "report.pdf").readBytes())
+        assertFalse(source.exists())
+    }
+
+    @Test
+    fun changingTheSourceDuringVerificationNeverDeletesTheChangedFile() {
+        provider.onRead = {
+            source.writeText("new contents")
+        }
+        assertThrows(java.io.IOException::class.java) {
+            DirectoryExports(context).save(tree, "document", source, "report.pdf", "application/pdf")
+        }
+        assertEquals("new contents", source.readText())
+    }
+
+    @Test
+    fun changingTheSourceAfterVerificationNeverDeletesTheChangedFile() {
+        File(provider.directory, "report.pdf").writeBytes(source.readBytes())
+        val uri = DocumentsContract.buildDocumentUriUsingTree(Uri.parse(tree), "report.pdf")
+        val verified = VerifiedDownload.compare(context, source, uri)!!
+        assertTrue(source.delete())
+        source.writeText("replacement file")
+        assertThrows(java.io.IOException::class.java) { verified.removePrivateCopy(context) }
+        assertEquals("replacement file", source.readText())
+    }
+
+    @Test
+    fun losingTheDestinationAfterVerificationKeepsTheSource() {
+        val destination = File(provider.directory, "report.pdf").apply { writeBytes(source.readBytes()) }
+        val uri = DocumentsContract.buildDocumentUriUsingTree(Uri.parse(tree), "report.pdf")
+        val verified = VerifiedDownload.compare(context, source, uri)!!
+        assertTrue(destination.delete())
+        assertThrows(java.io.IOException::class.java) { verified.removePrivateCopy(context) }
+        assertEquals(100_000L, source.length())
+    }
+
+    @Test
+    fun publicSourcesAndPathsOutsideTheAppAreNeverDeleted() {
+        val public = folder.newFile("sent-by-user.pdf").apply { writeText("user file") }
+        HostFileStats.source = public
+        DirectoryExports(context).save(tree, "document", public, "report.pdf", "application/pdf")
+        assertEquals("user file", public.readText())
+        assertEquals("user file", File(provider.directory, "report.pdf").readText())
+    }
+
+    @Test
+    fun aProviderAliasOfTheSourceIsNeverDeleted() {
+        // The user may have selected the app's own folder on an older Android version.
+        provider.directory = source.parentFile!!
+        val uri = DocumentsContract.buildDocumentUriUsingTree(Uri.parse(tree), source.name)
+        val verified = VerifiedDownload.compare(context, source, uri)!!
+        verified.removePrivateCopy(context)
+        assertEquals(100_000L, source.length())
+    }
+
     class FolderProvider : DocumentsProvider() {
         lateinit var directory: File
         var failOpen = false
+        var failRead = false
+        var onRead: (File) -> Unit = {}
         override fun onCreate(): Boolean = true
         override fun queryRoots(projection: Array<out String>?): Cursor = MatrixCursor(arrayOf(DocumentsContract.Root.COLUMN_ROOT_ID))
 
@@ -181,7 +295,38 @@ class DirectoryExportsTest {
         override fun deleteDocument(documentId: String) { check(File(directory, documentId).delete()) }
         override fun openDocument(documentId: String, mode: String, signal: CancellationSignal?): ParcelFileDescriptor {
             if (failOpen) throw FileNotFoundException("Storage disconnected")
-            return ParcelFileDescriptor.open(File(directory, documentId), ParcelFileDescriptor.parseMode(mode))
+            if (mode == "r") {
+                if (failRead) throw FileNotFoundException("Read permission lost")
+                onRead(File(directory, documentId))
+            }
+            val file = File(directory, documentId)
+            return ParcelFileDescriptor.open(file, ParcelFileDescriptor.parseMode(mode)).also {
+                HostFileStats.descriptors[it.fileDescriptor] = file
+            }
+        }
+    }
+
+    /** Robolectric returns zero-filled fstat values on Windows. Supply host metadata and file IDs
+     * (canonical paths where the host has no ID); associate descriptors with their provider file. */
+    @Implements(Os::class)
+    class HostFileStats {
+        companion object {
+            lateinit var source: File
+            val descriptors = IdentityHashMap<FileDescriptor, File>()
+
+            @JvmStatic @Implementation
+            fun fstat(fd: FileDescriptor): StructStat = stat((descriptors[fd] ?: source).path)
+
+            @JvmStatic @Implementation
+            fun stat(path: String): StructStat {
+                if (!File(path).exists()) throw ErrnoException("stat", OsConstants.ENOENT)
+                val attributes = Files.readAttributes(File(path).toPath(), BasicFileAttributes::class.java)
+                val mode = if (attributes.isDirectory) OsConstants.S_IFDIR else OsConstants.S_IFREG
+                val identity = attributes.fileKey() ?: File(path).canonicalPath
+                return StructStat(1, identity.hashCode().toLong(), mode or 0x180,
+                    1, 0, 0, 0, attributes.size(), 0, attributes.lastModifiedTime().toMillis(),
+                    attributes.creationTime().toMillis(), 4096, 1)
+            }
         }
     }
 

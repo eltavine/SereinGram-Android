@@ -12,13 +12,20 @@ import java.security.MessageDigest
 internal class DirectoryExports(private val context: Context) {
     private val index = context.getSharedPreferences("serein_download_exports", Context.MODE_PRIVATE)
 
-    fun copy(tree: String, identity: String, source: File, name: String, mimeType: String): String {
+    fun save(tree: String, identity: String, source: File, name: String, mimeType: String): String {
         val directory = DocumentFile.fromTreeUri(context, Uri.parse(tree))
             ?.takeIf { it.isDirectory && it.canWrite() } ?: throw IOException("Directory is not writable")
         val key = MessageDigest.getInstance("SHA-256").digest("$tree\n$identity".toByteArray())
             .joinToString("") { "%02x".format(it) }
         val previous = index.getString(key, null)?.let { DocumentFile.fromSingleUri(context, Uri.parse(it)) }
-        if (previous != null && previous.exists() && previous.length() == source.length()) return previous.uri.toString()
+        if (previous != null && previous.exists()) {
+            // A file with the same length may have been edited or corrupted since the last export.
+            val verified = VerifiedDownload.compare(context, source, previous.uri)
+            if (verified != null) {
+                verified.removePrivateCopy(context)
+                return previous.uri.toString()
+            }
+        }
 
         // An interrupted copy from a previous process is not a completed export.
         index.getString(PENDING, null)?.let { pending ->
@@ -47,7 +54,12 @@ internal class DirectoryExports(private val context: Context) {
             }
         }
         val uri = exportFile(target, name, mimeType, source::inputStream)
+        val verified = VerifiedDownload.compare(context, source, Uri.parse(uri))
+            ?: throw IOException("Saved download differs from the app copy")
+        // Commit before deleting the source: after a crash the verified export must never be treated
+        // as an incomplete document and removed on the next run.
         if (!index.edit().putString(key, uri).remove(PENDING).commit()) throw IOException("Cannot record completed download")
+        verified.removePrivateCopy(context)
         return uri
     }
 

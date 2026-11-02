@@ -309,11 +309,11 @@
     <string name="serein_downloads_directory">Save folder</string>
     <string name="serein_downloads_directory_info">Choose a folder outside the app with the system file picker</string>
     <string name="serein_downloads_enabled">Save downloads to this folder</string>
-    <string name="serein_downloads_enabled_info">Keep a copy after each manual download</string>
+    <string name="serein_downloads_enabled_info">Verify saved files and remove identical app copies</string>
     <string name="serein_downloads_reset">Reset save folder</string>
     <string name="serein_downloads_reset_info">Stop external saving; keep saved files</string>
-    <string name="serein_downloads_note">Choose or create a subfolder such as Download/SereinGram. Android 11 and later do not allow selecting the Download root. Applies to new manual file, music and video downloads, not automatic media loading. Existing downloads are not moved. App cache is kept for playback and can be cleared separately. Secret chats, self-destructing and protected media are not exported.</string>
-    <string name="serein_downloads_failed">Could not save a download to the selected folder. The file is still in the app. Check free space and folder access, then choose the folder again and retry the download.</string>
+    <string name="serein_downloads_note">Choose or create a subfolder such as Download/SereinGram. Android 11 and later do not allow selecting the Download root. After saving a manual file, music or video download, every byte is checked before the identical app copy is removed. If saving or verification fails, the app copy stays. Open saved files in your file manager; opening or playing them in chat may download them again. Existing downloads are not moved. Secret chats, self-destructing and protected media are not exported.</string>
+    <string name="serein_downloads_failed">Could not finish saving, verifying or removing the app copy. The app copy has been kept. Check free space and folder access, then retry the download.</string>
     <string name="serein_downloads_attention">Check save folder</string>
     <string name="serein_downloads_on">On</string>
     <string name="serein_downloads_off">Off</string>

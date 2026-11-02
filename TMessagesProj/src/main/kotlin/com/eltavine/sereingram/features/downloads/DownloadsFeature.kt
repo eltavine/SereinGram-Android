@@ -24,11 +24,14 @@ import org.telegram.messenger.FileLoader
 import org.telegram.messenger.LocaleController.getString
 import org.telegram.messenger.MessageObject
 import org.telegram.messenger.MessagesController
+import org.telegram.messenger.NotificationCenter
 import org.telegram.messenger.R
 import org.telegram.messenger.UserConfig
 import org.telegram.ui.ActionBar.BaseFragment
 import org.telegram.ui.Components.BulletinFactory
 import org.telegram.ui.LaunchActivity
+import org.telegram.ui.ChatActivity
+import org.telegram.ui.Cells.ChatMessageCell
 import java.util.concurrent.Executors
 
 /** Publishes completed manual downloads through a user-granted document tree. */
@@ -52,8 +55,28 @@ class DownloadsFeature(private val application: Application) : SereinModule, Set
             io.execute {
                 // Switching off or choosing another directory also cancels queued exports.
                 if (!preferences.get(DownloadOptions.enabled) || preferences.get(DownloadOptions.directory) != tree) return@execute
-                runCatching { exports.copy(tree, identity, file, name, mime) }
-                    .onSuccess { preferences.reset(DownloadOptions.error) }
+                runCatching { exports.save(tree, identity, file, name, mime) }
+                    .onSuccess {
+                        preferences.reset(DownloadOptions.error)
+                        AndroidUtilities.runOnUIThread {
+                            if (!file.exists()) {
+                                clearCachedState(message)
+                                val page = LaunchActivity.getLastFragmentIncludeMainTabs() as? ChatActivity
+                                val list = page?.takeIf { it.currentAccount == account && it.dialogId == message.dialogId }?.getChatListView()
+                                if (list != null) {
+                                    for (index in 0 until list.childCount) {
+                                        val cell = list.getChildAt(index) as? ChatMessageCell ?: continue
+                                        val shown = cell.messageObject ?: continue
+                                        if (shown.id == message.id && shown.dialogId == message.dialogId) {
+                                            clearCachedState(shown)
+                                            cell.updateButtonState(false, true, true)
+                                        }
+                                    }
+                                }
+                                NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.onDownloadingFilesChanged)
+                            }
+                        }
+                    }
                     .onFailure { error ->
                         Faults.report("external download", error)
                         preferences.set(DownloadOptions.error, tree)
@@ -168,6 +191,15 @@ class DownloadsFeature(private val application: Application) : SereinModule, Set
     }
 
     internal companion object {
+        // Refresh the download button without rebinding images and immediately auto-downloading
+        // the file we just removed. An explicit tap enables downloading again in Telegram's cell.
+        private fun clearCachedState(message: MessageObject) {
+            message.checkMediaExistance()
+            message.loadedFileSize = 0
+            message.putInDownloadsStore = false
+            message.loadingCancelled = true
+        }
+
         fun eligible(message: MessageObject): Boolean {
             val owner = message.messageOwner ?: return false
             return message.putInDownloadsStore && !DialogObject.isEncryptedDialog(message.dialogId) &&
