@@ -17,7 +17,8 @@
     ".github/dependabot.yml",
     "BRANDING.md",
     "README.md",
-    "docs/adblock-rules.md"
+    "docs/adblock-rules.md",
+    "docs/join-diagnostics.md"
   ],
   "budget": {
     "all_files": 350,

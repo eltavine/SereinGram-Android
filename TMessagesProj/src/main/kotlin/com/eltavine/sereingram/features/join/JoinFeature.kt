@@ -17,6 +17,7 @@ import org.telegram.ui.ChatActivity
 import org.telegram.ui.Components.AlertsCreator
 import org.telegram.ui.Components.BulletinFactory
 import org.telegram.ui.LaunchActivity
+import tw.nekomimi.nekogram.NekoXConfig
 
 /** A server rejection is not evidence that the user's account has exactly 500 memberships. */
 object JoinFeature : SereinModule {
@@ -37,7 +38,7 @@ object JoinFeature : SereinModule {
     private fun show(account: Int, request: TLObject, page: BaseFragment) {
         val activity = page.parentActivity ?: return
         val owner = UserConfig.getInstance(account).clientUserId
-        val detail = formatString(R.string.serein_join_explanation, owner.toString(), BuildConfig.APP_ID)
+        val detail = formatString(R.string.serein_join_explanation, owner.toString(), NekoXConfig.currentAppId())
         page.showDialog(AlertDialog.Builder(activity, page.resourceProvider).setTitle(getString(R.string.serein_join_title))
             .setMessage(detail)
             .setItems(arrayOf(getString(R.string.serein_join_diagnose), getString(R.string.serein_join_retry), getString(R.string.serein_join_official))) { _, which ->
@@ -45,13 +46,18 @@ object JoinFeature : SereinModule {
                 when (which) {
                     0 -> JoinDiagnostics(account, owner).run { count, complete, failure ->
                         if (page.isFinished || page.parentActivity == null || UserConfig.getInstance(account).clientUserId != owner) return@run
-                        val report = detail + "\n\n" + formatString(R.string.serein_join_count, count,
-                            getString(if (complete) R.string.serein_join_complete else R.string.serein_join_partial)) +
-                            (failure?.let { "\n${getString(R.string.ErrorOccurred)}: $it" } ?: "")
-                        page.showDialog(AlertDialog.Builder(page.parentActivity, page.resourceProvider)
-                            .setTitle(getString(R.string.serein_join_diagnose)).setMessage(report)
-                            .setPositiveButton(getString(R.string.Copy)) { _, _ -> AndroidUtilities.addToClipboard(report) }
-                            .setNegativeButton(getString(R.string.Close), null).create())
+                        JoinSessionDiagnostics(account, owner).run session@ { apiId ->
+                            if (page.isFinished || page.parentActivity == null || UserConfig.getInstance(account).clientUserId != owner) return@session
+                            val report = detail + "\n\n" + formatString(R.string.serein_join_count, count,
+                                getString(if (complete) R.string.serein_join_complete else R.string.serein_join_partial)) +
+                                (failure?.let { "\n${getString(R.string.ErrorOccurred)}: $it" } ?: "") + "\n\n" +
+                                (apiId?.let { formatString(R.string.serein_join_session_api, it) }
+                                    ?: getString(R.string.serein_join_session_unknown))
+                            page.showDialog(AlertDialog.Builder(page.parentActivity, page.resourceProvider)
+                                .setTitle(getString(R.string.serein_join_diagnose)).setMessage(report)
+                                .setPositiveButton(getString(R.string.Copy)) { _, _ -> AndroidUtilities.addToClipboard(report) }
+                                .setNegativeButton(getString(R.string.Close), null).create())
+                        }
                     }
                     1 -> retry(account, owner, request, page)
                     2 -> openOfficial(account, request, page)

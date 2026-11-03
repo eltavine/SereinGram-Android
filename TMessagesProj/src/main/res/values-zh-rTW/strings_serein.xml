@@ -380,8 +380,8 @@
     <string name="serein_adblock_restore">恢復並開啟訊息</string>
     <string name="serein_adblock_restored">已將此訊息加入攔截例外。</string>
     <string name="serein_join_title">暫時無法加入</string>
-    <string name="serein_join_explanation">Telegram 返回 CHANNELS_TOO_MUCH，可能涉及群組/頻道數量或客戶端 API 限制。尚不能據此認定你已加入 500 個群組，也不能保證開通會員能夠解決。\n\n賬號 ID：%1$s\nAPI ID：%2$d</string>
-    <string name="serein_join_diagnose">檢查已加入的群組和頻道</string>
+    <string name="serein_join_explanation">Telegram 返回 CHANNELS_TOO_MUCH，可能涉及群組/頻道數量或客戶端 API 限制。尚不能據此認定你已加入 500 個群組，也不能保證開通會員能夠解決。\n\n賬號 ID：%1$s\n本地配置的 API ID：%2$d</string>
+    <string name="serein_join_diagnose">檢查群組數量與會話 API</string>
     <string name="serein_join_retry">重新嘗試加入</string>
     <string name="serein_join_official">在官方 Telegram 中開啟</string>
     <string name="serein_join_count">服務端會話列表中確認的超級群組和頻道：%1$d\n檢查狀態：%2$s\n\n上限同時計算超級群組與頻道，此檢查不能解除服務端限制。</string>
@@ -391,4 +391,6 @@
     <string name="serein_join_requested">已提交加入申請，等待管理員批准。</string>
     <string name="serein_join_updated">已同步服務端狀態，請檢視聊天列表。</string>
     <string name="serein_join_official_missing">未找到官方 Telegram 或可用連結，請手動在官方客戶端開啟同一群組。</string>
+    <string name="serein_join_session_api">Telegram 返回的當前登入會話 API ID：%1$d\n修改本地配置不代表已有登入會話已經切換。如果同一賬號在官方客戶端可以加入同一群組，應進一步排查會話或客戶端 API 限制；僅憑本報告不能確診原因。</string>
+    <string name="serein_join_session_unknown">未能從 Telegram 核實當前登入會話的 API ID。本地配置值不能當作已核實的會話 API ID。</string>
 </resources>

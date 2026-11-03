@@ -239,6 +239,10 @@ Settings missing from the file are read from the environment. The
 `LOCAL_PROPERTIES` environment variable, when set, holds the whole file in
 base64 and is read in its place.
 
+The default API pair matches Nagram's verified 13.0.2 release. See
+[joining diagnostics](docs/join-diagnostics.md) for the reference package and
+how to distinguish local API configuration from the server's current session.
+
 ## Development
 
 SereinGram's code is kept apart from Nagram's, so that Nagram's updates can be
