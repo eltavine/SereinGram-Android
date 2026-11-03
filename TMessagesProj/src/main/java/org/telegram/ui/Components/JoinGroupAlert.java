@@ -62,7 +62,12 @@ public class JoinGroupAlert extends BottomSheet {
     }
 
     public JoinGroupAlert(final Context context, TLObject obj, String group, BaseFragment parentFragment, Theme.ResourcesProvider resourcesProvider, int origination) {
+        this(context, obj, group, parentFragment, resourcesProvider, origination, parentFragment != null ? parentFragment.getCurrentAccount() : UserConfig.selectedAccount);
+    }
+
+    public JoinGroupAlert(final Context context, TLObject obj, String group, BaseFragment parentFragment, Theme.ResourcesProvider resourcesProvider, int origination, int account) {
         super(context, false, resourcesProvider);
+        currentAccount = account;
         setApplyBottomPadding(false);
         setApplyTopPadding(false);
         fixNavigationBar(getThemedColor(Theme.key_windowBackgroundWhite));
@@ -74,7 +79,7 @@ public class JoinGroupAlert extends BottomSheet {
             dialogId = chatInvite.chat != null ? -chatInvite.chat.id : 0;
         } else if (obj instanceof TLRPC.Chat) {
             currentChat = (TLRPC.Chat) obj;
-            dialogId = currentChat.id;
+            dialogId = -currentChat.id;
         } else {
             dialogId = 0;
         }
@@ -463,6 +468,7 @@ public class JoinGroupAlert extends BottomSheet {
                     }
                 }
             };
+            chatActivity.setCurrentAccount(currentAccount);
             fragment.presentFragment(chatActivity, fragment instanceof ChatActivity);
         }
     }

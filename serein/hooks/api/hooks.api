@@ -1,3 +1,19 @@
+public final class com/eltavine/sereingram/hooks/AdBlockHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/AdBlockHooks;
+	public static final fun blocksSponsored (I)Z
+	public final fun getFilters ()Lcom/eltavine/sereingram/core/Handlers;
+	public final fun getSponsoredPolicies ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun hides (ILjava/lang/Object;Ljava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/AdBlockHooks$Filter {
+	public abstract fun hides (ILjava/lang/Object;Ljava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/AdBlockHooks$SponsoredPolicy {
+	public abstract fun blocks (I)Z
+}
+
 public final class com/eltavine/sereingram/hooks/ChatHooks {
 	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/ChatHooks;
 	public static final fun allowShareButton (IJZ)Z
@@ -119,6 +135,16 @@ public final class com/eltavine/sereingram/hooks/InputHooks {
 
 public abstract interface class com/eltavine/sereingram/hooks/InputHooks$PastePolicy {
 	public abstract fun pastesPlainText ()Z
+}
+
+public final class com/eltavine/sereingram/hooks/JoinHooks {
+	public static final field INSTANCE Lcom/eltavine/sereingram/hooks/JoinHooks;
+	public final fun getHandlers ()Lcom/eltavine/sereingram/core/Handlers;
+	public static final fun handlesError (ILjava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)Z
+}
+
+public abstract interface class com/eltavine/sereingram/hooks/JoinHooks$ErrorHandler {
+	public abstract fun handle (ILjava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)Z
 }
 
 public final class com/eltavine/sereingram/hooks/LinkHooks {

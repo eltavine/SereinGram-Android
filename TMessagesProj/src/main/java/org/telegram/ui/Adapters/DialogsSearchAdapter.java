@@ -1127,20 +1127,21 @@ public class DialogsSearchAdapter extends RecyclerListView.SelectionAdapter {
             query = null;
         }
         filterRecent(query);
-        if (!TextUtils.equals(sponsoredQuery, query)) {
+        if (!TextUtils.equals(sponsoredQuery, query) || com.eltavine.sereingram.hooks.AdBlockHooks.blocksSponsored(currentAccount)) {
             sponsoredQuery = query;
             sponsoredPeers.clear();
             if (sponsoredReqId != 0) {
                 ConnectionsManager.getInstance(currentAccount).cancelRequest(sponsoredReqId, true);
                 sponsoredReqId = 0;
             }
-            if (NekoConfig.hideSponsoredMessage.Bool() || query == null || query.length() < 4 || UserConfig.getInstance(currentAccount).isPremium() && MessagesController.getInstance(currentAccount).isSponsoredDisabled()) {
+            if (com.eltavine.sereingram.hooks.AdBlockHooks.blocksSponsored(currentAccount) || NekoConfig.hideSponsoredMessage.Bool() || query == null || query.length() < 4 || UserConfig.getInstance(currentAccount).isPremium() && MessagesController.getInstance(currentAccount).isSponsoredDisabled()) {
                 sponsoredQuery = null;
             } else {
                 final TLRPC.TL_contacts_getSponsoredPeers req = new TLRPC.TL_contacts_getSponsoredPeers();
                 req.q = sponsoredQuery = query;
                 sponsoredReqId = ConnectionsManager.getInstance(currentAccount).sendRequest(req, (res, err) -> AndroidUtilities.runOnUIThread(() -> {
                     sponsoredReqId = 0;
+                    if (com.eltavine.sereingram.hooks.AdBlockHooks.blocksSponsored(currentAccount)) { sponsoredPeers.clear(); notifyDataSetChanged(); return; }
                     if (res instanceof TLRPC.TL_contacts_sponsoredPeersEmpty) {
                         if (!sponsoredPeers.isEmpty()) {
                             sponsoredPeers.clear();

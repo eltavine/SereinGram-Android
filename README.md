@@ -103,6 +103,10 @@ from its code.
 
 ### Chats and messages
 
+- **Advertising rules** for groups and channels: built-in labels, custom keywords,
+  JSON import/export, a configurable HTTPS subscription, and manual marking from
+  a message menu. A local history explains matches and restores false positives.
+  See [the rule format and subscription guide](docs/adblock-rules.md).
 - **Admin shortcuts** in a chat's menu: recent actions, administrators,
   members, permissions, statistics and invite links.<br>
   <sub>After Cherrygram, exteraGram, OctoGram and NagramX ·

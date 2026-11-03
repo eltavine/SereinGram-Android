@@ -1,6 +1,8 @@
 package com.eltavine.sereingram.app
 
 import android.app.Application
+import com.eltavine.sereingram.features.adblock.AdBlockFeature
+import com.eltavine.sereingram.features.join.JoinFeature
 import com.eltavine.sereingram.adapters.prefs.PreferencesLocalNameStore
 import com.eltavine.sereingram.adapters.prefs.PreferencesStores
 import com.eltavine.sereingram.adapters.room.RoomBookmarkStore
@@ -77,6 +79,8 @@ object SereinApp {
         return ModuleRegistry(
             listOf(
                 ServicesModule,
+                AdBlockFeature(application),
+                JoinFeature,
                 ChatLockFeature,
                 ChatShortcutsFeature,
                 DeclutterFeature,
