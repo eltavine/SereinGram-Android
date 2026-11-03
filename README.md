@@ -103,6 +103,10 @@ from its code.
 
 ### Chats and messages
 
+- **Advertising rules** for groups and channels: built-in labels, custom keywords,
+  JSON import/export, a configurable HTTPS subscription, and manual marking from
+  a message menu. A local history explains matches and restores false positives.
+  See [the rule format and subscription guide](docs/adblock-rules.md).
 - **Admin shortcuts** in a chat's menu: recent actions, administrators,
   members, permissions, statistics and invite links.<br>
   <sub>After Cherrygram, exteraGram, OctoGram and NagramX ·
@@ -234,6 +238,10 @@ from its code.
 Settings missing from the file are read from the environment. The
 `LOCAL_PROPERTIES` environment variable, when set, holds the whole file in
 base64 and is read in its place.
+
+The default API pair matches Nagram's verified 13.0.2 release. See
+[joining diagnostics](docs/join-diagnostics.md) for the reference package and
+how to distinguish local API configuration from the server's current session.
 
 ## Development
 

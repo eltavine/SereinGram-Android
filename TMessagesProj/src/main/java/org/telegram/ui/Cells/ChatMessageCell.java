@@ -1934,6 +1934,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 
     // NekoX
     private boolean needHideMessage() {
+        if (com.eltavine.sereingram.hooks.AdBlockHooks.hides(currentAccount, currentMessageObject, currentMessagesGroup)) return true;
         return currentMessageObject.messageOwner.hide ||
                 MessagesController.getInstance(currentAccount).blockePeers.indexOfKey(currentMessageObject.getFromChatId()) >= 0 &&
                         NekoConfig.ignoreBlocked.Bool() && !(getParent() != null && getParent().getClass().getName().contains("ChannelAdminLogActivity"));

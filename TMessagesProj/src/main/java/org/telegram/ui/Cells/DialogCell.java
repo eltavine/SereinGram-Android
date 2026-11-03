@@ -3832,6 +3832,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             MessageObject captionMessage = getCaptionMessage();
             // --- AyuGram hook
             boolean isFiltered = AyuFilter.isFiltered(message, null) || (captionMessage != null && AyuFilter.isFiltered(captionMessage, null));
+            isFiltered |= com.eltavine.sereingram.hooks.AdBlockHooks.hides(currentAccount, message, null) || com.eltavine.sereingram.hooks.AdBlockHooks.hides(currentAccount, captionMessage, null);
             // --- NaGram hook
             isFiltered = isFiltered || (message.messageOwner != null && message.messageOwner.hide);
             isFiltered = isFiltered || (NekoConfig.ignoreBlocked.Bool() && MessagesController.getInstance(currentAccount).blockePeers.indexOfKey(message.getFromChatId()) >= 0);

@@ -5192,6 +5192,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                                                     return;
                                                 }
                                                 ChatActivity fragment = new ChatActivity(args);
+                                                fragment.setCurrentAccount(intentAccount);
                                                 if (invite instanceof TLRPC.TL_chatInvitePeek) {
                                                     fragment.setChatInvite(invite);
                                                 }
@@ -5218,15 +5219,16 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                             } else if (invite.subscription_pricing != null && !invite.can_refulfill_subscription) {
                                 final long stars = invite.subscription_pricing.amount;
                                 MessagesController.getInstance(intentAccount).putChat(invite.chat, false);
-                                StarsController.getInstance(currentAccount).subscribeTo(group, invite, (status, dialogId) -> {
+                                StarsController.getInstance(intentAccount).subscribeTo(group, invite, (status, dialogId) -> {
                                     if ("paid".equals(status) && dialogId != 0) {
                                         AndroidUtilities.runOnUIThread(() -> {
                                             BaseFragment lastFragment = getSafeLastFragment();
                                             if (lastFragment == null) return;
                                             BaseFragment chatActivity = ChatActivity.of(dialogId);
+                                            chatActivity.setCurrentAccount(intentAccount);
                                             lastFragment.presentFragment(chatActivity);
 
-                                            TLRPC.Chat chat = MessagesController.getInstance(currentAccount).getChat(-dialogId);
+                                            TLRPC.Chat chat = MessagesController.getInstance(intentAccount).getChat(-dialogId);
                                             if (chat != null) {
                                                 AndroidUtilities.runOnUIThread(() -> {
                                                     BulletinFactory.of(chatActivity).createSimpleBulletin(R.raw.stars_send, LocaleController.getString(R.string.StarsSubscriptionCompleted), AndroidUtilities.replaceTags(formatPluralString("StarsSubscriptionCompletedText", (int) stars, chat.title))).show(true);
@@ -5237,7 +5239,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                                 });
                             } else {
                                 BaseFragment fragment = mainFragmentsStack.get(mainFragmentsStack.size() - 1);
-                                fragment.showDialog(new JoinGroupAlert(LaunchActivity.this, invite, group, fragment, (fragment instanceof ChatActivity ? ((ChatActivity) fragment).themeDelegate : null)));
+                                fragment.showDialog(new JoinGroupAlert(LaunchActivity.this, invite, group, fragment, (fragment instanceof ChatActivity ? ((ChatActivity) fragment).themeDelegate : null), JoinGroupAlert.ORIGINATION_OTHER, intentAccount));
                             }
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
@@ -5270,12 +5272,12 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                     final TLRPC.Updates updates;
                     if (response instanceof TLRPC.TL_chatInviteJoinResultOk) {
                         updates = ((TLRPC.TL_chatInviteJoinResultOk) response).updates;
-                        MessagesController.getInstance(currentAccount).processUpdates(updates, false);
+                        MessagesController.getInstance(intentAccount).processUpdates(updates, false);
                     } else if (response instanceof TLRPC.TL_chatInviteJoinResultWebView) {
                         TLRPC.TL_chatInviteJoinResultWebView resultWebView = (TLRPC.TL_chatInviteJoinResultWebView) response;
                         AndroidUtilities.runOnUIThread(() -> {
-                            MessagesController.getInstance(currentAccount).putUsers(resultWebView.users, false);
-                            BotGuardHelper.getInstance(currentAccount).openGuardBotWebApp(resultWebView.bot_id,
+                            MessagesController.getInstance(intentAccount).putUsers(resultWebView.users, false);
+                            BotGuardHelper.getInstance(intentAccount).openGuardBotWebApp(resultWebView.bot_id,
                                     resultWebView.bot_id, resultWebView.query_id);
                         });
 
@@ -5302,12 +5304,14 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                                         args.putLong("chat_id", chat.id);
                                         if (mainFragmentsStack.isEmpty() || MessagesController.getInstance(intentAccount).checkCanOpenChat(args, mainFragmentsStack.get(mainFragmentsStack.size() - 1))) {
                                             ChatActivity fragment = new ChatActivity(args);
+                                            fragment.setCurrentAccount(intentAccount);
                                             NotificationCenter.getInstance(intentAccount).postNotificationName(NotificationCenter.closeChats);
                                             getActionBarLayout().presentFragment(fragment, false, true, true, false);
                                         }
                                     }
                                 }
                             } else {
+                                if (com.eltavine.sereingram.hooks.JoinHooks.handlesError(intentAccount, req, error.text, getLastFragmentIncludeMainTabs())) return;
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
                                 builder.setTitle(LocaleController.getString(R.string.NekoX));
                                 if (error.text.startsWith("FLOOD_WAIT")) {

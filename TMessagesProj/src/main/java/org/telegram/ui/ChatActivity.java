@@ -39593,6 +39593,7 @@ public class ChatActivity extends BaseFragment implements
                 }
 
                 var msg = messages.get(position - messagesStartRow);
+                if (com.eltavine.sereingram.hooks.AdBlockHooks.hides(currentAccount, msg, msg == null ? null : getGroup(msg.getGroupId()))) return -1000;
 
                 // --- AyuGram hook
                 if (NaConfig.INSTANCE.getRegexFiltersEnabled().Bool() && (NaConfig.INSTANCE.getRegexFiltersEnableInChats().Bool() || ChatObject.isChannel(currentChat))) {

@@ -284,6 +284,7 @@ public final class com/eltavine/sereingram/settings/SettingsTint : java/lang/Enu
 	public static final field INDIGO Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field LIME Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field MAGENTA Lcom/eltavine/sereingram/settings/SettingsTint;
+	public static final field MINT Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field ORANGE Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field ORANGE_DEEP Lcom/eltavine/sereingram/settings/SettingsTint;
 	public static final field PINK Lcom/eltavine/sereingram/settings/SettingsTint;

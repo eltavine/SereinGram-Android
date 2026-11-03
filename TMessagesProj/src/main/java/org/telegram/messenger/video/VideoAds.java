@@ -179,6 +179,7 @@ public static VideoAds make(
 
     private void init(BulletinFactory bulletinFactory) {
         this.bulletinFactory = bulletinFactory;
+        if (com.eltavine.sereingram.hooks.AdBlockHooks.blocksSponsored(currentAccount)) return;
         this.lastTime = System.currentTimeMillis();
         this.first = true;
         if (cache.loaded) {
@@ -195,6 +196,7 @@ public static VideoAds make(
     private int requestId;
     private boolean loading, loaded;
     private void load() {
+        if (com.eltavine.sereingram.hooks.AdBlockHooks.blocksSponsored(currentAccount)) return;
         if (loading || loaded) return;
 
         if (UserConfig.getInstance(currentAccount).isPremium() && MessagesController.getInstance(currentAccount).isSponsoredDisabled()) {
@@ -266,6 +268,7 @@ public static VideoAds make(
     private float currentMenuTranslationY;
 
     private void show() {
+        if (com.eltavine.sereingram.hooks.AdBlockHooks.blocksSponsored(currentAccount)) return;
         if (ads.isEmpty()) return;
         final TLRPC.TL_sponsoredMessage ad = ads.get(0);
         final long showTime = System.currentTimeMillis() - currentBulletinPassedTime;

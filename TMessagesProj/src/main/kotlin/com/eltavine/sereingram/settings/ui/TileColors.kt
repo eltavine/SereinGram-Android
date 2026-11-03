@@ -30,6 +30,7 @@ internal val SettingsTint.gradient: TileGradient
         SettingsTint.BROWN -> TileGradient(0xFFC79466.toInt(), 0xFFA6713F.toInt())
         SettingsTint.GRAY -> IconBackgroundColors.GRAY.gradient
         SettingsTint.SLATE -> TileGradient(0xFF6B7888.toInt(), 0xFF4C5868.toInt())
+        SettingsTint.MINT -> TileGradient(0xFF45BFA8.toInt(), 0xFF23856F.toInt())
     }
 
 private val IconBackgroundColors.gradient: TileGradient get() = TileGradient(top, bottom)

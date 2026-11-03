@@ -50,6 +50,7 @@ public enum class SettingsTint {
     BROWN,
     GRAY,
     SLATE,
+    MINT,
 }
 
 /**

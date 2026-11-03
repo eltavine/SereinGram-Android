@@ -186,8 +186,8 @@ android {
         versionName verName
         versionCode verCode
 
-        def appId = "11535358"
-        def appHash = "33d372962fadb01df47e6ceed4e33cd6"
+        def appId = "896686" // Nagram 13.0.2 (1255) default pair; see docs/join-diagnostics.md.
+        def appHash = "cfa1494541244ed94cbb742712b0dc37"
 
         //obtain your own keys at https://core.telegram.org/api/obtaining_api_id
 
