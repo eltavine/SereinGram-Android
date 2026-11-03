@@ -20,10 +20,27 @@ matching the release asset's digest. Static inspection traced
 `org.telegram.messenger.BuildConfig` constants. A source tree whose default
 is `0` is insufficient evidence of the credentials injected into a release.
 
-This establishes a concrete configuration mismatch. It does not establish
-why Telegram returned a particular server error, or prove that changing the
-default repairs an existing authorization. Device testing still needs to
-confirm the join result and, if it fails, the server session's API ID.
+Device testing confirmed that updating an existing installation left its
+server authorization associated with `11535358`, even though the local
+configuration had changed to `896686`. The reporter subsequently confirmed
+normal functionality after testing a fresh login in a separate installation
+of the same code. This supports the fix for the reported case, without
+establishing Telegram's internal restriction policy.
+
+## Existing installations
+
+Changing the APK's default credentials does not reauthorize an existing
+session. If the diagnostic shows local API `896686` but server session API
+`11535358`, a fresh login is needed to test the corrected credentials.
+Importing a saved session reuses its old authorization key and is not a
+fresh login. User-selected custom API settings keep their existing priority.
+
+A separate test installation can establish a fresh login while keeping the
+original installation's data. For an existing installation, users can sign
+out and sign in normally after preserving needed local data and confirming
+they can complete authentication. Telegram secret chats do not survive
+logout; cloud chats can synchronize again. This change does not automatically
+log users out, copy session keys, or erase local data.
 
 ## Interpreting a report
 
@@ -78,10 +95,10 @@ diagnostic.
 
 The request path sends `channels.joinChannel` or `messages.importChatInvite`
 on the selected request account. The inspected client code does not synthesize
-`CHANNELS_TOO_MUCH` from a local count. Runtime evidence is still needed to
-establish why Telegram rejects a particular session. This version corrects
-the default credential mismatch and improves the diagnostic; it does not
-establish that joining is fixed before the device test succeeds.
+`CHANNELS_TOO_MUCH` from a local count. This version corrects the default
+credential mismatch and improves the diagnostic. The reported device case
+passed after a fresh login; other accounts or server restrictions still need
+their own evidence, and existing sessions are not silently migrated.
 
 Opening the same link in official Telegram is an explicit fallback. Once
 joined there, the membership can sync to SereinGram. It is not proof that
