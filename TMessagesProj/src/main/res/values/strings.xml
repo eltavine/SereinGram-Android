@@ -6352,7 +6352,7 @@
     <string name="ChannelInviteViaLinkRestricted2">This user can\'t be invited</string>
     <string name="ChannelInviteViaLinkRestricted3">This users can\'t be invited</string>
     <string name="StoragePathFreeInternal">%1$s free, high speed</string>
-    <string name="StoragePathFreeExternal">%1$s free, slow speed</string>\
+    <string name="StoragePathFreeExternal">%1$s free, slow speed</string>
     <string name="StoragePathFreeValueExternal">%1$s free, slow speed %2$s</string>
     <string name="AccDescrLiteBatteryWhenBelow">enabled when below %s%%</string>
     <string name="AccDescrRateTranscriptionUp">Rate up</string>

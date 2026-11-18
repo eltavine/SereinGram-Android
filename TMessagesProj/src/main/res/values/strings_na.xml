@@ -200,7 +200,7 @@
     <string name="DisableNonPremiumChannelChatShow">Disable non-Premium channel alias display</string>
     <string name="DisableRepeatInChannel">Disable repeat in channel</string>
     <string name="DisableRepeatInChannelError">Repeat is disabled in channel</string>
-    <string name="DisableDoubleTapWhenSelecting">Double tap is disabled when selecting</string>\
+    <string name="DisableDoubleTapWhenSelecting">Double tap is disabled when selecting</string>
     <string name="DisableActionBarButton">Disable Action Bar Button</string>
     <string name="DisableShortcutTagActions">Disable Favorite Shortcut Tag Actions</string>
     <string name="DisablePhoneSharePrompt">Disable contact phone number sharing prompt</string>
