@@ -43,8 +43,6 @@
     <string name="AutoReplaceRepeat">Tự động thay thế sự lặp lại bằng sự lặp lại không có tham chiếu</string>
     <string name="AppIconGoogle">Google</string>
     <string name="AppIconColorful">Đa sắc</string>
-    <string name="AppIconDarkGreen">Xanh đậm</string>
-    <string name="AppIconNeon">Phản quang</string>
     <string name="AppIconNiello">Vàng đen</string>
     <string name="AppIconBlue">Xanh dương</string>
     <string name="AppIconDarkBlue">Xanh dương đậm</string>
@@ -104,6 +102,7 @@
     <string name="DisableSendReadStories">Xem tin tức một cách bí mật</string>
     <string name="HideFilterMuteAll">\"Bật tiếng tất cả\" trong các thư mục ẩn</string>
     <string name="UseLocalQuoteColor">Màu tên cục bộ</string>
+    <string name="AvatarCorners">Avatar corners</string>
     <string name="DisableProfileAvatarBlur">Disable Profile Avatar Blur</string>
     <string name="DisableCustomWallpaperUser">Tắt nền tùy chỉnh cho tin nhắn riêng tư</string>
     <string name="DisableCustomWallpaperChannel">Tắt nền tùy chỉnh cho kênh</string>
@@ -130,7 +129,6 @@
     <string name="DisableClickCommandToSendHint">Không còn phải lo lắng con vô tình chạm vào nó nữa</string>
     <string name="DisableDialogsFloatingButton">Vô hiệu hóa nút nổi trang chủ</string>
     <string name="DisableFlagSecure">Tắt Flag Secure</string>
-    <string name="CenterActionBarTitle">Tiêu đề được căn giữa</string>
     <string name="ShowQuickReplyInBotCommands">Hiển thị nút trả lời nhanh trong hộp nhập</string>
     <string name="PushServiceType">Dịch vụ đẩy thông báo</string>
     <string name="PushServiceTypeInApp">Trong ứng dụng</string>
@@ -142,7 +140,6 @@
     <string name="SendMp4DocumentAsVideo">Video MP4 có thể được xem trước khi gửi dưới dạng tệp</string>
     <string name="StickersChooseShortNameForStickerPack">Chọn một tên ngắn cho gói của bạn.</string>
     <string name="StickersCopyStickerSet">Sao chép toàn bộ gói nhãn dán</string>
-    <string name="DisableChannelMuteButton">Tắt nút tắt tiếng trên trang trò chuyện của kênh</string>
     <string name="DisablePreviewVideoSoundShortcut">Tắt phím tắt âm lượng video xem trước</string>
     <string name="DisablePreviewVideoSoundShortcutNotice">Tắt phím âm lượng để bật nhanh âm thanh của video xem trước</string>
     <string name="DisableAutoWebLogin">Tắt đăng nhập tự động cho các trang web</string>
@@ -402,5 +399,17 @@
     <string name="CommunityAvatarTapActionChat">Always Open Chat</string>
     <string name="CommunityAvatarTapActionArrow">Open Community Only with the Bottom-Right Arrow</string>
     <string name="UseSystemNotificationColor">Use system notification color</string>
-    <string name="AvatarCorners">Avatar corners</string>
+    <string name="AdminActionsOnAvatarLongPress">Admin Actions on Avatar Long Press</string>
+    <string name="AdminActionsOnMentionLongPress">Admin Actions on Mention Long Press</string>
+    <string name="DeleteMessagesWhenRemovingMembers">Delete Messages When Removing Members</string>
+    <string name="BanOrDeleteMessages">Ban or Delete Messages</string>
+    <string name="StickerShape">Sticker Shape</string>
+    <string name="StickerShapeRounded">Rounded</string>
+    <string name="StickerShapeRoundedMsg">Message</string>
+    <string name="ActionBar">Action Bar</string>
+    <string name="UserRestrictedBy">Restricted by %1$s</string>
+    <string name="ChannelBottomButton">Channel bottom button</string>
+    <string name="HideChannelGiftButton">Hide channel gift button</string>
+    <string name="IgnoreBlockedReplies">Also hide replies to blocked users</string>
+    <string name="RemoveMessageTail">Remove message tail</string>
 </resources>

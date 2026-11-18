@@ -43,8 +43,6 @@
     <string name="AutoReplaceRepeat">Ersätt Repeat för att upprepa som kopia</string>
     <string name="AppIconGoogle">Google</string>
     <string name="AppIconColorful">Färgglad</string>
-    <string name="AppIconDarkGreen">Mörkgrön</string>
-    <string name="AppIconNeon">Neon</string>
     <string name="AppIconNiello">Niello</string>
     <string name="AppIconBlue">Blå</string>
     <string name="AppIconDarkBlue">Mörkblå</string>
@@ -104,6 +102,7 @@
     <string name="DisableSendReadStories">Inaktivera Skicka Lästa Berättelser</string>
     <string name="HideFilterMuteAll">Dölj filtrera stänga av alla</string>
     <string name="UseLocalQuoteColor">Använd lokal offertfärg</string>
+    <string name="AvatarCorners">Avatar hörn</string>
     <string name="DisableProfileAvatarBlur">Inaktivera profilavatar oskärpa</string>
     <string name="DisableCustomWallpaperUser">Inaktivera användaranpassad bakgrundsbild</string>
     <string name="DisableCustomWallpaperChannel">Inaktivera kanalanpassad bakgrundsbild</string>
@@ -130,7 +129,6 @@
     <string name="DisableClickCommandToSendHint">För att förhindra oavsiktligt tryck</string>
     <string name="DisableDialogsFloatingButton">Inaktivera dialoger flytande knapp</string>
     <string name="DisableFlagSecure">Inaktivera flagga säkert</string>
-    <string name="CenterActionBarTitle">Centrera titel i åtgärdsfältet</string>
     <string name="ShowQuickReplyInBotCommands">Visa snabbsvar i botkommandon</string>
     <string name="PushServiceType">Typ av push-tjänst</string>
     <string name="PushServiceTypeInApp">I appen</string>
@@ -142,7 +140,6 @@
     <string name="SendMp4DocumentAsVideo">Skicka mp4-dokument som video</string>
     <string name="StickersChooseShortNameForStickerPack">Välj ett kort namn för ditt paket.</string>
     <string name="StickersCopyStickerSet">Kopiera klistermärke set</string>
-    <string name="DisableChannelMuteButton">Inaktivera kanalavstängningsknapp</string>
     <string name="DisablePreviewVideoSoundShortcut">Inaktivera förhandsgranskning av videoljudgenväg</string>
     <string name="DisablePreviewVideoSoundShortcutNotice">Inaktivera volymknappar för att förhandsgranska videoljud</string>
     <string name="DisableAutoWebLogin">Inaktivera automatisk webbinloggning</string>
@@ -402,5 +399,17 @@
     <string name="CommunityAvatarTapActionChat">Öppna alltid chatt</string>
     <string name="CommunityAvatarTapActionArrow">Öppna gemenskap endast med den nedre högra pilen</string>
     <string name="UseSystemNotificationColor">Använd systemets aviseringsfärg</string>
-    <string name="AvatarCorners">Avatar hörn</string>
+    <string name="AdminActionsOnAvatarLongPress">Administratörsåtgärder på Avatar Långtryck</string>
+    <string name="AdminActionsOnMentionLongPress">Administratörsåtgärder vid omnämning Långtryck</string>
+    <string name="DeleteMessagesWhenRemovingMembers">Ta bort meddelanden när medlemmar tas bort</string>
+    <string name="BanOrDeleteMessages">Bannlys eller ta bort meddelanden</string>
+    <string name="StickerShape">Klistermärke form</string>
+    <string name="StickerShapeRounded">Avrundad</string>
+    <string name="StickerShapeRoundedMsg">Meddelande</string>
+    <string name="ActionBar">Åtgärd fält</string>
+    <string name="UserRestrictedBy">Begränsad av %1$s</string>
+    <string name="ChannelBottomButton">Kanal bottenknapp</string>
+    <string name="HideChannelGiftButton">Dölj kanal presentknapp</string>
+    <string name="IgnoreBlockedReplies">Dölj också svar till blockerade användare</string>
+    <string name="RemoveMessageTail">Ta bort meddelande svans</string>
 </resources>

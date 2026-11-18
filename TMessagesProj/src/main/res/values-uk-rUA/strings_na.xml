@@ -43,8 +43,6 @@
     <string name="AutoReplaceRepeat">Автозаміна повторення як копіювання</string>
     <string name="AppIconGoogle">Гугл</string>
     <string name="AppIconColorful">Кольорова</string>
-    <string name="AppIconDarkGreen">Темно-зелений</string>
-    <string name="AppIconNeon">Неон</string>
     <string name="AppIconNiello">Ньєлло</string>
     <string name="AppIconBlue">Синій</string>
     <string name="AppIconDarkBlue">Темно-синій</string>
@@ -104,6 +102,7 @@
     <string name="DisableSendReadStories">Вимкнути надсилання історій читання</string>
     <string name="HideFilterMuteAll">Сховати фільтр вимкнути всі</string>
     <string name="UseLocalQuoteColor">Використовувати колір локальної лапки</string>
+    <string name="AvatarCorners">Аватар кути</string>
     <string name="DisableProfileAvatarBlur">Вимкнути розмиття аватара профілю</string>
     <string name="DisableCustomWallpaperUser">Вимкнути користувацькі шпалери</string>
     <string name="DisableCustomWallpaperChannel">Вимкнути користувацькі шпалери каналу</string>
@@ -130,7 +129,6 @@
     <string name="DisableClickCommandToSendHint">Щоб запобігти випадковому дотику</string>
     <string name="DisableDialogsFloatingButton">Вимкнути плаваючу кнопку діалогу</string>
     <string name="DisableFlagSecure">Вимкнути захист прапора</string>
-    <string name="CenterActionBarTitle">Центрувати заголовок в панелі дій</string>
     <string name="ShowQuickReplyInBotCommands">Показати швидку відповідь у командах Bot</string>
     <string name="PushServiceType">Тип Служба push</string>
     <string name="PushServiceTypeInApp">В додатку</string>
@@ -142,7 +140,6 @@
     <string name="SendMp4DocumentAsVideo">Відправити mp4 документ як відео</string>
     <string name="StickersChooseShortNameForStickerPack">Виберіть коротке ім\'я для свого набору.</string>
     <string name="StickersCopyStickerSet">Копіювати набір наклейок</string>
-    <string name="DisableChannelMuteButton">Вимкнути кнопку вимкнення звуку каналу</string>
     <string name="DisablePreviewVideoSoundShortcut">Вимкнути ярлик під час перегляду відео звукового звуку</string>
     <string name="DisablePreviewVideoSoundShortcutNotice">Вимкніть клавіші гучності, щоб увімкнути попередній перегляд відео звуку</string>
     <string name="DisableAutoWebLogin">Вимкнути автоматичний веб-логін</string>
@@ -402,5 +399,17 @@
     <string name="CommunityAvatarTapActionChat">Завжди відкривати чат</string>
     <string name="CommunityAvatarTapActionArrow">Відкрити Спільноту лише з правою стрілою внизу</string>
     <string name="UseSystemNotificationColor">Використовувати системний колір сповіщень</string>
-    <string name="AvatarCorners">Аватар кути</string>
+    <string name="AdminActionsOnAvatarLongPress">Дії адміністратора на аваторі довгого натиску</string>
+    <string name="AdminActionsOnMentionLongPress">Дії адміністратора при довгому натиску</string>
+    <string name="DeleteMessagesWhenRemovingMembers">Видалити повідомлення при видаленні учасників</string>
+    <string name="BanOrDeleteMessages">Заблокувати або видалити повідомлення</string>
+    <string name="StickerShape">Стікер</string>
+    <string name="StickerShapeRounded">Округлі</string>
+    <string name="StickerShapeRoundedMsg">Повідомлення</string>
+    <string name="ActionBar">Смуга подій</string>
+    <string name="UserRestrictedBy">Restricted by %1$s</string>
+    <string name="ChannelBottomButton">Кнопка нижнього каналу</string>
+    <string name="HideChannelGiftButton">Приховати кнопку подарунку каналу</string>
+    <string name="IgnoreBlockedReplies">Також приховувати відповіді для заблокованих користувачів</string>
+    <string name="RemoveMessageTail">Видалити хвіст повідомлення</string>
 </resources>

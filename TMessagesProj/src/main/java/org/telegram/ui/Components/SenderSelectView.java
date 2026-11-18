@@ -24,9 +24,9 @@ import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.Theme;
 
-import xyz.nextalone.nagram.NaConfig;
+import xyz.nextalone.nagram.helper.AvatarCornersHelper;
 
-public class SenderSelectView extends View {
+public class SenderSelectView extends View implements Theme.Colorable {
     private final static float SPRING_MULTIPLIER = 100f;
     private final static FloatPropertyCompat<SenderSelectView> MENU_PROGRESS = new SimpleFloatPropertyCompat<SenderSelectView>("menuProgress", obj -> obj.menuProgress, (obj, value) -> {
         obj.menuProgress = value;
@@ -55,12 +55,24 @@ public class SenderSelectView extends View {
         setContentDescription(LocaleController.formatString("AccDescrSendAsPeer", R.string.AccDescrSendAsPeer, ""));
     }
 
-    private void updateColors() {
+    private int lastSelectorColor;
+
+    @Override
+    public void updateColors() {
         backgroundPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelVoiceBackground));
         menuPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelVoicePressed));
-        int corners = NaConfig.INSTANCE.getAvatarCorners().Int();
-        int value = corners == 100 ? 18 : Math.round(18 * (corners / 100.0f));
-        selectorDrawable = Theme.createSimpleSelectorRoundRectDrawable(AndroidUtilities.dp(value), Color.TRANSPARENT, Theme.multAlpha(Theme.getColor(Theme.key_windowBackgroundWhite), 0.2f));
+        if (selectorDrawable != null) {
+            // theme update: recolor in place (keeps the pressed state), only when the color changed
+            final int selectorColor = Theme.multAlpha(Theme.getColor(Theme.key_windowBackgroundWhite), 0.2f);
+            if (selectorColor != lastSelectorColor) {
+                lastSelectorColor = selectorColor;
+                Theme.setSelectorDrawableColor(selectorDrawable, selectorColor, true);
+            }
+            invalidate();
+            return;
+        }
+        lastSelectorColor = Theme.multAlpha(Theme.getColor(Theme.key_windowBackgroundWhite), 0.2f);
+        selectorDrawable = Theme.createSimpleSelectorRoundRectDrawable(AvatarCornersHelper.scale(AndroidUtilities.dp(18)), Color.TRANSPARENT, lastSelectorColor);
         selectorDrawable.setCallback(this);
     }
 
@@ -103,14 +115,10 @@ public class SenderSelectView extends View {
 
         int alpha = (int) (menuProgress * 0xFF);
         backgroundPaint.setAlpha(alpha);
-        int corners = NaConfig.INSTANCE.getAvatarCorners().Int();
-        if (corners == 0) {
+        if (AvatarCornersHelper.isCustom()) {
+            final float radius = AvatarCornersHelper.radius(Math.min(getWidth(), getHeight()));
             AndroidUtilities.rectTmp.set(0, 0, getWidth(), getHeight());
-            canvas.drawRoundRect(AndroidUtilities.rectTmp, 0, 0, backgroundPaint);
-        } else if (corners < 100) {
-            float rad = (Math.min(getWidth(), getHeight()) / 2f) * (corners / 100.0f);
-            AndroidUtilities.rectTmp.set(0, 0, getWidth(), getHeight());
-            canvas.drawRoundRect(AndroidUtilities.rectTmp, rad, rad, backgroundPaint);
+            canvas.drawRoundRect(AndroidUtilities.rectTmp, radius, radius, backgroundPaint);
         } else {
             canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, Math.min(getWidth(), getHeight()) / 2f, backgroundPaint);
         }

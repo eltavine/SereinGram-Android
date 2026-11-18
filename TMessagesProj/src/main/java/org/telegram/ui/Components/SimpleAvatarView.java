@@ -17,7 +17,7 @@ import org.telegram.messenger.ImageReceiver;
 import org.telegram.tgnet.TLObject;
 import org.telegram.ui.ActionBar.Theme;
 
-import xyz.nextalone.nagram.NaConfig;
+import xyz.nextalone.nagram.helper.AvatarCornersHelper;
 
 public class SimpleAvatarView extends View {
     public final static int SELECT_ANIMATION_DURATION = 200;
@@ -72,13 +72,9 @@ public class SimpleAvatarView extends View {
         selectPaint.setAlpha((int) (Color.alpha(selectPaint.getColor()) * selectProgress));
         float stroke = selectPaint.getStrokeWidth();
         AndroidUtilities.rectTmp.set(stroke, stroke, getWidth() - stroke, getHeight() - stroke);
-        int corners = NaConfig.INSTANCE.getAvatarCorners().Int();
-        if (corners == 0) {
-            final float w = selectPaint.getStrokeWidth();
-            canvas.drawRect(w, w, getWidth() - w, getHeight() - w, selectPaint);
-        } else if (corners < 100) {
-            float rad = (Math.min(getWidth(), getHeight()) / 2f) * (corners / 100.0f);
-            canvas.drawRoundRect(AndroidUtilities.rectTmp, rad, rad, selectPaint);
+        if (AvatarCornersHelper.isCustom()) {
+            final float radius = AvatarCornersHelper.radius(AndroidUtilities.rectTmp.width());
+            canvas.drawRoundRect(AndroidUtilities.rectTmp, radius, radius, selectPaint);
         } else {
             canvas.drawArc(AndroidUtilities.rectTmp, -90, selectProgress * 360, false, selectPaint);
         }

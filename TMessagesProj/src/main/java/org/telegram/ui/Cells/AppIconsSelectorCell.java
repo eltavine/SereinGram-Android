@@ -3,6 +3,7 @@ package org.telegram.ui.Cells;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -28,6 +29,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.FileLog;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.NotificationCenter;
@@ -35,6 +37,7 @@ import org.telegram.messenger.R;
 import org.telegram.messenger.UserConfig;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.Theme;
+import org.telegram.ui.ActionBar.ThemeBind;
 import org.telegram.ui.Components.Bulletin;
 import org.telegram.ui.Components.ColoredImageSpan;
 import org.telegram.ui.Components.Easings;
@@ -78,9 +81,8 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
                 IconHolderView holderView = (IconHolderView) holder.itemView;
                 LauncherIconController.LauncherIcon icon = availableIcons.get(position);
                 holderView.bind(icon);
-                holderView.iconView.setBackground(Theme.createSimpleSelectorRoundRectDrawable(AndroidUtilities.dp(ICONS_ROUND_RADIUS), Color.TRANSPARENT, Theme.getColor(Theme.key_listSelector), Color.BLACK));
+                ThemeBind.selectorBackground(holderView.iconView, Theme.createSimpleSelectorRoundRectDrawable(AndroidUtilities.dp(ICONS_ROUND_RADIUS), Color.TRANSPARENT, Theme.getColor(Theme.key_listSelector), Color.BLACK), null, ThemeBind.of(Theme.key_listSelector));
                 holderView.iconView.setForeground(icon.foreground);
-                holderView.iconView.setIsNekoXIcon(icon.isNekoX());
             }
 
             @Override
@@ -188,7 +190,7 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.premiumStatusChangedGlobal);
+        NotificationCenter.getGlobalInstance().addWeakObserver(this, NotificationCenter.premiumStatusChangedGlobal);
     }
 
     @Override
@@ -205,7 +207,7 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
         }
     }
 
-    private final static class IconHolderView extends LinearLayout {
+    private final static class IconHolderView extends LinearLayout implements Theme.Colorable {
         private Paint outlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private Paint fillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -247,8 +249,22 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
             canvas.drawRoundRect(AndroidUtilities.rectTmp, AndroidUtilities.dp(ICONS_ROUND_RADIUS), AndroidUtilities.dp(ICONS_ROUND_RADIUS), outlinePaint);
         }
 
+        private boolean progressApplied;
+
+        @Override
+        public void updateColors() {
+            try {
+                if (progressApplied && titleView != null) {
+                    setProgress(progress);
+                }
+            } catch (Exception e) {
+                FileLog.e(e);
+            }
+        }
+
         private void setProgress(float progress) {
             this.progress = progress;
+            progressApplied = true;
 
             titleView.setTextColor(ColorUtils.blendARGB(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText), Theme.getColor(Theme.key_windowBackgroundWhiteValueText), progress));
             outlinePaint.setColor(ColorUtils.blendARGB(ColorUtils.setAlphaComponent(Theme.getColor(Theme.key_switchTrack), 0x3F), Theme.getColor(Theme.key_windowBackgroundWhiteValueText), progress));
@@ -294,7 +310,6 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
     }
 
     public static class AdaptiveIconImageView extends ImageView {
-        private boolean isNekoXIcon = false;
         private Drawable foreground;
         private Path path = new Path();
         private int outerPadding = AndroidUtilities.dp(5);
@@ -305,12 +320,8 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
         }
 
         public void setForeground(int res) {
-            foreground = ContextCompat.getDrawable(getContext(), res);
+            foreground = res == Resources.ID_NULL ? null : ContextCompat.getDrawable(getContext(), res);
             invalidate();
-        }
-
-        public void setIsNekoXIcon(boolean value) {
-            this.isNekoXIcon = value;
         }
 
         @Override
@@ -335,12 +346,13 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
         public void draw(Canvas canvas) {
             canvas.save();
             canvas.clipPath(path);
-            if (!this.isNekoXIcon)
-                canvas.scale(1f + backgroundOuterPadding / (float) getWidth(), 1f + backgroundOuterPadding / (float) getHeight(), getWidth() / 2f, getHeight() / 2f);
+            // A single-layer icon is laid out like a foreground layer, so its glyph matches layered icons.
+            int padding = foreground != null ? backgroundOuterPadding : outerPadding * 2;
+            canvas.scale(1f + padding / (float) getWidth(), 1f + padding / (float) getHeight(), getWidth() / 2f, getHeight() / 2f);
             super.draw(canvas);
             canvas.restore();
 
-            if (foreground != null && !this.isNekoXIcon) {
+            if (foreground != null) {
                 foreground.setBounds(-outerPadding, -outerPadding, getWidth() + outerPadding, getHeight() + outerPadding);
                 foreground.draw(canvas);
             }

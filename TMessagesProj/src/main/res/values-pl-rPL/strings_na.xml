@@ -43,8 +43,6 @@
     <string name="AutoReplaceRepeat">Automatyczna zamiana powtórzeń jako kopia</string>
     <string name="AppIconGoogle">Google</string>
     <string name="AppIconColorful">Kolorowe</string>
-    <string name="AppIconDarkGreen">Ciemnozielony</string>
-    <string name="AppIconNeon">Neon</string>
     <string name="AppIconNiello">Niello</string>
     <string name="AppIconBlue">Niebieski</string>
     <string name="AppIconDarkBlue">Ciemnoniebieski</string>
@@ -104,6 +102,7 @@
     <string name="DisableSendReadStories">Wyłącz wysyłanie przeczytanych artykułów</string>
     <string name="HideFilterMuteAll">Ukryj wyciszenie filtru</string>
     <string name="UseLocalQuoteColor">Użyj lokalnego koloru cytatu</string>
+    <string name="AvatarCorners">Narożniki awatara</string>
     <string name="DisableProfileAvatarBlur">Wyłącz rozmycie awatara profilu</string>
     <string name="DisableCustomWallpaperUser">Wyłącz własną tapetę użytkownika</string>
     <string name="DisableCustomWallpaperChannel">Wyłącz własną tapetę kanału</string>
@@ -130,7 +129,6 @@
     <string name="DisableClickCommandToSendHint">Aby zapobiec przypadkowemu dotknięciu</string>
     <string name="DisableDialogsFloatingButton">Wyłącz pływający przycisk dialogów</string>
     <string name="DisableFlagSecure">Wyłącz bezpieczne flagi</string>
-    <string name="CenterActionBarTitle">Wyśrodkuj tytuł na pasku akcji</string>
     <string name="ShowQuickReplyInBotCommands">Pokaż szybkie odpowiedzi w poleceniach bota</string>
     <string name="PushServiceType">Typ usługi Push</string>
     <string name="PushServiceTypeInApp">W aplikacji</string>
@@ -142,7 +140,6 @@
     <string name="SendMp4DocumentAsVideo">Wyślij dokument mp4 jako film</string>
     <string name="StickersChooseShortNameForStickerPack">Wybierz krótką nazwę dla paczki.</string>
     <string name="StickersCopyStickerSet">Kopiuj zestaw naklejek</string>
-    <string name="DisableChannelMuteButton">Wyłącz przycisk wyciszenia kanału</string>
     <string name="DisablePreviewVideoSoundShortcut">Wyłącz podgląd skrótu dźwięku wideo</string>
     <string name="DisablePreviewVideoSoundShortcutNotice">Wyłącz przyciski głośności, aby włączyć podgląd dźwięku wideo</string>
     <string name="DisableAutoWebLogin">Wyłącz automatyczne logowanie</string>
@@ -402,5 +399,17 @@
     <string name="CommunityAvatarTapActionChat">Zawsze otwieraj czat</string>
     <string name="CommunityAvatarTapActionArrow">Otwórz społeczność tylko za pomocą dolnej prawej strzałki</string>
     <string name="UseSystemNotificationColor">Użyj systemowego koloru powiadomień</string>
-    <string name="AvatarCorners">Narożniki awatara</string>
+    <string name="AdminActionsOnAvatarLongPress">Akcje administratora przy długim naciśnięciu awatara</string>
+    <string name="AdminActionsOnMentionLongPress">Akcje administratora przy długim naciśnięciu wspomnienia</string>
+    <string name="DeleteMessagesWhenRemovingMembers">Usuń wiadomości podczas usuwania członków</string>
+    <string name="BanOrDeleteMessages">Zablokuj lub usuń wiadomości</string>
+    <string name="StickerShape">Kształt naklejki</string>
+    <string name="StickerShapeRounded">Zaokrąglone</string>
+    <string name="StickerShapeRoundedMsg">Wiadomość</string>
+    <string name="ActionBar">Pasek akcji</string>
+    <string name="UserRestrictedBy">Ograniczone przez %1$s</string>
+    <string name="ChannelBottomButton">Dolny przycisk kanału</string>
+    <string name="HideChannelGiftButton">Ukryj przycisk podarunkowy</string>
+    <string name="IgnoreBlockedReplies">Ukryj również odpowiedzi dla zablokowanych użytkowników</string>
+    <string name="RemoveMessageTail">Usuń ogon wiadomości</string>
 </resources>
