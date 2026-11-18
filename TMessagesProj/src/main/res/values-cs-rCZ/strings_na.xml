@@ -43,8 +43,6 @@
     <string name="AutoReplaceRepeat">Automaticky nahradit opakování jako kopírování</string>
     <string name="AppIconGoogle">Google</string>
     <string name="AppIconColorful">Barevné</string>
-    <string name="AppIconDarkGreen">Tmavě zelená</string>
-    <string name="AppIconNeon">Neún</string>
     <string name="AppIconNiello">Niello</string>
     <string name="AppIconBlue">Modrá</string>
     <string name="AppIconDarkBlue">Tmavě modrá</string>
@@ -104,6 +102,7 @@
     <string name="DisableSendReadStories">Zakázat odesílání příběhů pro čtení</string>
     <string name="HideFilterMuteAll">Skrýt ztlumit vše</string>
     <string name="UseLocalQuoteColor">Použít místní barvu citací</string>
+    <string name="AvatarCorners">Avatar rohy</string>
     <string name="DisableProfileAvatarBlur">Zakázat rozostření profilu</string>
     <string name="DisableCustomWallpaperUser">Zakázat uživatelskou vlastní tapetu</string>
     <string name="DisableCustomWallpaperChannel">Zakázat vlastní tapetu kanálu</string>
@@ -130,7 +129,6 @@
     <string name="DisableClickCommandToSendHint">Aby se zabránilo náhodnému dotyku</string>
     <string name="DisableDialogsFloatingButton">Zakázat plovoucí tlačítko dialogů</string>
     <string name="DisableFlagSecure">Zakázat zabezpečení vlajky</string>
-    <string name="CenterActionBarTitle">Vycentrovat název na panelu akcí</string>
     <string name="ShowQuickReplyInBotCommands">Zobrazit příkazy rychlé odpovědi v Bot</string>
     <string name="PushServiceType">Typ služby Push</string>
     <string name="PushServiceTypeInApp">V aplikaci</string>
@@ -142,7 +140,6 @@
     <string name="SendMp4DocumentAsVideo">Poslat dokument mp4 jako video</string>
     <string name="StickersChooseShortNameForStickerPack">Choose a short name for your pack.</string>
     <string name="StickersCopyStickerSet">Copy Sticker Set</string>
-    <string name="DisableChannelMuteButton">Zakázat tlačítko ztlumit kanál</string>
     <string name="DisablePreviewVideoSoundShortcut">Zakázat zástupce zvuku videa</string>
     <string name="DisablePreviewVideoSoundShortcutNotice">Zakázat tlačítka hlasitosti pro zapnutí náhledu zvuku videa</string>
     <string name="DisableAutoWebLogin">Zakázat automatické přihlášení k webu</string>
@@ -402,5 +399,17 @@
     <string name="CommunityAvatarTapActionChat">Vždy otevřít chat</string>
     <string name="CommunityAvatarTapActionArrow">Otevřít komunitu pouze pomocí šipky vpravo dole</string>
     <string name="UseSystemNotificationColor">Použít barvu systémových oznámení</string>
-    <string name="AvatarCorners">Avatar rohy</string>
+    <string name="AdminActionsOnAvatarLongPress">Admin akce při dlouhém stisku Avatara</string>
+    <string name="AdminActionsOnMentionLongPress">Admin akce při dlouhém stisku</string>
+    <string name="DeleteMessagesWhenRemovingMembers">Odstranit zprávy při odebírání členů</string>
+    <string name="BanOrDeleteMessages">Zakázat nebo odstranit zprávy</string>
+    <string name="StickerShape">Tvar nálepky</string>
+    <string name="StickerShapeRounded">Zaobleno</string>
+    <string name="StickerShapeRoundedMsg">Zpráva</string>
+    <string name="ActionBar">Panel akcí</string>
+    <string name="UserRestrictedBy">Omezeno %1$s</string>
+    <string name="ChannelBottomButton">Tlačítko dolní části kanálu</string>
+    <string name="HideChannelGiftButton">Skrýt dárkové tlačítko kanálu</string>
+    <string name="IgnoreBlockedReplies">Také skrýt odpovědi pro blokované uživatele</string>
+    <string name="RemoveMessageTail">Odstranit konec zprávy</string>
 </resources>

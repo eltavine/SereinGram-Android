@@ -27,6 +27,8 @@ import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarMenu;
 import org.telegram.ui.ActionBar.ActionBarMenuItem;
 import org.telegram.ui.ActionBar.AlertDialog;
+import org.telegram.ui.ActionBar.SimpleActionBarMenu;
+import org.telegram.ui.ActionBar.SimpleActionBarMenuItem;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.ActionBar.ThemeDescription;
 import org.telegram.ui.Cells.EmptyCell;
@@ -58,8 +60,9 @@ import tw.nekomimi.nekogram.config.cell.ConfigCellTextCheck;
 import tw.nekomimi.nekogram.config.cell.ConfigCellTextDetail;
 import tw.nekomimi.nekogram.config.cell.ConfigCellTextInput;
 import tw.nekomimi.nekogram.helpers.remote.EmojiHelper;
-import tw.nekomimi.nekogram.settings.cell.AvatarCornersSeekBar;
+import tw.nekomimi.nekogram.settings.cell.DoubleTapCell;
 import tw.nekomimi.nekogram.settings.cell.InputAnimationStrengthSeekBar;
+import tw.nekomimi.nekogram.settings.cell.StickerShapeCell;
 import tw.nekomimi.nekogram.ui.PopupBuilder;
 import xyz.nextalone.nagram.NaConfig;
 import xyz.nextalone.nagram.helper.DoubleTap;
@@ -76,10 +79,14 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
     private final AbstractConfigCell stickersOnlyShowReadRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getRealHideTimeForSticker()));
     private final AbstractConfigCell divider0 = cellGroup.appendCell(new ConfigCellDivider());
 
+    // Sticker Shape
+    private final AbstractConfigCell headerStickerShape = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("StickerShape", R.string.StickerShape)));
+    private final AbstractConfigCell stickerShapeRow = cellGroup.appendCell(new ConfigCellCustom("StickerShape", NaConfig.INSTANCE.getStickerShape(), ConfigCellCustom.CUSTOM_ITEM_StickerShape, true));
+    private final AbstractConfigCell dividerStickerShape = cellGroup.appendCell(new ConfigCellDivider());
+
     // Messages
     private final AbstractConfigCell headerMessages = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString(R.string.NagramMessages)));
     private final AbstractConfigCell messagesPreviewRow = cellGroup.appendCell(new ConfigCellCustom("MessagePreview", ConfigCellCustom.CUSTOM_ITEM_MessagesPreview, false));
-    private final AbstractConfigCell avatarCornersRow = cellGroup.appendCell(new ConfigCellCustom("AvatarCorners", ConfigCellCustom.CUSTOM_ITEM_AvatarCorners, true));
     private final AbstractConfigCell showSeconds = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showSeconds));
     private final AbstractConfigCell showMessageIDRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getShowMessageID()));
     private final AbstractConfigCell dateOfForwardMsgRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDateOfForwardedMsg()));
@@ -90,11 +97,13 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
     private final AbstractConfigCell showSpoilersDirectlyRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showSpoilersDirectly));
     private final AbstractConfigCell disableLinkPreviewsRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getGlobalDisableLinkPreviews()));
     private final AbstractConfigCell hideSideShareButtonRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getHideSideShareButton()));
+    private final AbstractConfigCell removeMessageTailRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getRemoveMessageTail()));
     private final AbstractConfigCell dividerMessages = cellGroup.appendCell(new ConfigCellDivider());
 
     private final AbstractConfigCell headerDoubleTap = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString(R.string.DoubleTapAction)));
-    private final AbstractConfigCell doubleTapActionIncomingRow = cellGroup.appendCell(new ConfigCellCustom("DoubleTapActionIncoming", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
-    private final AbstractConfigCell doubleTapActionOutgoingRow = cellGroup.appendCell(new ConfigCellCustom("DoubleTapActionOutgoing", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
+    private final AbstractConfigCell doubleTapPreviewRow = cellGroup.appendCell(new ConfigCellCustom("DoubleTapAction", ConfigCellCustom.CUSTOM_ITEM_DoubleTap, false));
+    private final AbstractConfigCell doubleTapActionIncomingRow = cellGroup.appendCell(new ConfigCellCustom(NaConfig.INSTANCE.getDoubleTapActionIncoming(), CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
+    private final AbstractConfigCell doubleTapActionOutgoingRow = cellGroup.appendCell(new ConfigCellCustom(NaConfig.INSTANCE.getDoubleTapActionOutgoing(), CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
     private final AbstractConfigCell dividerDoubleTap = cellGroup.appendCell(new ConfigCellDivider());
 
     // Chats
@@ -213,7 +222,13 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
         }}));
     }));
     private final AbstractConfigCell disableSwipeToNextRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableSwipeToNext));
-    private final AbstractConfigCell disableChannelMuteButtonRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableChannelMuteButton()));
+    private final AbstractConfigCell channelBottomButtonRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NaConfig.INSTANCE.getChannelBottomButton(),
+            new String[]{
+                    LocaleController.getString(R.string.ChannelMuteNoCaps),
+                    LocaleController.getString(R.string.Discussion),
+                    LocaleController.getString(R.string.Hide),
+            }, null));
+    private final AbstractConfigCell hideChannelGiftButtonRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getHideChannelGiftButton()));
     private final AbstractConfigCell disablePhotoSideActionRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disablePhotoSideAction));
     private final AbstractConfigCell disableClickProfileGalleryViewRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableClickProfileGalleryView()));
     private final AbstractConfigCell disableRemoteEmojiInteractionsRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableRemoteEmojiInteractions));
@@ -289,9 +304,11 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
     private final AbstractConfigCell quickToggleAnonymousRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getQuickToggleAnonymous(), LocaleController.getString(R.string.QuickToggleAnonymousNotice)));
     private final AbstractConfigCell dividerBottomStyleTag  = cellGroup.appendCell(new ConfigCellDivider());
 
-    private ActionBarMenuItem menuItem;
+    private SimpleActionBarMenuItem menuItem;
     private StickerSizeCell stickerSizeCell;
+    private StickerShapeCell stickerShapeCell;
     private EmojiSetCell emojiSetCell;
+    private DoubleTapCell doubleTapCell;
 
     public NekoChatSettingsActivity() {
         updateRows();
@@ -315,13 +332,15 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
     public View createView(Context context) {
         var superView = super.createView(context);
 
-        ActionBarMenu menu = actionBar.createMenu();
+        SimpleActionBarMenu menu = simpleActionBar.createMenu();
+        menu.clearItems();
+
         menuItem = menu.addItem(0, R.drawable.ic_ab_other);
-        menuItem.setContentDescription(LocaleController.getString("AccDescrMoreOptions", R.string.AccDescrMoreOptions));
-        menuItem.addSubItem(1, R.drawable.msg_reset, LocaleController.getString("ResetStickerSize", R.string.ResetStickerSize));
+        menuItem.setContentDescription(LocaleController.getString(R.string.AccDescrMoreOptions));
+        menuItem.addSubItem(1, R.drawable.msg_reset, LocaleController.getString(R.string.ResetStickerSize));
         menuItem.setVisibility(NekoConfig.stickerSize.Float() != 14.0f ? View.VISIBLE : View.GONE);
 
-        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
+        simpleActionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(int id) {
                 if (id == -1) {
@@ -338,7 +357,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
 
         listView.setAdapter(listAdapter);
         listView.setItemSelectorColorProvider(position ->
-                position == cellGroup.rows.indexOf(stickerSizeRow) || position == cellGroup.rows.indexOf(messagesPreviewRow) ? Color.TRANSPARENT : null);
+                position == cellGroup.rows.indexOf(stickerSizeRow) || position == cellGroup.rows.indexOf(messagesPreviewRow) || position == cellGroup.rows.indexOf(stickerShapeRow) ? Color.TRANSPARENT : null);
         // Fragment: Set OnClick Callbacks
         listView.setOnItemClickListener((view, position, x, y) -> {
             AbstractConfigCell a = cellGroup.rows.get(position);
@@ -358,6 +377,9 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                     }
                 }
             } else if (a instanceof ConfigCellCustom) { // Custom onclick
+                if (position == cellGroup.rows.indexOf(stickerShapeRow)) {
+                    return;
+                }
                 if (position == cellGroup.rows.indexOf(maxRecentStickerCountRow)) {
                     final int[] counts = {20, 30, 40, 50, 80, 100, 120, 150, 180, 200};
                     List<String> types = Arrays.stream(counts)
@@ -397,7 +419,9 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                     }
                     PopupBuilder builder = new PopupBuilder(view);
                     builder.setItems(arrayList, (i, str) -> {
-                        (outgoing ? NaConfig.INSTANCE.getDoubleTapActionOutgoing() : NaConfig.INSTANCE.getDoubleTapActionIncoming()).setConfigInt(types.get(i));
+                        int newValue = types.get(i);
+                        ((ConfigCellCustom) a).getBindConfig().setConfigInt(newValue);
+                        ((ConfigCellCustom) a).runCallback(newValue);
                         listAdapter.notifyItemChanged(position);
                         return Unit.INSTANCE;
                     });
@@ -432,8 +456,15 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
             } else if (key.equals(NekoConfig.hideTimeForSticker.getKey()) || key.equals(NaConfig.INSTANCE.getRealHideTimeForSticker().getKey())) {
                 if (stickerSizeCell != null) stickerSizeCell.invalidate();
-            } else if (key.equals(NaConfig.INSTANCE.getAvatarCorners().getKey())) {
-                tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
+            } else if (key.equals(NaConfig.INSTANCE.getStickerShape().getKey())) {
+                if (stickerSizeCell != null) stickerSizeCell.invalidate();
+                if (stickerShapeCell != null) stickerShapeCell.updateSelection();
+            } else if (key.equals(NaConfig.INSTANCE.getDoubleTapActionIncoming().getKey())) {
+                if (doubleTapCell != null) doubleTapCell.updateIcons(1, true);
+            } else if (key.equals(NaConfig.INSTANCE.getDoubleTapActionOutgoing().getKey())) {
+                if (doubleTapCell != null) doubleTapCell.updateIcons(2, true);
+            } else if (key.equals(NaConfig.INSTANCE.getRemoveMessageTail().getKey())) {
+                Theme.reloadAllResources(getParentActivity());
             }
         };
 
@@ -464,16 +495,8 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
     @Override
     public ArrayList<ThemeDescription> getThemeDescriptions() {
         ArrayList<ThemeDescription> themeDescriptions = new ArrayList<>();
-        themeDescriptions.add(new ThemeDescription(listView, ThemeDescription.FLAG_CELLBACKGROUNDCOLOR, new Class[]{EmptyCell.class, TextSettingsCell.class, TextCheckCell.class, HeaderCell.class, TextDetailSettingsCell.class, NotificationsCheckCell.class}, null, null, null, Theme.key_windowBackgroundWhite));
+        themeDescriptions.add(new ThemeDescription(listView, ThemeDescription.FLAG_CELLBACKGROUNDCOLOR, new Class[]{EmptyCell.class, TextSettingsCell.class, TextCheckCell.class, HeaderCell.class, TextDetailSettingsCell.class, NotificationsCheckCell.class, StickerShapeCell.class, DoubleTapCell.class}, null, null, null, Theme.key_windowBackgroundWhite));
         themeDescriptions.add(new ThemeDescription(fragmentView, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_windowBackgroundGray));
-
-        themeDescriptions.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_avatar_backgroundActionBarBlue));
-        themeDescriptions.add(new ThemeDescription(listView, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_avatar_backgroundActionBarBlue));
-        themeDescriptions.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_ITEMSCOLOR, null, null, null, null, Theme.key_avatar_actionBarIconBlue));
-        themeDescriptions.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_TITLECOLOR, null, null, null, null, Theme.key_actionBarDefaultTitle));
-        themeDescriptions.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_SELECTORCOLOR, null, null, null, null, Theme.key_avatar_actionBarSelectorBlue));
-        themeDescriptions.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_SUBMENUBACKGROUND, null, null, null, null, Theme.key_actionBarDefaultSubmenuBackground));
-        themeDescriptions.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_SUBMENUITEM, null, null, null, null, Theme.key_actionBarDefaultSubmenuItem));
 
         themeDescriptions.add(new ThemeDescription(listView, ThemeDescription.FLAG_SELECTOR, null, null, null, null, Theme.key_listSelector));
 
@@ -651,6 +674,8 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                         } else if (position == cellGroup.rows.indexOf(doubleTapActionOutgoingRow)) {
                             textCell.setTextAndValue(LocaleController.getString(R.string.DoubleTapActionOutgoing), DoubleTap.doubleTapActionMap.get(NaConfig.INSTANCE.getDoubleTapActionOutgoing().Int()), divider);
                         }
+                    } else if (view instanceof StickerShapeCell) {
+                        ((StickerShapeCell) view).updateSelection();
                     } else if (view instanceof EmojiSetCell) {
                         EmojiSetCell v1 =  (EmojiSetCell) view;
                         v1.setData(EmojiHelper.getInstance().getCurrentEmojiPackInfo(), false, divider);
@@ -671,6 +696,20 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                 case ConfigCellCustom.CUSTOM_ITEM_StickerSize:
                     view = stickerSizeCell = new StickerSizeCell(mContext);
                     break;
+                case ConfigCellCustom.CUSTOM_ITEM_StickerShape:
+                    view = stickerShapeCell = new StickerShapeCell(mContext, () -> {
+                        if (stickerSizeCell != null) {
+                            stickerSizeCell.invalidate();
+                        }
+                    }, () -> {
+                        if (stickerShapeCell != null) {
+                            createLongClickDialog(stickerShapeCell, NekoChatSettingsActivity.this, "chat", cellGroup.rows.indexOf(stickerShapeRow));
+                        }
+                    });
+                    break;
+                case ConfigCellCustom.CUSTOM_ITEM_DoubleTap:
+                    view = doubleTapCell = new DoubleTapCell(mContext);
+                    break;
                 case ConfigCellCustom.CUSTOM_ITEM_EmojiSet:
                     view = emojiSetCell = new EmojiSetCell(mContext, false);
                     break;
@@ -679,9 +718,6 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                     break;
                 case ConfigCellCustom.CUSTOM_ITEM_InputAnimationStrength:
                     view = new InputAnimationStrengthSeekBar(mContext);
-                    break;
-                case ConfigCellCustom.CUSTOM_ITEM_AvatarCorners:
-                    view = new AvatarCornersSeekBar(mContext, cellGroup);
                     break;
             }
             if (view != null) {

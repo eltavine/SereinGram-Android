@@ -43,8 +43,6 @@
     <string name="AutoReplaceRepeat">Reemplazar Repetir para Repetir Como Copia</string>
     <string name="AppIconGoogle">Google</string>
     <string name="AppIconColorful">Colorido</string>
-    <string name="AppIconDarkGreen">Verde Oscuro</string>
-    <string name="AppIconNeon">Neón</string>
     <string name="AppIconNiello">Niello</string>
     <string name="AppIconBlue">Azul</string>
     <string name="AppIconDarkBlue">Azul Oscuro</string>
@@ -104,6 +102,7 @@
     <string name="DisableSendReadStories">Deshabilitar envío de lectura de historias</string>
     <string name="HideFilterMuteAll">Ocultar el filtro silenciar todo</string>
     <string name="UseLocalQuoteColor">Usar color local de citado</string>
+    <string name="AvatarCorners">Esquinas de avatar</string>
     <string name="DisableProfileAvatarBlur">Desactivar perfil Avatar Blur</string>
     <string name="DisableCustomWallpaperUser">Desactivar fondo de pantalla personalizado del usuario</string>
     <string name="DisableCustomWallpaperChannel">Desactivar fondo de pantalla personalizado del canal</string>
@@ -130,7 +129,6 @@
     <string name="DisableClickCommandToSendHint">Para prevenir toques accidentales</string>
     <string name="DisableDialogsFloatingButton">Deshabilitar botón flotante de diálogos</string>
     <string name="DisableFlagSecure">Deshabilitar Flag Secure</string>
-    <string name="CenterActionBarTitle">Centrar el título en la barra de acción</string>
     <string name="ShowQuickReplyInBotCommands">Mostrar respuestas rápidas en comandos del bot</string>
     <string name="PushServiceType">Tipo de servicio Push</string>
     <string name="PushServiceTypeInApp">En la App</string>
@@ -142,7 +140,6 @@
     <string name="SendMp4DocumentAsVideo">Enviar documento mp4 como vídeo</string>
     <string name="StickersChooseShortNameForStickerPack">Elige un nombre corto para tu paquete.</string>
     <string name="StickersCopyStickerSet">Copiar pack de Sticker</string>
-    <string name="DisableChannelMuteButton">Deshabilitar botón de silenciar canal</string>
     <string name="DisablePreviewVideoSoundShortcut">Desactivar acceso directo al sonido de un video</string>
     <string name="DisablePreviewVideoSoundShortcutNotice">Desactivar las teclas de volumen para reproducir el sonido de la vista previa del video</string>
     <string name="DisableAutoWebLogin">Deshabilitar inicio de sesión web automático</string>
@@ -402,5 +399,17 @@
     <string name="CommunityAvatarTapActionChat">Abrir siempre el chat</string>
     <string name="CommunityAvatarTapActionArrow">Abrir comunidad sólo con la flecha de abajo derecha</string>
     <string name="UseSystemNotificationColor">Usar color de notificación del sistema</string>
-    <string name="AvatarCorners">Esquinas de avatar</string>
+    <string name="AdminActionsOnAvatarLongPress">Acciones de administración en Avatar Largo Presión</string>
+    <string name="AdminActionsOnMentionLongPress">Acciones de administración al mencionar pulsación larga</string>
+    <string name="DeleteMessagesWhenRemovingMembers">Eliminar mensajes al eliminar usuarios</string>
+    <string name="BanOrDeleteMessages">Bloquear o eliminar mensajes</string>
+    <string name="StickerShape">Forma de pegado</string>
+    <string name="StickerShapeRounded">Redondeado</string>
+    <string name="StickerShapeRoundedMsg">Mensaje</string>
+    <string name="ActionBar">Barra de acción</string>
+    <string name="UserRestrictedBy">Restringido por %1$s</string>
+    <string name="ChannelBottomButton">Botón inferior del canal</string>
+    <string name="HideChannelGiftButton">Ocultar botón de regalo del canal</string>
+    <string name="IgnoreBlockedReplies">También ocultar respuestas a usuarios bloqueados</string>
+    <string name="RemoveMessageTail">Eliminar cola del mensaje</string>
 </resources>

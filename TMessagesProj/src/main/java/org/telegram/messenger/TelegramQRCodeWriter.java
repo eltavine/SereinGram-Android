@@ -232,7 +232,7 @@ public final class TelegramQRCodeWriter {
         canvas.drawBitmap(icon, imageX, imageX, null);
         icon.recycle();
       } else {
-        Drawable drawable = ApplicationLoader.applicationContext.getResources().getDrawable(R.mipmap.ic_launcher_nagram);
+        Drawable drawable = ApplicationLoader.applicationContext.getResources().getDrawable(R.mipmap.ic_launcher);
         drawable.setBounds(imageX, imageX, imageX + imageSize, imageX + imageSize);
         drawable.draw(canvas);
       }
@@ -432,7 +432,7 @@ public final class TelegramQRCodeWriter {
             }
         }
 
-        Drawable drawable = ApplicationLoader.applicationContext.getResources().getDrawable(R.mipmap.ic_launcher_nagram);
+        Drawable drawable = ApplicationLoader.applicationContext.getResources().getDrawable(R.mipmap.ic_launcher);
         drawable.setBounds(imageX, imageX, imageX + imageSize, imageX + imageSize);
         drawable.draw(canvas);
 

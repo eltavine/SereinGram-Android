@@ -43,8 +43,6 @@
     <string name="AutoReplaceRepeat">Gentag automatisk Gentag at gentage som kopi</string>
     <string name="AppIconGoogle">Google</string>
     <string name="AppIconColorful">Farverig</string>
-    <string name="AppIconDarkGreen">Mørkegrøn</string>
-    <string name="AppIconNeon">Neon</string>
     <string name="AppIconNiello">Niello</string>
     <string name="AppIconBlue">Blå</string>
     <string name="AppIconDarkBlue">Mørk Blå</string>
@@ -104,6 +102,7 @@
     <string name="DisableSendReadStories">Deaktivér Send Læsehistorier</string>
     <string name="HideFilterMuteAll">Skjul filter mute alle</string>
     <string name="UseLocalQuoteColor">Brug lokal tilbudsfarve</string>
+    <string name="AvatarCorners">Avatar hjørner</string>
     <string name="DisableProfileAvatarBlur">Deaktivér Profil Avatar Blur</string>
     <string name="DisableCustomWallpaperUser">Deaktivér brugerdefineret baggrund</string>
     <string name="DisableCustomWallpaperChannel">Deaktivér kanal brugerdefineret baggrund</string>
@@ -130,7 +129,6 @@
     <string name="DisableClickCommandToSendHint">For at forhindre utilsigtet berøring</string>
     <string name="DisableDialogsFloatingButton">Deaktivér Dialoger Flydende Knap</string>
     <string name="DisableFlagSecure">Deaktivér Flag Sikker</string>
-    <string name="CenterActionBarTitle">Centrér titel i handlingsbjælken</string>
     <string name="ShowQuickReplyInBotCommands">Vis Hurtigt Svar I Bot Kommandoer</string>
     <string name="PushServiceType">Push Service Type</string>
     <string name="PushServiceTypeInApp">I App</string>
@@ -142,7 +140,6 @@
     <string name="SendMp4DocumentAsVideo">Send mp4-dokument som video</string>
     <string name="StickersChooseShortNameForStickerPack">Vælg et kort navn til din pakke.</string>
     <string name="StickersCopyStickerSet">Kopiér Klistermærke Set</string>
-    <string name="DisableChannelMuteButton">Deaktivér kanal mute knap</string>
     <string name="DisablePreviewVideoSoundShortcut">Deaktivér forhåndsvisning af videolyd genvej</string>
     <string name="DisablePreviewVideoSoundShortcutNotice">Deaktivér lydstyrkeknapper for at aktivere forhåndsvisning af videolyd</string>
     <string name="DisableAutoWebLogin">Deaktivér auto weblogin</string>
@@ -402,5 +399,17 @@
     <string name="CommunityAvatarTapActionChat">Åbn Altid Chat</string>
     <string name="CommunityAvatarTapActionArrow">Åbn kun fællesskabet med pil nederst til højre</string>
     <string name="UseSystemNotificationColor">Brug systemnotifikationsfarve</string>
-    <string name="AvatarCorners">Avatar hjørner</string>
+    <string name="AdminActionsOnAvatarLongPress">Admin-handlinger på Avatar Langt Tryk</string>
+    <string name="AdminActionsOnMentionLongPress">Admin-handlinger ved omtale Langt tryk</string>
+    <string name="DeleteMessagesWhenRemovingMembers">Slet Beskeder Ved Fjernelse Af Medlemmer</string>
+    <string name="BanOrDeleteMessages">Bandlys eller slet beskeder</string>
+    <string name="StickerShape">Klistermærke Form</string>
+    <string name="StickerShapeRounded">Aundet</string>
+    <string name="StickerShapeRoundedMsg">Besked</string>
+    <string name="ActionBar">Handlings Bjælke</string>
+    <string name="UserRestrictedBy">Begrænset af %1$s</string>
+    <string name="ChannelBottomButton">Kanal nederste knap</string>
+    <string name="HideChannelGiftButton">Skjul kanal gaveknap</string>
+    <string name="IgnoreBlockedReplies">Skjul også svar til blokerede brugere</string>
+    <string name="RemoveMessageTail">Fjern besked hale</string>
 </resources>
